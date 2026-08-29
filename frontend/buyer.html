@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shop - KaviyaMart</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header class="header">
+
+    <div class="logo">KaviyaMart</div>
+
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="buyer.html">Shop</a>
+
+        <!-- CART -->
+        <a href="javascript:void(0)" id="cartLink">
+            🛒 Cart
+            <span id="cartCount">0</span>
+        </a>
+
+        <a href="login.html" id="logoutLink">Logout</a>
+    </nav>
+
+</header>
+
+
+<main>
+
+    <section class="page-heading">
+        <h1>Explore Products</h1>
+        <p>Find products from our sellers</p>
+    </section>
+
+
+    <section class="categories">
+
+        <h2>Categories</h2>
+
+        <div class="category-grid">
+
+            <button
+                class="category-card"
+                onclick="loadProducts('Fashion')">
+                Fashion
+            </button>
+
+            <button
+                class="category-card"
+                onclick="loadProducts('Watches')">
+                Watches
+            </button>
+
+            <button
+                class="category-card"
+                onclick="loadProducts('Jewelry')">
+                Jewelry
+            </button>
+
+            <button
+                class="category-card"
+                onclick="loadProducts('Electronics')">
+                Electronics
+            </button>
+
+            <button
+                class="category-card"
+                onclick="loadProducts('Accessories')">
+                Accessories
+            </button>
+
+        </div>
+
+    </section>
+
+
+    <section class="products-section">
+
+        <h2>Products</h2>
+
+        <div id="productGrid" class="product-grid">
+
+            <p>Loading products...</p>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<script src="script.js"></script>
+
+
+<script>
+
+// Make sure cart count is displayed when page opens
+document.addEventListener("DOMContentLoaded", function () {
+
+    if (typeof updateCartCount === "function") {
+        updateCartCount();
+    }
+
+});
+
+
+// Show cart contents when Cart is clicked
+document.getElementById("cartLink").addEventListener("click", function () {
+
+    const cart =
+        JSON.parse(
+            localStorage.getItem("kaviyaMartCart")
+        ) || [];
+
+    if (cart.length === 0) {
+
+        alert("Your cart is empty.");
+
+        return;
+    }
+
+    let message = "Your Cart:\n\n";
+
+    let total = 0;
+
+    cart.forEach(function (item) {
+
+        const quantity =
+            Number(item.quantity || 1);
+
+        const price =
+            Number(item.price || 0);
+
+        const itemTotal =
+            price * quantity;
+
+        total += itemTotal;
+
+        message +=
+            item.product_name +
+            " × " +
+            quantity +
+            " = ₹" +
+            itemTotal.toFixed(2) +
+            "\n";
+
+    });
+
+    message +=
+        "\nTotal: ₹" +
+        total.toFixed(2);
+
+    alert(message);
+
+});
+
+</script>
+
+</body>
+</html>

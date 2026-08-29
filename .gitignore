@@ -1,0 +1,22 @@
+# CMake build files
+build/
+
+# Compiled files
+*.exe
+*.dll
+*.obj
+*.pdb
+*.lib
+
+# Environment and secrets
+.env
+.env.*
+*.env
+
+# IDE files
+.vscode/
+.vs/
+
+# OS files
+.DS_Store
+Thumbs.db

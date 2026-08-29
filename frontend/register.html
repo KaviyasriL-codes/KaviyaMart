@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - KaviyaMart</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="header">
+    <div class="logo">KaviyaMart</div>
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="login.html">Login</a>
+    </nav>
+</header>
+
+<main class="form-page">
+    <div class="form-container">
+        <h1>Create Account</h1>
+
+        <form id="registerForm">
+
+            <label>Name</label>
+            <input type="text" id="registerName" required>
+
+            <label>Email</label>
+            <input type="email" id="registerEmail" required>
+
+            <label>Mobile</label>
+            <input type="tel" id="registerMobile" required>
+
+            <label>Password</label>
+            <input type="password" id="registerPassword" required>
+
+            <label>Account Type</label>
+            <select id="registerRole" required>
+                <option value="">Select account type</option>
+                <option value="buyer">Buyer</option>
+                <option value="seller">Seller</option>
+            </select>
+
+            <button type="submit" class="btn">Register</button>
+
+        </form>
+
+        <p>Already have an account?
+            <a href="login.html">Login</a>
+        </p>
+    </div>
+</main>
+
+<script src="script.js"></script>
+</body>
+</html>

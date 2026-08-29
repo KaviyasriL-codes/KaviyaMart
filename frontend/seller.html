@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seller Dashboard - KaviyaMart</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="header">
+    <div class="logo">KaviyaMart</div>
+
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="seller.html">Dashboard</a>
+        <a href="login.html">Logout</a>
+    </nav>
+</header>
+
+<main class="dashboard">
+
+    <section class="dashboard-header">
+        <h1>Seller Dashboard</h1>
+        <p>Welcome, <span id="sellerName">Seller</span></p>
+    </section>
+
+    <section class="dashboard-cards">
+
+        <div class="dashboard-card">
+            <h2>My Products</h2>
+            <p id="productCount">0</p>
+            <a href="add-product.html" class="btn">Add Product</a>
+        </div>
+
+        <div class="dashboard-card">
+            <h2>Orders</h2>
+            <p id="orderCount">0</p>
+            <button class="btn" onclick="alert('Orders section coming soon')">
+                View Orders
+            </button>
+        </div>
+
+        <div class="dashboard-card">
+            <h2>Sales</h2>
+            <p id="salesAmount">₹0</p>
+        </div>
+
+    </section>
+
+    <section class="products-section">
+        <h2>My Products</h2>
+
+        <div id="sellerProducts" class="product-grid">
+            <p>Loading your products...</p>
+        </div>
+    </section>
+
+</main>
+
+<script src="script.js"></script>
+</body>
+</html>
