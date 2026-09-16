@@ -1,168 +1,245 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
     <title>Add Product - KaviyaMart</title>
 
-    <link rel="stylesheet" href="style.css">
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
 </head>
+
 
 <body>
 
-<header class="header">
+    <!-- =========================================
+         HEADER
+    ========================================== -->
 
-    <div class="logo">
-        KaviyaMart
-    </div>
+    <header class="header">
 
-    <nav>
-        <a href="seller.html">Dashboard</a>
-        <a href="index.html">Home</a>
-    </nav>
+        <div class="logo">
+            KaviyaMart
+        </div>
 
-</header>
+        <nav>
+
+            <a href="seller.html">
+                Dashboard
+            </a>
+
+            <a href="index.html">
+                Home
+            </a>
+
+            <a href="#" id="logoutLink">
+                Logout
+            </a>
+
+        </nav>
+
+    </header>
 
 
-<main class="form-page">
+    <!-- =========================================
+         ADD PRODUCT PAGE
+    ========================================== -->
 
-    <div class="form-container">
+    <main class="form-page">
 
-        <h1>Add New Product</h1>
+        <div class="form-container">
+
+            <h1>
+                Add New Product
+            </h1>
 
 
-        <form id="productForm">
-
-            <label for="productName">
-                Product Name
-            </label>
-
-            <input
-                type="text"
-                id="productName"
-                required
+            <form
+                id="productForm"
+                enctype="multipart/form-data"
             >
 
+                <!-- PRODUCT NAME -->
 
-            <label for="productCategory">
-                Category
-            </label>
+                <label for="productName">
+                    Product Name
+                </label>
 
-            <select
-                id="productCategory"
-                required
-            >
-
-                <option value="">
-                    Select category
-                </option>
-
-                <option value="Fashion">
-                    Fashion
-                </option>
-
-                <option value="Watches">
-                    Watches
-                </option>
-
-                <option value="Jewelry">
-                    Jewelry
-                </option>
-
-                <option value="Electronics">
-                    Electronics
-                </option>
-
-                <option value="Accessories">
-                    Accessories
-                </option>
-
-            </select>
+                <input
+                    type="text"
+                    id="productName"
+                    placeholder="Enter product name"
+                    required
+                >
 
 
-            <label for="productPrice">
-                Price
-            </label>
+                <!-- CATEGORY -->
 
-            <input
-                type="number"
-                id="productPrice"
-                step="0.01"
-                min="0"
-                required
-            >
+                <label for="productCategory">
+                    Category
+                </label>
 
+                <select
+                    id="productCategory"
+                    required
+                >
 
-            <label for="productDescription">
-                Description
-            </label>
+                    <option value="">
+                        Select category
+                    </option>
 
-            <textarea
-                id="productDescription"
-                rows="5"
-                required
-            ></textarea>
+                    <option value="Fashion">
+                        Fashion
+                    </option>
 
+                    <option value="Watches">
+                        Watches
+                    </option>
 
-            <!-- IMAGE UPLOAD -->
+                    <option value="Jewelry">
+                        Jewelry
+                    </option>
 
-            <label for="productImage">
-                Product Image
-            </label>
+                    <option value="Electronics">
+                        Electronics
+                    </option>
 
-            <input
-                type="file"
-                id="productImage"
-                accept="image/jpeg,image/png,image/webp"
-                required
-            >
+                    <option value="Accessories">
+                        Accessories
+                    </option>
 
-            <small>
-                Supported: JPG, PNG, WEBP
-            </small>
+                </select>
 
 
-            <!-- IMAGE PREVIEW -->
+                <!-- PRICE -->
 
-            <div
-                id="imagePreview"
-                style="
-                    margin-top:15px;
-                    display:none;
-                "
-            >
+                <label for="productPrice">
+                    Price
+                </label>
 
-                <img
-                    id="previewImage"
-                    src=""
-                    alt="Product Preview"
+                <input
+                    type="number"
+                    id="productPrice"
+                    placeholder="Enter price"
+                    step="0.01"
+                    min="0"
+                    required
+                >
+
+
+                <!-- DESCRIPTION -->
+
+                <label for="productDescription">
+                    Description
+                </label>
+
+                <textarea
+                    id="productDescription"
+                    rows="5"
+                    placeholder="Enter product description"
+                    required
+                ></textarea>
+
+
+                <!-- =================================
+                     IMAGE UPLOAD
+                ================================== -->
+
+                <label for="productImage">
+                    Product Image
+                </label>
+
+                <input
+                    type="file"
+                    id="productImage"
+                    name="image"
+                    accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
+                    required
+                >
+
+
+                <p class="image-help">
+                    Choose a JPG, PNG, JPEG or WEBP image.
+                </p>
+
+
+                <!-- =================================
+                     IMAGE PREVIEW
+                ================================== -->
+
+                <div
+                    id="imagePreview"
                     style="
-                        width:180px;
-                        height:180px;
-                        object-fit:cover;
-                        border-radius:10px;
+                        display:none;
+                        margin-top:15px;
+                        text-align:center;
                     "
                 >
 
-            </div>
+                    <p>
+                        <strong>
+                            Image Preview
+                        </strong>
+                    </p>
+
+                    <img
+                        id="previewImage"
+                        src=""
+                        alt="Product Image Preview"
+                        style="
+                            max-width:250px;
+                            max-height:250px;
+                            object-fit:contain;
+                            border-radius:10px;
+                            margin-top:10px;
+                        "
+                    >
+
+                </div>
 
 
-            <button
-                type="submit"
-                class="btn"
-            >
-                Add Product
-            </button>
+                <!-- =================================
+                     BUTTONS
+                ================================== -->
 
-        </form>
-
-    </div>
-
-</main>
+                <button
+                    type="submit"
+                    class="btn"
+                >
+                    Add Product
+                </button>
 
 
-<script src="script.js"></script>
+                <button
+                    type="button"
+                    class="btn"
+                    onclick="window.location.href='seller.html'"
+                    style="margin-top:10px;"
+                >
+                    Cancel
+                </button>
+
+            </form>
+
+        </div>
+
+    </main>
+
+
+    <!-- =========================================
+         JAVASCRIPT
+    ========================================== -->
+
+    <script src="script.js"></script>
 
 </body>
+
 </html>

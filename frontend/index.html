@@ -1,53 +1,717 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KaviyaMart</title>
-    <link rel="stylesheet" href="style.css">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="description"
+        content="KaviyaMart - Shop, sell and discover products from trusted sellers."
+    >
+
+    <title>KaviyaMart | Shop • Sell • Save</title>
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
 </head>
+
 
 <body>
 
-<header class="header">
-    <div class="logo">KaviyaMart</div>
+    <!-- =====================================================
+         HEADER
+    ====================================================== -->
 
-    <nav>
-        <a href="index.html">Home</a>
-        <a href="login.html">Login</a>
-        <a href="register.html">Register</a>
-    </nav>
-</header>
+    <header class="header">
 
-<main>
+        <a
+            href="index.html"
+            class="brand-logo"
+            aria-label="KaviyaMart Home"
+        >
+            <img
+                src="kaviyamart-logo.png"
+                alt="KaviyaMart"
+            >
+        </a>
 
-    <section class="hero">
-        <h1>Welcome to KaviyaMart</h1>
-        <p>Your multi-vendor shopping platform</p>
 
-        <div class="hero-buttons">
-            <a href="buyer.html" class="btn">Shop Now</a>
-            <a href="seller.html" class="btn secondary-btn">Sell Products</a>
+        <nav aria-label="Main Navigation">
+
+            <a
+                href="index.html"
+                class="active"
+            >
+                Home
+            </a>
+
+            <a href="login.html?redirect=buyer.html">
+                Shop
+            </a>
+
+            <a href="login.html?redirect=seller.html">
+                Sell
+            </a>
+
+            <a href="#categories">
+                Categories
+            </a>
+
+        </nav>
+
+
+        <div class="header-actions">
+
+            <a
+                href="login.html"
+                class="header-login"
+            >
+                Login
+            </a>
+
+            <a
+                href="register.html"
+                class="header-register"
+            >
+                Register
+            </a>
+
         </div>
-    </section>
 
-    <section class="categories">
-        <h2>Shop by Category</h2>
+    </header>
 
-        <div class="category-grid">
-            <div class="category-card">Fashion</div>
-            <div class="category-card">Watches</div>
-            <div class="category-card">Jewelry</div>
-            <div class="category-card">Electronics</div>
-            <div class="category-card">Accessories</div>
+
+    <!-- =====================================================
+         HERO SECTION
+    ====================================================== -->
+
+    <main>
+
+        <section class="hero">
+
+            <div class="hero-content">
+
+                <div class="hero-text">
+
+                    <div class="hero-eyebrow">
+                        <span></span>
+                        WELCOME TO KAVIYAMART
+                        <span></span>
+                    </div>
+
+
+                    <h1>
+                        Discover Something
+                        <br>
+                        You'll
+                        <span>Love.</span>
+                    </h1>
+
+
+                    <p>
+                        Fashion, watches, jewelry, electronics
+                        and accessories — beautiful choices,
+                        trusted sellers, and a shopping experience
+                        made for you.
+                    </p>
+
+
+                    <div class="hero-buttons">
+
+                        <a
+                            href="login.html?redirect=buyer.html"
+                            class="btn"
+                        >
+                            Shop Now
+                            <span>→</span>
+                        </a>
+
+
+                        <a
+                            href="login.html?redirect=seller.html"
+                            class="btn secondary-btn"
+                        >
+                            Sell Products
+                            <span>↗</span>
+                        </a>
+
+                    </div>
+
+
+                    <!-- TRUST FEATURES -->
+
+                    <div class="hero-features">
+
+                        <div class="hero-feature">
+
+                            <div class="feature-icon">
+                                ✓
+                            </div>
+
+                            <div>
+                                <strong>
+                                    Trusted Sellers
+                                </strong>
+
+                                <small>
+                                    Shop with confidence
+                                </small>
+                            </div>
+
+                        </div>
+
+
+                        <div class="hero-feature">
+
+                            <div class="feature-icon">
+                                ♡
+                            </div>
+
+                            <div>
+                                <strong>
+                                    Secure Shopping
+                                </strong>
+
+                                <small>
+                                    Your comfort matters
+                                </small>
+                            </div>
+
+                        </div>
+
+
+                        <div class="hero-feature">
+
+                            <div class="feature-icon">
+                                ₹
+                            </div>
+
+                            <div>
+                                <strong>
+                                    Cash on Delivery
+                                </strong>
+
+                                <small>
+                                    Pay when it arrives
+                                </small>
+                            </div>
+
+                        </div>
+
+
+                        <div class="hero-feature">
+
+                            <div class="feature-icon">
+                                ↻
+                            </div>
+
+                            <div>
+                                <strong>
+                                    Easy Experience
+                                </strong>
+
+                                <small>
+                                    Simple and comfortable
+                                </small>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =================================================
+                     HERO VISUAL
+                ================================================== -->
+
+                <div class="hero-visual">
+
+                    <div class="hero-glow"></div>
+
+
+                    <div class="hero-visual-card">
+
+                        <div class="hero-decor decor-one"></div>
+                        <div class="hero-decor decor-two"></div>
+
+
+                        <div class="hero-brand-mark">
+
+                            <img
+                                src="kaviyamart-logo.png"
+                                alt="KaviyaMart Logo"
+                            >
+
+                        </div>
+
+
+                        <div class="hero-shopping-scene">
+
+                            <div class="shopping-bag">
+
+                                <div class="bag-handle"></div>
+
+                                <div class="bag-logo">
+                                    KaviyaMart
+                                </div>
+
+                                <small>
+                                    SHOP • SELL • SAVE
+                                </small>
+
+                            </div>
+
+
+                            <div class="mini-product product-bag">
+                                
+                            </div>
+
+
+                            <div class="mini-product product-watch">
+                                
+                            </div>
+
+
+                            <div class="mini-product product-gift">
+                                
+                            </div>
+
+
+                            <div class="mini-product product-jewelry">
+                                
+                            </div>
+
+                        </div>
+
+
+                        <div class="hero-quote">
+
+                            <span>
+                                Better Choices
+                            </span>
+
+                            <strong>
+                                Bigger Smiles
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             CATEGORY SECTION
+        ====================================================== -->
+
+        <section
+            class="categories"
+            id="categories"
+        >
+
+            <div class="section-heading-row">
+
+                <div>
+
+                    <div class="section-eyebrow">
+                        EXPLORE
+                    </div>
+
+                    <h2 class="section-title">
+                        Shop by Category
+                    </h2>
+
+                    <p class="section-subtitle">
+                        Find something special from our carefully
+                        selected categories.
+                    </p>
+
+                </div>
+
+
+                <a
+                    href="login.html?redirect=buyer.html"
+                    class="outline-link"
+                >
+                    View All Categories
+                    <span>→</span>
+                </a>
+
+            </div>
+
+
+            <div class="category-grid">
+
+                <!-- Fashion -->
+
+                <a
+                    href="login.html?redirect=buyer.html"
+                    class="category-card category-fashion"
+                >
+
+                    <div class="category-visual">
+                        
+                    </div>
+
+                    <div class="category-content">
+
+                        <h3>
+                            Fashion
+                        </h3>
+
+                        <p>
+                            Style your way
+                        </p>
+
+                        <span class="category-arrow">
+                            →
+                        </span>
+
+                    </div>
+
+                </a>
+
+
+                <!-- Watches -->
+
+                <a
+                    href="login.html?redirect=buyer.html"
+                    class="category-card category-watches"
+                >
+
+                    <div class="category-visual">
+                        
+                    </div>
+
+                    <div class="category-content">
+
+                        <h3>
+                            Watches
+                        </h3>
+
+                        <p>
+                            Timeless elegance
+                        </p>
+
+                        <span class="category-arrow">
+                            →
+                        </span>
+
+                    </div>
+
+                </a>
+
+
+                <!-- Jewelry -->
+
+                <a
+                    href="login.html?redirect=buyer.html"
+                    class="category-card category-jewelry"
+                >
+
+                    <div class="category-visual">
+                        
+                    </div>
+
+                    <div class="category-content">
+
+                        <h3>
+                            Jewelry
+                        </h3>
+
+                        <p>
+                            Little luxuries
+                        </p>
+
+                        <span class="category-arrow">
+                            →
+                        </span>
+
+                    </div>
+
+                </a>
+
+
+                <!-- Electronics -->
+
+                <a
+                    href="login.html?redirect=buyer.html"
+                    class="category-card category-electronics"
+                >
+
+                    <div class="category-visual">
+                        
+                    </div>
+
+                    <div class="category-content">
+
+                        <h3>
+                            Electronics
+                        </h3>
+
+                        <p>
+                            Smart choices
+                        </p>
+
+                        <span class="category-arrow">
+                            →
+                        </span>
+
+                    </div>
+
+                </a>
+
+
+                <!-- Accessories -->
+
+                <a
+                    href="login.html?redirect=buyer.html"
+                    class="category-card category-accessories"
+                >
+
+                    <div class="category-visual">
+                        
+                    </div>
+
+                    <div class="category-content">
+
+                        <h3>
+                            Accessories
+                        </h3>
+
+                        <p>
+                            Complete your look
+                        </p>
+
+                        <span class="category-arrow">
+                            →
+                        </span>
+
+                    </div>
+
+                </a>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             WHY KAVIYAMART
+        ====================================================== -->
+
+        <section class="why-section">
+
+            <div class="why-container">
+
+                <div class="why-content">
+
+                    <div class="section-eyebrow">
+                        WHY KAVIYAMART
+                    </div>
+
+                    <h2>
+                        Shopping should feel
+                        <span>easy.</span>
+                    </h2>
+
+                    <p>
+                        We want every customer to feel comfortable
+                        discovering products, choosing what they love,
+                        and ordering with confidence.
+                    </p>
+
+
+                    <a
+                        href="login.html?redirect=buyer.html"
+                        class="btn"
+                    >
+                        Start Shopping
+                        <span>→</span>
+                    </a>
+
+                </div>
+
+
+                <div class="why-features">
+
+                    <div class="why-card">
+
+                        <div class="why-icon">
+                            ♡
+                        </div>
+
+                        <h3>
+                            Made for You
+                        </h3>
+
+                        <p>
+                            A clean and comfortable shopping
+                            experience designed around customers.
+                        </p>
+
+                    </div>
+
+
+                    <div class="why-card">
+
+                        <div class="why-icon">
+                            ✦
+                        </div>
+
+                        <h3>
+                            Discover More
+                        </h3>
+
+                        <p>
+                            Explore different categories and
+                            discover products from sellers.
+                        </p>
+
+                    </div>
+
+
+                    <div class="why-card">
+
+                        <div class="why-icon">
+                            ✓
+                        </div>
+
+                        <h3>
+                            Simple Checkout
+                        </h3>
+
+                        <p>
+                            Choose your products and enjoy
+                            convenient Cash on Delivery.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             SELLER CTA
+        ====================================================== -->
+
+        <section class="seller-cta">
+
+            <div class="seller-cta-inner">
+
+                <div>
+
+                    <div class="section-eyebrow">
+                        FOR SELLERS
+                    </div>
+
+                    <h2>
+                        Have something
+                        <span>special to sell?</span>
+                    </h2>
+
+                    <p>
+                        Join KaviyaMart and bring your products
+                        to customers looking for something they love.
+                    </p>
+
+                </div>
+
+
+                <a
+                    href="login.html?redirect=seller.html"
+                    class="btn gold-btn"
+                >
+                    Start Selling
+                    <span>→</span>
+                </a>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- =====================================================
+         FOOTER
+    ====================================================== -->
+
+    <footer class="footer">
+
+        <div class="footer-content">
+
+            <div class="footer-brand">
+
+                <img
+                    src="kaviyamart-logo.png"
+                    alt="KaviyaMart"
+                >
+
+                <p>
+                    Shop • Sell • Save
+                </p>
+
+            </div>
+
+
+            <div class="footer-links">
+
+                <a href="index.html">
+                    Home
+                </a>
+
+                <a href="login.html?redirect=buyer.html">
+                    Shop
+                </a>
+
+                <a href="login.html?redirect=seller.html">
+                    Sell
+                </a>
+
+                <a href="register.html">
+                    Register
+                </a>
+
+            </div>
+
+
+            <div class="footer-copy">
+
+                © 2026 KaviyaMart.
+                All rights reserved.
+
+            </div>
+
         </div>
-    </section>
 
-</main>
+    </footer>
 
-<footer>
-    <p>© 2026 KaviyaMart. All rights reserved.</p>
-</footer>
+
+    <!-- =====================================================
+         JAVASCRIPT
+    ====================================================== -->
+
+    <script src="script.js"></script>
 
 </body>
+
 </html>

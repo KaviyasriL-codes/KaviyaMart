@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shop - KaviyaMart</title>
+
+    <title>Shop | KaviyaMart</title>
+
     <link rel="stylesheet" href="style.css">
 </head>
 
@@ -11,65 +13,128 @@
 
 <header class="header">
 
-    <div class="logo">KaviyaMart</div>
+    <a href="index.html" class="logo" aria-label="KaviyaMart Home">
+        <img src="kaviyamart-logo.png" alt="KaviyaMart Logo">
+    </a>
 
     <nav>
-        <a href="index.html">Home</a>
-        <a href="buyer.html">Shop</a>
 
-        <!-- CART -->
-        <a href="javascript:void(0)" id="cartLink">
+        <a href="index.html">
+            Home
+        </a>
+
+        <a href="buyer.html" class="active">
+            Shop
+        </a>
+
+        <a href="my-orders.html" class="buyer-only">
+            📦 My Orders
+        </a>
+
+        <a href="#" id="cartLink" class="cart-link">
             🛒 Cart
             <span id="cartCount">0</span>
         </a>
 
-        <a href="login.html" id="logoutLink">Logout</a>
+        <a href="#" id="logoutLink">
+            Logout
+        </a>
+
     </nav>
 
 </header>
 
 
-<main>
+<main class="buyer-page">
 
-    <section class="page-heading">
-        <h1>Explore Products</h1>
-        <p>Find products from our sellers</p>
+    <!-- SHOP HERO -->
+
+    <section class="shop-hero">
+
+        <div class="shop-hero-content">
+
+            <h1>
+                Discover Something
+                <span>You'll Love</span>
+            </h1>
+
+            <p>
+                Explore fashion, watches, jewelry, electronics
+                and accessories from our marketplace.
+            </p>
+
+        </div>
+
     </section>
 
 
-    <section class="categories">
+    <!-- SHOP CONTROLS -->
 
-        <h2>Categories</h2>
+    <section class="shop-controls">
 
-        <div class="category-grid">
+        <div class="search-box">
+
+            <span class="search-icon">
+                ⌕
+            </span>
+
+            <input
+                type="search"
+                id="productSearch"
+                placeholder="Search products..."
+                autocomplete="off"
+            >
+
+        </div>
+
+
+        <div class="category-filter">
 
             <button
-                class="category-card"
-                onclick="loadProducts('Fashion')">
+                type="button"
+                class="category-btn active"
+                onclick="loadProducts('')"
+            >
+                All
+            </button>
+
+            <button
+                type="button"
+                class="category-btn"
+                onclick="loadProducts('Fashion')"
+            >
                 Fashion
             </button>
 
             <button
-                class="category-card"
-                onclick="loadProducts('Watches')">
+                type="button"
+                class="category-btn"
+                onclick="loadProducts('Watches')"
+            >
                 Watches
             </button>
 
             <button
-                class="category-card"
-                onclick="loadProducts('Jewelry')">
+                type="button"
+                class="category-btn"
+                onclick="loadProducts('Jewelry')"
+            >
                 Jewelry
             </button>
 
             <button
-                class="category-card"
-                onclick="loadProducts('Electronics')">
+                type="button"
+                class="category-btn"
+                onclick="loadProducts('Electronics')"
+            >
                 Electronics
             </button>
 
             <button
-                class="category-card"
-                onclick="loadProducts('Accessories')">
+                type="button"
+                class="category-btn"
+                onclick="loadProducts('Accessories')"
+            >
                 Accessories
             </button>
 
@@ -78,13 +143,39 @@
     </section>
 
 
+    <!-- PRODUCT SECTION -->
+
     <section class="products-section">
 
-        <h2>Products</h2>
+        <div class="section-heading">
 
-        <div id="productGrid" class="product-grid">
+            <div>
 
-            <p>Loading products...</p>
+                <span class="eyebrow">
+                    SHOP COLLECTION
+                </span>
+
+                <h2>
+                    Explore Products
+                </h2>
+
+            </div>
+
+            <p id="productResultText">
+                Discover products available on KaviyaMart.
+            </p>
+
+        </div>
+
+
+        <div
+            id="productGrid"
+            class="product-grid"
+        >
+
+            <div class="loading-state">
+                Loading products...
+            </div>
 
         </div>
 
@@ -93,72 +184,130 @@
 </main>
 
 
+<!-- CART OVERLAY -->
+
+<div
+    id="cartOverlay"
+    class="cart-overlay"
+>
+</div>
+
+
+<!-- CART PANEL -->
+
+<aside
+    id="cartPanel"
+    class="cart-panel"
+    aria-label="Shopping cart"
+>
+
+    <div class="cart-header">
+
+        <div>
+
+            <span class="eyebrow">
+                YOUR BAG
+            </span>
+
+            <h2>
+                Shopping Cart
+            </h2>
+
+        </div>
+
+        <button
+            type="button"
+            id="closeCart"
+            class="close-cart"
+            aria-label="Close cart"
+        >
+            ×
+        </button>
+
+    </div>
+
+
+    <div
+        id="cartItems"
+        class="cart-items"
+    >
+
+        <p class="empty-cart">
+            Your cart is empty.
+        </p>
+
+    </div>
+
+
+    <div class="cart-footer">
+
+        <div class="cart-total-row">
+
+            <span>
+                Total
+            </span>
+
+            <strong id="cartTotal">
+                ₹0.00
+            </strong>
+
+        </div>
+
+
+        <button
+            type="button"
+            id="checkoutBtn"
+            class="btn checkout-btn"
+        >
+            Proceed to Checkout
+        </button>
+
+    </div>
+
+</aside>
+
+
+<!-- TOAST -->
+
+<div
+    id="toast"
+    class="toast"
+    role="status"
+    aria-live="polite"
+>
+</div>
+
+
+<footer class="footer">
+
+    <div class="footer-content">
+
+        <div>
+
+            <h3>
+                KaviyaMart
+            </h3>
+
+            <p>
+                Your beautiful shopping app.
+            </p>
+
+        </div>
+
+        <div>
+
+            <p class="brand-line">
+                © 2026 KaviyaMart. All rights reserved.
+            </p>
+
+        </div>
+
+    </div>
+
+</footer>
+
+
 <script src="script.js"></script>
-
-
-<script>
-
-// Make sure cart count is displayed when page opens
-document.addEventListener("DOMContentLoaded", function () {
-
-    if (typeof updateCartCount === "function") {
-        updateCartCount();
-    }
-
-});
-
-
-// Show cart contents when Cart is clicked
-document.getElementById("cartLink").addEventListener("click", function () {
-
-    const cart =
-        JSON.parse(
-            localStorage.getItem("kaviyaMartCart")
-        ) || [];
-
-    if (cart.length === 0) {
-
-        alert("Your cart is empty.");
-
-        return;
-    }
-
-    let message = "Your Cart:\n\n";
-
-    let total = 0;
-
-    cart.forEach(function (item) {
-
-        const quantity =
-            Number(item.quantity || 1);
-
-        const price =
-            Number(item.price || 0);
-
-        const itemTotal =
-            price * quantity;
-
-        total += itemTotal;
-
-        message +=
-            item.product_name +
-            " × " +
-            quantity +
-            " = ₹" +
-            itemTotal.toFixed(2) +
-            "\n";
-
-    });
-
-    message +=
-        "\nTotal: ₹" +
-        total.toFixed(2);
-
-    alert(message);
-
-});
-
-</script>
 
 </body>
 </html>

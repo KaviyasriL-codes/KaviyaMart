@@ -1,63 +1,349 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Seller Dashboard - KaviyaMart</title>
+
+    <title>Seller Dashboard | KaviyaMart</title>
+
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
 <header class="header">
-    <div class="logo">KaviyaMart</div>
+
+    <a href="index.html" class="logo" aria-label="KaviyaMart Home">
+        <img src="kaviyamart-logo.png" alt="KaviyaMart Logo">
+    </a>
 
     <nav>
         <a href="index.html">Home</a>
-        <a href="seller.html">Dashboard</a>
-        <a href="login.html">Logout</a>
+        <a href="seller.html" class="active">Dashboard</a>
+
+        <a href="add-product.html" class="header-action">
+            + Add Product
+        </a>
+
+        <a href="#" id="logoutLink">
+            Logout
+        </a>
     </nav>
+
 </header>
 
-<main class="dashboard">
 
-    <section class="dashboard-header">
-        <h1>Seller Dashboard</h1>
-        <p>Welcome, <span id="sellerName">Seller</span></p>
+<main class="seller-page">
+
+    <!-- SELLER WELCOME -->
+
+    <section class="seller-hero">
+
+        <div class="seller-hero-content">
+
+            <span class="eyebrow">
+                SELLER DASHBOARD
+            </span>
+
+            <h1>
+                Welcome back,
+                <span id="sellerName">Seller</span> 👋
+            </h1>
+
+            <p>
+                Manage your products and grow your business
+                with KaviyaMart.
+            </p>
+
+        </div>
+
+
+        <div class="seller-hero-action">
+
+            <a
+                href="add-product.html"
+                class="btn"
+            >
+                + Add New Product
+            </a>
+
+        </div>
+
     </section>
 
-    <section class="dashboard-cards">
 
-        <div class="dashboard-card">
-            <h2>My Products</h2>
-            <p id="productCount">0</p>
-            <a href="add-product.html" class="btn">Add Product</a>
+    <!-- SELLER STATS -->
+
+    <section class="stats-grid">
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                
+            </div>
+
+            <div>
+                <span class="stat-label">
+                    My Products
+                </span>
+
+                <strong id="productCount">
+                    0
+                </strong>
+            </div>
+
         </div>
 
-        <div class="dashboard-card">
-            <h2>Orders</h2>
-            <p id="orderCount">0</p>
-            <button class="btn" onclick="alert('Orders section coming soon')">
-                View Orders
-            </button>
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                
+            </div>
+
+            <div>
+                <span class="stat-label">
+                    Orders
+                </span>
+
+                <strong id="orderCount">
+                    —
+                </strong>
+            </div>
+
         </div>
 
-        <div class="dashboard-card">
-            <h2>Sales</h2>
-            <p id="salesAmount">₹0</p>
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                ₹
+            </div>
+
+            <div>
+                <span class="stat-label">
+                    Sales
+                </span>
+
+                <strong id="salesAmount">
+                    —
+                </strong>
+            </div>
+
         </div>
 
     </section>
 
-    <section class="products-section">
-        <h2>My Products</h2>
 
-        <div id="sellerProducts" class="product-grid">
-            <p>Loading your products...</p>
+    <!-- QUICK ACTIONS -->
+
+    <section class="seller-actions">
+
+        <div class="seller-section-heading">
+
+            <div>
+                <span class="eyebrow">
+                    QUICK ACTIONS
+                </span>
+
+                <h2>
+                    Manage Your Store
+                </h2>
+            </div>
+
         </div>
+
+
+        <div class="seller-action-grid">
+
+            <a
+                href="add-product.html"
+                class="seller-action-card"
+            >
+
+                <div class="action-card-icon">
+                    ＋
+                </div>
+
+                <div>
+                    <h3>
+                        Add Product
+                    </h3>
+
+                    <p>
+                        List a new product in your store.
+                    </p>
+                </div>
+
+                <span class="action-arrow">
+                    →
+                </span>
+
+            </a>
+
+
+            <a
+                href="#my-products"
+                class="seller-action-card"
+            >
+
+                <div class="action-card-icon">
+                    
+                </div>
+
+                <div>
+                    <h3>
+                        My Products
+                    </h3>
+
+                    <p>
+                        View the products you have listed.
+                    </p>
+                </div>
+
+                <span class="action-arrow">
+                    →
+                </span>
+
+            </a>
+
+
+            <div
+                class="seller-action-card disabled-action"
+                onclick="alert('Seller orders management will be available in the next version.')"
+            >
+
+                <div class="action-card-icon">
+                    🧾
+                </div>
+
+                <div>
+                    <h3>
+                        Orders
+                    </h3>
+
+                    <p>
+                        Manage customer orders.
+                    </p>
+                </div>
+
+                <span class="action-arrow">
+                    →
+                </span>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- MY PRODUCTS -->
+
+    <section
+        class="seller-products-section"
+        id="my-products"
+    >
+
+        <div class="seller-section-heading">
+
+            <div>
+                <span class="eyebrow">
+                    YOUR STORE
+                </span>
+
+                <h2>
+                    My Products
+                </h2>
+
+                <p>
+                    Products currently listed in your KaviyaMart store.
+                </p>
+            </div>
+
+
+            <a
+                href="add-product.html"
+                class="btn secondary-btn"
+            >
+                + Add Product
+            </a>
+
+        </div>
+
+
+        <div
+            id="sellerProducts"
+            class="product-grid"
+        >
+
+            <div class="loading-state">
+                Loading your products...
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- SELLER TIP -->
+
+    <section class="seller-tip">
+
+        <div class="seller-tip-icon">
+            ✦
+        </div>
+
+        <div>
+
+            <span class="eyebrow">
+                SELLER TIP
+            </span>
+
+            <h2>
+                Make your products stand out
+            </h2>
+
+            <p>
+                Use clear product images, attractive descriptions
+                and accurate pricing to give customers a better
+                shopping experience.
+            </p>
+
+        </div>
+
     </section>
 
 </main>
 
+
+<footer class="footer">
+
+    <div class="footer-content">
+
+        <div>
+            <h3>KaviyaMart</h3>
+
+            <p>
+                A modern multi-vendor marketplace built for buyers
+                and sellers.
+            </p>
+        </div>
+
+        <div>
+            <p class="brand-line">
+                © 2026 KaviyaMart. All rights reserved.
+            </p>
+        </div>
+
+    </div>
+
+</footer>
+
+
 <script src="script.js"></script>
+
 </body>
+
 </html>

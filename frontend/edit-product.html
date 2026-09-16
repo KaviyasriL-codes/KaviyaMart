@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Edit Product | KaviyaMart</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header class="header">
+
+    <a href="index.html" class="logo" aria-label="KaviyaMart Home">
+        <img src="kaviyamart-logo.png" alt="KaviyaMart Logo">
+    </a>
+
+    <nav>
+        <a href="seller.html">Dashboard</a>
+        <a href="index.html">Home</a>
+        <a href="#" id="logoutLink">Logout</a>
+    </nav>
+
+</header>
+
+
+<main class="form-page">
+
+    <div class="form-container">
+
+        <div class="auth-logo">
+            <img src="logo.png" alt="KaviyaMart">
+        </div>
+
+        <span class="eyebrow">
+            SELLER STORE
+        </span>
+
+        <h1>
+            Edit Product
+        </h1>
+
+        <p>
+            Update your product information and keep your store
+            up to date.
+        </p>
+
+
+        <div
+            id="editProductMessage"
+            class="error-message"
+            style="display:none;"
+        >
+        </div>
+
+
+        <form
+            id="editProductForm"
+            novalidate
+        >
+
+            <!-- PRODUCT NAME -->
+
+            <label for="editProductName">
+                Product Name
+            </label>
+
+            <input
+                type="text"
+                id="editProductName"
+                placeholder="Enter product name"
+                required
+            >
+
+
+            <!-- CATEGORY -->
+
+            <label for="editProductCategory">
+                Category
+            </label>
+
+            <select
+                id="editProductCategory"
+                required
+            >
+
+                <option value="">
+                    Select category
+                </option>
+
+                <option value="Fashion">
+                    Fashion
+                </option>
+
+                <option value="Watches">
+                    Watches
+                </option>
+
+                <option value="Jewelry">
+                    Jewelry
+                </option>
+
+                <option value="Electronics">
+                    Electronics
+                </option>
+
+                <option value="Accessories">
+                    Accessories
+                </option>
+
+            </select>
+
+
+            <!-- PRICE -->
+
+            <label for="editProductPrice">
+                Price
+            </label>
+
+            <input
+                type="number"
+                id="editProductPrice"
+                placeholder="Enter price"
+                min="0"
+                step="0.01"
+                required
+            >
+
+
+            <!-- DESCRIPTION -->
+
+            <label for="editProductDescription">
+                Description
+            </label>
+
+            <textarea
+                id="editProductDescription"
+                rows="6"
+                placeholder="Describe your product..."
+                required
+            ></textarea>
+
+
+            <!-- CURRENT IMAGE -->
+
+            <div class="edit-image-section">
+
+                <label>
+                    Current Product Image
+                </label>
+
+                <div
+                    id="currentImageContainer"
+                    class="image-preview-container"
+                >
+
+                    <p>
+                        Loading image...
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- NEW IMAGE -->
+
+            <div class="edit-image-section">
+
+                <label for="editProductImage">
+                    Replace Product Image
+                </label>
+
+                <input
+                    type="file"
+                    id="editProductImage"
+                    name="image"
+                    accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
+                >
+
+                <p class="image-help">
+                    Optional. Leave empty to keep the current image.
+                </p>
+
+
+                <div
+                    id="newImagePreview"
+                    style="display:none; margin-top:15px; text-align:center;"
+                >
+
+                    <p>
+                        <strong>New Image Preview</strong>
+                    </p>
+
+                    <img
+                        id="editPreviewImage"
+                        src=""
+                        alt="New Product Image Preview"
+                        style="
+                            max-width:250px;
+                            max-height:250px;
+                            object-fit:contain;
+                            border-radius:12px;
+                            margin-top:10px;
+                        "
+                    >
+
+                </div>
+
+            </div>
+
+
+            <!-- BUTTONS -->
+
+            <div class="form-actions">
+
+                <button
+                    type="submit"
+                    class="btn"
+                    id="saveProductBtn"
+                >
+                    Save Changes
+                </button>
+
+
+                <button
+                    type="button"
+                    class="btn secondary-btn"
+                    id="cancelEditBtn"
+                >
+                    Cancel
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</main>
+
+
+<footer class="footer">
+
+    <div class="footer-content">
+
+        <div>
+
+            <h3>
+                KaviyaMart
+            </h3>
+
+            <p>
+                A modern multi-vendor marketplace built for
+                buyers and sellers.
+            </p>
+
+        </div>
+
+
+        <div>
+
+            <p class="brand-line">
+                © 2026 KaviyaMart. All rights reserved.
+            </p>
+
+        </div>
+
+    </div>
+
+</footer>
+
+
+<script src="script.js"></script>
+
+</body>
+
+</html>

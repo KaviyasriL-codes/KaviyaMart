@@ -3,54 +3,155 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register - KaviyaMart</title>
+
+    <title>Register | KaviyaMart</title>
+
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
 <header class="header">
-    <div class="logo">KaviyaMart</div>
+
+    <a href="index.html" class="logo" aria-label="KaviyaMart Home">
+        <img src="kaviyamart-logo.png" alt="KaviyaMart Logo">
+    </a>
+
     <nav>
         <a href="index.html">Home</a>
         <a href="login.html">Login</a>
     </nav>
+
 </header>
 
+
 <main class="form-page">
+
     <div class="form-container">
-        <h1>Create Account</h1>
+
+        <div class="auth-logo">
+            <img src="kaviyamart-logo.png" alt="KaviyaMart">
+        </div>
+
+        <h1>Create Your Account</h1>
+
+        <p>
+            Join KaviyaMart and start your shopping or selling journey.
+        </p>
+
 
         <form id="registerForm">
 
-            <label>Name</label>
-            <input type="text" id="registerName" required>
+            <label for="registerName">
+                Full Name
+            </label>
 
-            <label>Email</label>
-            <input type="email" id="registerEmail" required>
+            <input
+                type="text"
+                id="registerName"
+                placeholder="Enter your full name"
+                autocomplete="name"
+                required
+            >
 
-            <label>Mobile</label>
-            <input type="tel" id="registerMobile" required>
 
-            <label>Password</label>
-            <input type="password" id="registerPassword" required>
+            <label for="registerEmail">
+                Email Address
+            </label>
 
-            <label>Account Type</label>
+            <input
+                type="email"
+                id="registerEmail"
+                placeholder="Enter your email"
+                autocomplete="email"
+                required
+            >
+
+
+            <label for="registerMobile">
+                Mobile Number
+            </label>
+
+            <input
+                type="tel"
+                id="registerMobile"
+                placeholder="Enter your mobile number"
+                autocomplete="tel"
+                required
+            >
+
+
+            <label for="registerPassword">
+                Password
+            </label>
+
+            <input
+                type="password"
+                id="registerPassword"
+                placeholder="Create a password"
+                autocomplete="new-password"
+                minlength="6"
+                required
+            >
+
+
+            <label for="registerRole">
+                Account Type
+            </label>
+
             <select id="registerRole" required>
-                <option value="">Select account type</option>
-                <option value="buyer">Buyer</option>
-                <option value="seller">Seller</option>
+
+                <option value="">
+                    Select account type
+                </option>
+
+                <option value="buyer">
+                    Buyer — Shop Products
+                </option>
+
+                <option value="seller">
+                    Seller — Sell Products
+                </option>
+
             </select>
 
-            <button type="submit" class="btn">Register</button>
+
+            <button
+                type="submit"
+                class="btn"
+            >
+                Create Account
+            </button>
 
         </form>
 
-        <p>Already have an account?
-            <a href="login.html">Login</a>
+
+        <p class="auth-switch">
+            Already have an account?
+            <a href="login.html">Login here</a>
         </p>
+
     </div>
+
 </main>
 
+
+<footer class="footer">
+
+    <h3>KaviyaMart</h3>
+
+    <p>
+        A simple, secure and beautiful multi-vendor shopping experience.
+    </p>
+
+    <p class="brand-line">
+        © 2026 KaviyaMart. All rights reserved.
+    </p>
+
+</footer>
+
+
 <script src="script.js"></script>
+
 </body>
 </html>

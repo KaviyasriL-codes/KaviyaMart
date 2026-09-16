@@ -1,41 +1,188 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - KaviyaMart</title>
-    <link rel="stylesheet" href="style.css">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Login | KaviyaMart</title>
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
 </head>
+
+
 <body>
 
-<header class="header">
-    <div class="logo">KaviyaMart</div>
-    <nav>
-        <a href="index.html">Home</a>
-        <a href="register.html">Register</a>
-    </nav>
-</header>
+    <!-- =====================================================
+         HEADER
+    ====================================================== -->
 
-<main class="form-page">
-    <div class="form-container">
-        <h1>Login</h1>
+    <header class="header">
 
-        <form id="loginForm">
-            <label>Email</label>
-            <input type="email" id="loginEmail" required>
+        <a
+            href="index.html"
+            class="logo"
+            aria-label="KaviyaMart Home"
+        >
+            <img
+                src="kaviyamart-logo.png"
+                alt="KaviyaMart Logo"
+            >
+        </a>
 
-            <label>Password</label>
-            <input type="password" id="loginPassword" required>
 
-            <button type="submit" class="btn">Login</button>
-        </form>
+        <nav>
 
-        <p>Don't have an account?
-            <a href="register.html">Register</a>
+            <a href="index.html">
+                Home
+            </a>
+
+            <a
+                href="register.html"
+                class="active"
+            >
+                Register
+            </a>
+
+        </nav>
+
+    </header>
+
+
+    <!-- =====================================================
+         LOGIN PAGE
+    ====================================================== -->
+
+    <main class="form-page">
+
+        <div class="form-container">
+
+
+            <!-- BRAND LOGO -->
+
+            <div class="auth-logo">
+
+                <img
+                    src="kaviyamart-logo.png"
+                    alt="KaviyaMart"
+                >
+
+            </div>
+
+
+            <!-- TITLE -->
+
+            <h1>
+                Welcome Back
+            </h1>
+
+
+            <p>
+                Login to continue shopping and enjoying
+                KaviyaMart.
+            </p>
+
+
+            <!-- =================================================
+                 LOGIN FORM
+            ================================================== -->
+
+            <form id="loginForm">
+
+                <!-- EMAIL -->
+
+                <label for="loginEmail">
+                    Email Address
+                </label>
+
+                <input
+                    type="email"
+                    id="loginEmail"
+                    placeholder="Enter your email"
+                    autocomplete="email"
+                    required
+                >
+
+
+                <!-- PASSWORD -->
+
+                <label for="loginPassword">
+                    Password
+                </label>
+
+                <input
+                    type="password"
+                    id="loginPassword"
+                    placeholder="Enter your password"
+                    autocomplete="current-password"
+                    required
+                >
+
+
+                <!-- LOGIN BUTTON -->
+
+                <button
+                    type="submit"
+                    class="btn"
+                >
+                    Login
+                </button>
+
+            </form>
+
+
+            <!-- REGISTER LINK -->
+
+            <p>
+
+                Don't have an account?
+
+                <a href="register.html">
+                    Create an account
+                </a>
+
+            </p>
+
+        </div>
+
+    </main>
+
+
+    <!-- =====================================================
+         FOOTER
+    ====================================================== -->
+
+    <footer class="footer">
+
+        <h3>
+            KaviyaMart
+        </h3>
+
+        <p>
+            A simple, secure and beautiful multi-vendor
+            shopping experience.
         </p>
-    </div>
-</main>
 
-<script src="script.js"></script>
+        <p class="brand-line">
+            © 2026 KaviyaMart. All rights reserved.
+        </p>
+
+    </footer>
+
+
+    <!-- =====================================================
+         JAVASCRIPT
+    ====================================================== -->
+
+    <script src="script.js"></script>
+
 </body>
+
 </html>

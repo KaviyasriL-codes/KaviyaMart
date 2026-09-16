@@ -2,281 +2,195 @@
 #include "../Services/Database.h"
 
 #include <drogon/drogon.h>
+#include <drogon/MultiPart.h>
+#include <pqxx/pqxx>
 
 #include <filesystem>
 #include <string>
+#include <chrono>
+#include <cctype>
+#include <iostream>
+
+namespace fs = std::filesystem;
 
 using namespace drogon;
 
-namespace
+
+// ============================================================
+// Helper: Create JSON response
+// ============================================================
+
+static HttpResponsePtr makeJsonResponse(
+    const Json::Value& json,
+    HttpStatusCode status = k200OK)
 {
-    const std::string uploadDirectory =
-        "C:/capstonekaviya/frontend/uploads";
-
-
-    Json::Value makeResponse(
-        bool success,
-        const std::string& message)
-    {
-        Json::Value response;
-
-        response["success"] = success;
-        response["message"] = message;
-
-        return response;
-    }
+    auto response = HttpResponse::newHttpJsonResponse(json);
+    response->setStatusCode(status);
+    return response;
 }
 
 
-// =====================================================
+// ============================================================
+// Helper: Convert extension to lowercase
+// ============================================================
+
+static std::string lowerExtension(const std::string& extension)
+{
+    std::string result = extension;
+
+    for (char& c : result)
+    {
+        c = static_cast<char>(
+            std::tolower(static_cast<unsigned char>(c))
+        );
+    }
+
+    return result;
+}
+
+
+// ============================================================
+// Helper: Generate unique image filename
+// ============================================================
+
+static std::string generateImageName(const std::string& extension)
+{
+    const auto timestamp =
+        std::chrono::duration_cast<std::chrono::milliseconds>(
+            std::chrono::system_clock::now().time_since_epoch()
+        ).count();
+
+    return "product_" +
+           std::to_string(timestamp) +
+           extension;
+}
+
+
+// ============================================================
 // ADD PRODUCT
-// =====================================================
+// POST /api/products
+// ============================================================
 
 void ProductController::addProduct(
     const HttpRequestPtr& req,
-    std::function<void(const HttpResponsePtr&)>&& callback
-)
+    std::function<void(const HttpResponsePtr&)>&& callback)
 {
     try
     {
-        // ---------------------------------------------
-        // Parse multipart/form-data
-        // ---------------------------------------------
-
         MultiPartParser parser;
 
         if (parser.parse(req) != 0)
         {
-            Json::Value response =
-                makeResponse(
-                    false,
-                    "Invalid multipart form data."
-                );
+            Json::Value result;
+            result["success"] = false;
+            result["message"] = "Unable to process product form.";
 
-            auto httpResponse =
-                HttpResponse::newHttpJsonResponse(response);
-
-            httpResponse->setStatusCode(
-                k400BadRequest
+            callback(
+                makeJsonResponse(result, k400BadRequest)
             );
-
-            callback(httpResponse);
-
             return;
         }
 
 
-        // ---------------------------------------------
-        // Get normal form fields
-        // ---------------------------------------------
+        // ----------------------------------------------------
+        // Read form fields
+        // ----------------------------------------------------
 
-        const auto& parameters =
-            parser.getParameters();
+        std::string sellerIdText =
+            parser.getParameter<std::string>("seller_id");
 
-        const auto& files =
-            parser.getFiles();
+        std::string productName =
+            parser.getParameter<std::string>("product_name");
 
+        std::string category =
+            parser.getParameter<std::string>("category");
+
+        std::string priceText =
+            parser.getParameter<std::string>("price");
+
+        std::string description =
+            parser.getParameter<std::string>("description");
+
+
+        if (sellerIdText.empty() ||
+            productName.empty() ||
+            category.empty() ||
+            priceText.empty() ||
+            description.empty())
+        {
+            Json::Value result;
+            result["success"] = false;
+            result["message"] = "All product fields are required.";
+
+            callback(
+                makeJsonResponse(result, k400BadRequest)
+            );
+            return;
+        }
+
+
+        int sellerId = 0;
+        double price = 0.0;
+
+        try
+        {
+            sellerId = std::stoi(sellerIdText);
+            price = std::stod(priceText);
+        }
+        catch (...)
+        {
+            Json::Value result;
+            result["success"] = false;
+            result["message"] = "Invalid seller ID or price.";
+
+            callback(
+                makeJsonResponse(result, k400BadRequest)
+            );
+            return;
+        }
+
+
+        if (price < 0)
+        {
+            Json::Value result;
+            result["success"] = false;
+            result["message"] = "Price cannot be negative.";
+
+            callback(
+                makeJsonResponse(result, k400BadRequest)
+            );
+            return;
+        }
+
+
+        // ----------------------------------------------------
+        // Check image
+        // ----------------------------------------------------
+
+        const auto& files = parser.getFiles();
 
         if (files.empty())
         {
-            Json::Value response =
-                makeResponse(
-                    false,
-                    "Please select a product image."
-                );
+            Json::Value result;
+            result["success"] = false;
+            result["message"] = "Product image is required.";
 
-            auto httpResponse =
-                HttpResponse::newHttpJsonResponse(response);
-
-            httpResponse->setStatusCode(
-                k400BadRequest
+            callback(
+                makeJsonResponse(result, k400BadRequest)
             );
-
-            callback(httpResponse);
-
             return;
         }
 
 
-        // ---------------------------------------------
-        // Read seller ID
-        // ---------------------------------------------
-
-        if (parameters.find("seller_id") ==
-            parameters.end())
-        {
-            Json::Value response =
-                makeResponse(
-                    false,
-                    "Seller ID is missing."
-                );
-
-            auto httpResponse =
-                HttpResponse::newHttpJsonResponse(response);
-
-            httpResponse->setStatusCode(
-                k400BadRequest
-            );
-
-            callback(httpResponse);
-
-            return;
-        }
-
-
-        int sellerId =
-            std::stoi(
-                parameters.at("seller_id")
-            );
-
-
-        // ---------------------------------------------
-        // Read product fields
-        // ---------------------------------------------
-
-        std::string productName;
-
-        std::string category;
-
-        std::string description;
-
-        double price = 0.0;
-
-
-        if (parameters.find("product_name") !=
-            parameters.end())
-        {
-            productName =
-                parameters.at("product_name");
-        }
-
-
-        if (parameters.find("category") !=
-            parameters.end())
-        {
-            category =
-                parameters.at("category");
-        }
-
-
-        if (parameters.find("description") !=
-            parameters.end())
-        {
-            description =
-                parameters.at("description");
-        }
-
-
-        if (parameters.find("price") !=
-            parameters.end())
-        {
-            price =
-                std::stod(
-                    parameters.at("price")
-                );
-        }
-
-
-        // ---------------------------------------------
-        // Validate fields
-        // ---------------------------------------------
-
-        if (sellerId <= 0 ||
-            productName.empty() ||
-            category.empty() ||
-            price < 0)
-        {
-            Json::Value response =
-                makeResponse(
-                    false,
-                    "Invalid product information."
-                );
-
-            auto httpResponse =
-                HttpResponse::newHttpJsonResponse(response);
-
-            httpResponse->setStatusCode(
-                k400BadRequest
-            );
-
-            callback(httpResponse);
-
-            return;
-        }
-
-
-        // ---------------------------------------------
-        // Verify seller
-        // ---------------------------------------------
-
-        auto db =
-            Database::connect();
-
-        pqxx::work transaction(*db);
-
-
-        pqxx::result sellerCheck =
-            transaction.exec_params(
-                "SELECT user_id "
-                "FROM users "
-                "WHERE user_id = $1 "
-                "AND role = 'seller'",
-                sellerId
-            );
-
-
-        if (sellerCheck.empty())
-        {
-            transaction.abort();
-
-            Json::Value response =
-                makeResponse(
-                    false,
-                    "Invalid seller."
-                );
-
-            auto httpResponse =
-                HttpResponse::newHttpJsonResponse(response);
-
-            httpResponse->setStatusCode(
-                k403Forbidden
-            );
-
-            callback(httpResponse);
-
-            return;
-        }
-
-
-        // ---------------------------------------------
-        // Validate image
-        // ---------------------------------------------
-
-        const auto& uploadedFile =
-            files[0];
-
+        const HttpFile& imageFile = files[0];
 
         std::string originalFilename =
-            uploadedFile.getFileName();
+            imageFile.getFileName();
 
+        fs::path originalPath(originalFilename);
 
         std::string extension =
-            std::filesystem::path(
-                originalFilename
-            ).extension().string();
-
-
-        // Convert extension to lowercase
-
-        for (char& c : extension)
-        {
-            c =
-                static_cast<char>(
-                    std::tolower(
-                        static_cast<unsigned char>(c)
-                    )
-                );
-        }
+            lowerExtension(originalPath.extension().string());
 
 
         if (extension != ".jpg" &&
@@ -284,81 +198,166 @@ void ProductController::addProduct(
             extension != ".png" &&
             extension != ".webp")
         {
-            transaction.abort();
+            Json::Value result;
+            result["success"] = false;
+            result["message"] =
+                "Only JPG, JPEG, PNG and WEBP images are allowed.";
 
-            Json::Value response =
-                makeResponse(
-                    false,
-                    "Only JPG, JPEG, PNG and WEBP images are allowed."
-                );
-
-            auto httpResponse =
-                HttpResponse::newHttpJsonResponse(response);
-
-            httpResponse->setStatusCode(
-                k400BadRequest
+            callback(
+                makeJsonResponse(result, k400BadRequest)
             );
-
-            callback(httpResponse);
-
             return;
         }
 
 
-        // ---------------------------------------------
-        // Create upload directory
-        // ---------------------------------------------
+        // ----------------------------------------------------
+        // Upload directory
+        // ----------------------------------------------------
 
-        std::filesystem::create_directories(
-            uploadDirectory
-        );
+        const fs::path uploadDirectory =
+            "C:/capstonekaviya/frontend/uploads";
+
+        try
+        {
+            fs::create_directories(uploadDirectory);
+        }
+        catch (const std::exception& e)
+        {
+            Json::Value result;
+            result["success"] = false;
+            result["message"] =
+                std::string("Could not create upload directory: ")
+                + e.what();
+
+            callback(
+                makeJsonResponse(result, k500InternalServerError)
+            );
+            return;
+        }
 
 
-        // ---------------------------------------------
+        // ----------------------------------------------------
         // Generate unique filename
-        // ---------------------------------------------
+        // ----------------------------------------------------
 
-        const std::string uniqueFilename =
-            "product_" +
-            std::to_string(
-                std::chrono::system_clock::now()
-                    .time_since_epoch()
-                    .count()
-            ) +
-            extension;
+        std::string newFileName =
+            generateImageName(extension);
+
+        fs::path fullFilePath =
+            uploadDirectory / newFileName;
 
 
-        const std::string fullPath =
-            uploadDirectory +
-            "/" +
-            uniqueFilename;
+        // ----------------------------------------------------
+        // Save image
+        // ----------------------------------------------------
+
+        try
+        {
+            imageFile.saveAs(fullFilePath.string());
+        }
+        catch (const std::exception& e)
+        {
+            Json::Value result;
+            result["success"] = false;
+            result["message"] =
+                std::string("Could not save product image: ")
+                + e.what();
+
+            callback(
+                makeJsonResponse(result, k500InternalServerError)
+            );
+            return;
+        }
 
 
-        // ---------------------------------------------
-        // Save uploaded image
-        // ---------------------------------------------
-
-        uploadedFile.saveAs(
-            fullPath
-        );
+        std::string imagePath =
+            "/uploads/" + newFileName;
 
 
-        // Browser-accessible path
+        // ----------------------------------------------------
+        // Database
+        // ----------------------------------------------------
 
-        const std::string imagePath =
-            "/uploads/" +
-            uniqueFilename;
+        auto db = Database::connect();
+
+        if (!db || !db->is_open())
+        {
+            Json::Value result;
+            result["success"] = false;
+            result["message"] = "Database connection failed.";
+
+            callback(
+                makeJsonResponse(result, k500InternalServerError)
+            );
+            return;
+        }
 
 
-        // ---------------------------------------------
+        // ----------------------------------------------------
+        // Check seller
+        // ----------------------------------------------------
+
+        pqxx::work transaction(*db);
+
+        pqxx::result sellerResult =
+            transaction.exec_params(
+                "SELECT user_id, role "
+                "FROM users "
+                "WHERE user_id = $1",
+                sellerId
+            );
+
+
+        if (sellerResult.empty())
+        {
+            transaction.abort();
+
+            std::error_code ec;
+            fs::remove(fullFilePath, ec);
+
+            Json::Value result;
+            result["success"] = false;
+            result["message"] = "Seller account not found.";
+
+            callback(
+                makeJsonResponse(result, k404NotFound)
+            );
+            return;
+        }
+
+
+        std::string role =
+            sellerResult[0]["role"].as<std::string>();
+
+
+        if (role != "seller")
+        {
+            transaction.abort();
+
+            std::error_code ec;
+            fs::remove(fullFilePath, ec);
+
+            Json::Value result;
+            result["success"] = false;
+            result["message"] =
+                "Only seller accounts can add products.";
+
+            callback(
+                makeJsonResponse(result, k403Forbidden)
+            );
+            return;
+        }
+
+
+        // ----------------------------------------------------
         // Insert product
-        // ---------------------------------------------
+        // ----------------------------------------------------
 
-        pqxx::result result =
+        pqxx::result insertedProduct =
             transaction.exec_params(
                 "INSERT INTO products "
-                "(seller_id, product_name, category, "
-                "price, description, image_path) "
+                "(seller_id, product_name, category, price, "
+                "description, image_path) "
                 "VALUES ($1, $2, $3, $4, $5, $6) "
                 "RETURNING product_id",
                 sellerId,
@@ -373,295 +372,910 @@ void ProductController::addProduct(
         transaction.commit();
 
 
-        // ---------------------------------------------
-        // Success response
-        // ---------------------------------------------
+        int productId =
+            insertedProduct[0]["product_id"].as<int>();
 
-        Json::Value response;
 
-        response["success"] = true;
+        // ----------------------------------------------------
+        // Success
+        // ----------------------------------------------------
 
-        response["message"] =
-            "Product added successfully.";
+        Json::Value result;
 
-        response["product_id"] =
-            result[0]["product_id"].as<int>();
-
-        response["image_path"] =
-            imagePath;
-
+        result["success"] = true;
+        result["message"] = "Product added successfully.";
+        result["product_id"] = productId;
+        result["image_path"] = imagePath;
 
         callback(
-            HttpResponse::newHttpJsonResponse(
-                response
-            )
+            makeJsonResponse(result, k201Created)
         );
     }
     catch (const std::exception& e)
     {
-        LOG_ERROR
-            << "Add product error: "
-            << e.what();
+        Json::Value result;
 
+        result["success"] = false;
+        result["message"] =
+            std::string("Failed to add product: ")
+            + e.what();
 
-        Json::Value response =
-            makeResponse(
-                false,
-                "Failed to add product."
-            );
-
-
-        auto httpResponse =
-            HttpResponse::newHttpJsonResponse(
-                response
-            );
-
-        httpResponse->setStatusCode(
-            k500InternalServerError
+        callback(
+            makeJsonResponse(result, k500InternalServerError)
         );
-
-        callback(httpResponse);
     }
 }
 
 
-
-// =====================================================
+// ============================================================
 // GET ALL PRODUCTS
-// =====================================================
+// GET /api/products
+// ============================================================
 
 void ProductController::getProducts(
     const HttpRequestPtr& req,
-    std::function<void(const HttpResponsePtr&)>&& callback
-)
+    std::function<void(const HttpResponsePtr&)>&& callback)
 {
     try
     {
-        auto db =
-            Database::connect();
+        auto db = Database::connect();
+
+        if (!db || !db->is_open())
+        {
+            Json::Value result;
+            result["success"] = false;
+            result["message"] = "Database connection failed.";
+
+            callback(
+                makeJsonResponse(result, k500InternalServerError)
+            );
+            return;
+        }
+
 
         pqxx::work transaction(*db);
 
-        pqxx::result result =
+        pqxx::result products =
             transaction.exec(
-                "SELECT product_id, seller_id, "
-                "product_name, category, price, "
-                "description, image_path, rating "
+                "SELECT "
+                "product_id, "
+                "seller_id, "
+                "product_name, "
+                "category, "
+                "price, "
+                "description, "
+                "image_path, "
+                "rating "
                 "FROM products "
-                "ORDER BY created_at DESC"
+                "ORDER BY product_id DESC"
             );
 
         transaction.commit();
 
 
-        Json::Value products(
-            Json::arrayValue
-        );
+        Json::Value result;
+        result["success"] = true;
+        result["products"] = Json::arrayValue;
 
 
-        for (const auto& row : result)
+        for (const auto& row : products)
         {
             Json::Value product;
-
 
             product["product_id"] =
                 row["product_id"].as<int>();
 
-
             product["seller_id"] =
                 row["seller_id"].as<int>();
 
-
             product["product_name"] =
-                row["product_name"].c_str();
-
+                row["product_name"].as<std::string>();
 
             product["category"] =
-                row["category"].c_str();
-
+                row["category"].as<std::string>();
 
             product["price"] =
                 row["price"].as<double>();
 
-
             product["description"] =
-                row["description"].is_null()
-                    ? ""
-                    : row["description"].c_str();
+                row["description"].as<std::string>();
 
+            if (row["image_path"].is_null())
+            {
+                product["image_path"] = "";
+            }
+            else
+            {
+                product["image_path"] =
+                    row["image_path"].as<std::string>();
+            }
 
-            product["image_path"] =
-                row["image_path"].is_null()
-                    ? ""
-                    : row["image_path"].c_str();
+            if (row["rating"].is_null())
+            {
+                product["rating"] = 0;
+            }
+            else
+            {
+                product["rating"] =
+                    row["rating"].as<double>();
+            }
 
-
-            product["rating"] =
-                row["rating"].is_null()
-                    ? 0
-                    : row["rating"].as<double>();
-
-
-            products.append(product);
+            result["products"].append(product);
         }
 
 
-        Json::Value response;
-
-        response["success"] = true;
-
-        response["products"] =
-            products;
-
-
         callback(
-            HttpResponse::newHttpJsonResponse(
-                response
-            )
+            makeJsonResponse(result)
         );
     }
     catch (const std::exception& e)
     {
-        LOG_ERROR
-            << "Get products error: "
-            << e.what();
+        Json::Value result;
 
-
-        Json::Value response;
-
-        response["success"] = false;
-
-        response["message"] =
-            "Failed to load products.";
-
+        result["success"] = false;
+        result["message"] =
+            std::string("Failed to load products: ")
+            + e.what();
 
         callback(
-            HttpResponse::newHttpJsonResponse(
-                response
-            )
+            makeJsonResponse(result, k500InternalServerError)
         );
     }
 }
 
 
-
-// =====================================================
+// ============================================================
 // GET SELLER PRODUCTS
-// =====================================================
+// GET /api/products/seller/{sellerId}
+// ============================================================
 
 void ProductController::getSellerProducts(
     const HttpRequestPtr& req,
     std::function<void(const HttpResponsePtr&)>&& callback,
-    int sellerId
-)
+    int sellerId)
 {
     try
     {
-        auto db =
-            Database::connect();
+        auto db = Database::connect();
+
+        if (!db || !db->is_open())
+        {
+            Json::Value result;
+            result["success"] = false;
+            result["message"] = "Database connection failed.";
+
+            callback(
+                makeJsonResponse(result, k500InternalServerError)
+            );
+            return;
+        }
+
 
         pqxx::work transaction(*db);
 
-
-        pqxx::result result =
+        pqxx::result products =
             transaction.exec_params(
-                "SELECT product_id, seller_id, "
-                "product_name, category, price, "
-                "description, image_path, rating "
+                "SELECT "
+                "product_id, "
+                "seller_id, "
+                "product_name, "
+                "category, "
+                "price, "
+                "description, "
+                "image_path, "
+                "rating "
                 "FROM products "
                 "WHERE seller_id = $1 "
-                "ORDER BY created_at DESC",
+                "ORDER BY product_id DESC",
                 sellerId
             );
+
+        transaction.commit();
+
+
+        Json::Value result;
+
+        result["success"] = true;
+        result["products"] = Json::arrayValue;
+
+
+        for (const auto& row : products)
+        {
+            Json::Value product;
+
+            product["product_id"] =
+                row["product_id"].as<int>();
+
+            product["seller_id"] =
+                row["seller_id"].as<int>();
+
+            product["product_name"] =
+                row["product_name"].as<std::string>();
+
+            product["category"] =
+                row["category"].as<std::string>();
+
+            product["price"] =
+                row["price"].as<double>();
+
+            product["description"] =
+                row["description"].as<std::string>();
+
+            if (row["image_path"].is_null())
+            {
+                product["image_path"] = "";
+            }
+            else
+            {
+                product["image_path"] =
+                    row["image_path"].as<std::string>();
+            }
+
+            if (row["rating"].is_null())
+            {
+                product["rating"] = 0;
+            }
+            else
+            {
+                product["rating"] =
+                    row["rating"].as<double>();
+            }
+
+            result["products"].append(product);
+        }
+
+
+        callback(
+            makeJsonResponse(result)
+        );
+    }
+    catch (const std::exception& e)
+    {
+        Json::Value result;
+
+        result["success"] = false;
+        result["message"] =
+            std::string("Failed to load seller products: ")
+            + e.what();
+
+        callback(
+            makeJsonResponse(result, k500InternalServerError)
+        );
+    }
+}
+
+
+// ============================================================
+// GET SINGLE PRODUCT
+// GET /api/products/{productId}
+// ============================================================
+
+void ProductController::getProduct(
+    const HttpRequestPtr& req,
+    std::function<void(const HttpResponsePtr&)>&& callback,
+    int productId)
+{
+    try
+    {
+        auto db = Database::connect();
+
+        if (!db || !db->is_open())
+        {
+            Json::Value result;
+            result["success"] = false;
+            result["message"] = "Database connection failed.";
+
+            callback(
+                makeJsonResponse(result, k500InternalServerError)
+            );
+            return;
+        }
+
+
+        pqxx::work transaction(*db);
+
+        pqxx::result products =
+            transaction.exec_params(
+                "SELECT "
+                "product_id, "
+                "seller_id, "
+                "product_name, "
+                "category, "
+                "price, "
+                "description, "
+                "image_path, "
+                "rating "
+                "FROM products "
+                "WHERE product_id = $1",
+                productId
+            );
+
+        transaction.commit();
+
+
+        if (products.empty())
+        {
+            Json::Value result;
+
+            result["success"] = false;
+            result["message"] = "Product not found.";
+
+            callback(
+                makeJsonResponse(result, k404NotFound)
+            );
+            return;
+        }
+
+
+        const auto& row = products[0];
+
+        Json::Value product;
+
+        product["product_id"] =
+            row["product_id"].as<int>();
+
+        product["seller_id"] =
+            row["seller_id"].as<int>();
+
+        product["product_name"] =
+            row["product_name"].as<std::string>();
+
+        product["category"] =
+            row["category"].as<std::string>();
+
+        product["price"] =
+            row["price"].as<double>();
+
+        product["description"] =
+            row["description"].as<std::string>();
+
+        if (row["image_path"].is_null())
+        {
+            product["image_path"] = "";
+        }
+        else
+        {
+            product["image_path"] =
+                row["image_path"].as<std::string>();
+        }
+
+        if (row["rating"].is_null())
+        {
+            product["rating"] = 0;
+        }
+        else
+        {
+            product["rating"] =
+                row["rating"].as<double>();
+        }
+
+
+        Json::Value result;
+
+        result["success"] = true;
+        result["product"] = product;
+
+        callback(
+            makeJsonResponse(result)
+        );
+    }
+    catch (const std::exception& e)
+    {
+        Json::Value result;
+
+        result["success"] = false;
+        result["message"] =
+            std::string("Failed to load product: ")
+            + e.what();
+
+        callback(
+            makeJsonResponse(result, k500InternalServerError)
+        );
+    }
+}
+
+
+// ============================================================
+// UPDATE PRODUCT
+// PUT /api/products/{productId}
+// ============================================================
+
+void ProductController::updateProduct(
+    const HttpRequestPtr& req,
+    std::function<void(const HttpResponsePtr&)>&& callback,
+    int productId)
+{
+    std::string newImagePath;
+    std::string oldImagePath;
+    fs::path newImageFilePath;
+
+    bool newImageSaved = false;
+
+
+    try
+    {
+        // ----------------------------------------------------
+        // Parse multipart form
+        // ----------------------------------------------------
+
+        MultiPartParser parser;
+
+        if (parser.parse(req) != 0)
+        {
+            Json::Value result;
+
+            result["success"] = false;
+            result["message"] =
+                "Unable to process product update form.";
+
+            callback(
+                makeJsonResponse(result, k400BadRequest)
+            );
+            return;
+        }
+
+
+        // ----------------------------------------------------
+        // Read form fields
+        // ----------------------------------------------------
+
+        std::string sellerIdText =
+            parser.getParameter<std::string>("seller_id");
+
+        std::string productName =
+            parser.getParameter<std::string>("product_name");
+
+        std::string category =
+            parser.getParameter<std::string>("category");
+
+        std::string priceText =
+            parser.getParameter<std::string>("price");
+
+        std::string description =
+            parser.getParameter<std::string>("description");
+
+
+        if (sellerIdText.empty() ||
+            productName.empty() ||
+            category.empty() ||
+            priceText.empty() ||
+            description.empty())
+        {
+            Json::Value result;
+
+            result["success"] = false;
+            result["message"] =
+                "All product fields are required.";
+
+            callback(
+                makeJsonResponse(result, k400BadRequest)
+            );
+            return;
+        }
+
+
+        int sellerId = 0;
+        double price = 0.0;
+
+
+        try
+        {
+            sellerId = std::stoi(sellerIdText);
+            price = std::stod(priceText);
+        }
+        catch (...)
+        {
+            Json::Value result;
+
+            result["success"] = false;
+            result["message"] =
+                "Invalid seller ID or price.";
+
+            callback(
+                makeJsonResponse(result, k400BadRequest)
+            );
+            return;
+        }
+
+
+        if (price < 0)
+        {
+            Json::Value result;
+
+            result["success"] = false;
+            result["message"] =
+                "Price cannot be negative.";
+
+            callback(
+                makeJsonResponse(result, k400BadRequest)
+            );
+            return;
+        }
+
+
+        // ----------------------------------------------------
+        // Connect DB
+        // ----------------------------------------------------
+
+        auto db = Database::connect();
+
+        if (!db || !db->is_open())
+        {
+            Json::Value result;
+
+            result["success"] = false;
+            result["message"] =
+                "Database connection failed.";
+
+            callback(
+                makeJsonResponse(result, k500InternalServerError)
+            );
+            return;
+        }
+
+
+        // ----------------------------------------------------
+        // Check product + ownership
+        // ----------------------------------------------------
+
+        pqxx::work transaction(*db);
+
+        pqxx::result existingProduct =
+            transaction.exec_params(
+                "SELECT "
+                "product_id, "
+                "seller_id, "
+                "image_path "
+                "FROM products "
+                "WHERE product_id = $1",
+                productId
+            );
+
+
+        if (existingProduct.empty())
+        {
+            transaction.abort();
+
+            Json::Value result;
+
+            result["success"] = false;
+            result["message"] =
+                "Product not found.";
+
+            callback(
+                makeJsonResponse(result, k404NotFound)
+            );
+            return;
+        }
+
+
+        int existingSellerId =
+            existingProduct[0]["seller_id"].as<int>();
+
+
+        if (existingSellerId != sellerId)
+        {
+            transaction.abort();
+
+            Json::Value result;
+
+            result["success"] = false;
+            result["message"] =
+                "You are not allowed to edit this product.";
+
+            callback(
+                makeJsonResponse(result, k403Forbidden)
+            );
+            return;
+        }
+
+
+        if (!existingProduct[0]["image_path"].is_null())
+        {
+            oldImagePath =
+                existingProduct[0]["image_path"]
+                    .as<std::string>();
+        }
+
+
+        // ----------------------------------------------------
+        // Check whether a new image was uploaded
+        // ----------------------------------------------------
+
+        const auto& files = parser.getFiles();
+
+        bool hasNewImage = !files.empty();
+
+
+        // ----------------------------------------------------
+        // Save new image if provided
+        // ----------------------------------------------------
+
+        if (hasNewImage)
+        {
+            const HttpFile& imageFile = files[0];
+
+            std::string originalFilename =
+                imageFile.getFileName();
+
+            fs::path originalPath(originalFilename);
+
+            std::string extension =
+                lowerExtension(
+                    originalPath.extension().string()
+                );
+
+
+            if (extension != ".jpg" &&
+                extension != ".jpeg" &&
+                extension != ".png" &&
+                extension != ".webp")
+            {
+                transaction.abort();
+
+                Json::Value result;
+
+                result["success"] = false;
+                result["message"] =
+                    "Only JPG, JPEG, PNG and WEBP images are allowed.";
+
+                callback(
+                    makeJsonResponse(result, k400BadRequest)
+                );
+                return;
+            }
+
+
+            // ------------------------------------------------
+            // Upload directory
+            // ------------------------------------------------
+
+            const fs::path uploadDirectory =
+                "C:/capstonekaviya/frontend/uploads";
+
+
+            try
+            {
+                fs::create_directories(uploadDirectory);
+            }
+            catch (const std::exception& e)
+            {
+                transaction.abort();
+
+                Json::Value result;
+
+                result["success"] = false;
+                result["message"] =
+                    std::string(
+                        "Could not create upload directory: "
+                    ) + e.what();
+
+                callback(
+                    makeJsonResponse(
+                        result,
+                        k500InternalServerError
+                    )
+                );
+                return;
+            }
+
+
+            // ------------------------------------------------
+            // Unique filename
+            // ------------------------------------------------
+
+            std::string newFileName =
+                generateImageName(extension);
+
+            newImageFilePath =
+                uploadDirectory / newFileName;
+
+            newImagePath =
+                "/uploads/" + newFileName;
+
+
+            // ------------------------------------------------
+            // Save image
+            // ------------------------------------------------
+
+            try
+            {
+                std::cout
+                    << "Saving edited product image to: "
+                    << newImageFilePath.string()
+                    << std::endl;
+
+                imageFile.saveAs(
+                    newImageFilePath.string()
+                );
+
+                newImageSaved = true;
+            }
+            catch (const std::exception& e)
+            {
+                transaction.abort();
+
+                Json::Value result;
+
+                result["success"] = false;
+                result["message"] =
+                    std::string(
+                        "Could not save new product image: "
+                    ) + e.what();
+
+                callback(
+                    makeJsonResponse(
+                        result,
+                        k500InternalServerError
+                    )
+                );
+                return;
+            }
+        }
+
+
+        // ----------------------------------------------------
+        // Update product
+        // ----------------------------------------------------
+
+        if (hasNewImage)
+        {
+            transaction.exec_params(
+                "UPDATE products "
+                "SET product_name = $1, "
+                "category = $2, "
+                "price = $3, "
+                "description = $4, "
+                "image_path = $5 "
+                "WHERE product_id = $6",
+                productName,
+                category,
+                price,
+                description,
+                newImagePath,
+                productId
+            );
+        }
+        else
+        {
+            transaction.exec_params(
+                "UPDATE products "
+                "SET product_name = $1, "
+                "category = $2, "
+                "price = $3, "
+                "description = $4 "
+                "WHERE product_id = $5",
+                productName,
+                category,
+                price,
+                description,
+                productId
+            );
+        }
 
 
         transaction.commit();
 
 
-        Json::Value products(
-            Json::arrayValue
-        );
+        // ----------------------------------------------------
+        // Delete old image AFTER successful DB update
+        // ----------------------------------------------------
 
-
-        for (const auto& row : result)
+        if (hasNewImage &&
+            !oldImagePath.empty())
         {
-            Json::Value product;
+            try
+            {
+                std::string oldFilename =
+                    oldImagePath;
+
+                const std::string prefix =
+                    "/uploads/";
+
+                if (oldFilename.rfind(prefix, 0) == 0)
+                {
+                    oldFilename =
+                        oldFilename.substr(prefix.length());
+                }
 
 
-            product["product_id"] =
-                row["product_id"].as<int>();
+                // Security check
+                if (oldFilename.find("..") == std::string::npos &&
+                    oldFilename.find('/') == std::string::npos &&
+                    oldFilename.find('\\') == std::string::npos)
+                {
+                    fs::path oldFile =
+                        fs::path(
+                            "C:/capstonekaviya/frontend/uploads"
+                        ) / oldFilename;
 
 
-            product["seller_id"] =
-                row["seller_id"].as<int>();
+                    if (fs::exists(oldFile) &&
+                        fs::is_regular_file(oldFile))
+                    {
+                        fs::remove(oldFile);
 
-
-            product["product_name"] =
-                row["product_name"].c_str();
-
-
-            product["category"] =
-                row["category"].c_str();
-
-
-            product["price"] =
-                row["price"].as<double>();
-
-
-            product["description"] =
-                row["description"].is_null()
-                    ? ""
-                    : row["description"].c_str();
-
-
-            product["image_path"] =
-                row["image_path"].is_null()
-                    ? ""
-                    : row["image_path"].c_str();
-
-
-            product["rating"] =
-                row["rating"].is_null()
-                    ? 0
-                    : row["rating"].as<double>();
-
-
-            products.append(product);
+                        std::cout
+                            << "Deleted old product image: "
+                            << oldFile.string()
+                            << std::endl;
+                    }
+                }
+            }
+            catch (const std::exception& e)
+            {
+                std::cerr
+                    << "Could not delete old product image: "
+                    << e.what()
+                    << std::endl;
+            }
         }
 
 
-        Json::Value response;
+        // ----------------------------------------------------
+        // Success
+        // ----------------------------------------------------
 
-        response["success"] = true;
+        Json::Value result;
 
-        response["products"] =
-            products;
+        result["success"] = true;
+        result["message"] =
+            "Product updated successfully.";
+
+        result["product_id"] =
+            productId;
+
+        if (hasNewImage)
+        {
+            result["image_path"] =
+                newImagePath;
+        }
+        else
+        {
+            result["image_path"] =
+                oldImagePath;
+        }
 
 
         callback(
-            HttpResponse::newHttpJsonResponse(
-                response
-            )
+            makeJsonResponse(result)
         );
     }
     catch (const std::exception& e)
     {
-        LOG_ERROR
-            << "Get seller products error: "
-            << e.what();
+        // ----------------------------------------------------
+        // Remove newly uploaded image if DB update failed
+        // ----------------------------------------------------
+
+        if (newImageSaved &&
+            !newImageFilePath.empty())
+        {
+            try
+            {
+                if (fs::exists(newImageFilePath))
+                {
+                    fs::remove(newImageFilePath);
+                }
+            }
+            catch (...)
+            {
+                // Ignore cleanup failure
+            }
+        }
 
 
-        Json::Value response;
+        Json::Value result;
 
-        response["success"] = false;
-
-        response["message"] =
-            "Failed to load seller products.";
+        result["success"] = false;
+        result["message"] =
+            std::string("Failed to update product: ")
+            + e.what();
 
 
         callback(
-            HttpResponse::newHttpJsonResponse(
-                response
+            makeJsonResponse(
+                result,
+                k500InternalServerError
             )
         );
     }
