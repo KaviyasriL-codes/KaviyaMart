@@ -1,0 +1,1733 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Seller Orders | KaviyaMart</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+
+        /* =========================================================
+           SELLER ORDERS PAGE
+        ========================================================= */
+
+        .orders-page {
+            max-width: 1250px;
+            margin: 0 auto;
+            padding: 45px 22px 70px;
+        }
+
+
+        /* =========================================================
+           PAGE HEADER
+        ========================================================= */
+
+        .orders-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 32px;
+        }
+
+        .orders-title h1 {
+            font-size: 34px;
+            margin-bottom: 8px;
+            color: #25113f;
+        }
+
+        .orders-title p {
+            color: #777;
+            font-size: 15px;
+        }
+
+        .refresh-btn {
+            border: none;
+            padding: 13px 21px;
+            border-radius: 12px;
+            background: #6c3fc9;
+            color: white;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .refresh-btn:hover {
+            transform: translateY(-1px);
+            opacity: 0.92;
+        }
+
+
+        /* =========================================================
+           SUMMARY CARDS
+        ========================================================= */
+
+        .orders-summary {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 32px;
+        }
+
+        .summary-card {
+            background: white;
+            border-radius: 18px;
+            padding: 23px;
+            box-shadow: 0 5px 22px rgba(0, 0, 0, 0.07);
+            border: 1px solid #f0eafa;
+        }
+
+        .summary-label {
+            color: #777;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        .summary-value {
+            color: #5c32ad;
+            font-size: 29px;
+            font-weight: 800;
+        }
+
+
+        /* =========================================================
+           ORDER CARD
+        ========================================================= */
+
+        .seller-order-card {
+            background: white;
+            border-radius: 20px;
+            margin-bottom: 24px;
+            padding: 25px;
+            box-shadow: 0 5px 24px rgba(0, 0, 0, 0.07);
+            border: 1px solid #eee8f7;
+        }
+
+        .order-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 20px;
+            padding-bottom: 18px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .order-number {
+            font-size: 20px;
+            font-weight: 800;
+            color: #29133f;
+            margin-bottom: 6px;
+        }
+
+        .order-date {
+            color: #888;
+            font-size: 13px;
+        }
+
+
+        /* =========================================================
+           STATUS
+        ========================================================= */
+
+        .order-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 8px 14px;
+            border-radius: 30px;
+            background: #fff4dc;
+            color: #9a6500;
+            font-size: 13px;
+            font-weight: 800;
+        }
+
+        .status-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: currentColor;
+        }
+
+
+        /* =========================================================
+           CUSTOMER SECTION
+        ========================================================= */
+
+        .customer-section {
+            padding: 20px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .section-title {
+            font-size: 15px;
+            font-weight: 800;
+            color: #352047;
+            margin-bottom: 12px;
+        }
+
+        .customer-preview {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+        }
+
+        .customer-left {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+        }
+
+        .customer-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f0e7ff;
+            color: #6235b4;
+            font-size: 19px;
+            font-weight: 800;
+        }
+
+        .customer-name {
+            font-weight: 800;
+            color: #29202f;
+            margin-bottom: 3px;
+        }
+
+        .customer-contact {
+            color: #888;
+            font-size: 13px;
+        }
+
+        .view-customer-btn {
+            border: 1px solid #6c3fc9;
+            background: white;
+            color: #6336b5;
+            padding: 10px 15px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .view-customer-btn:hover {
+            background: #6c3fc9;
+            color: white;
+        }
+
+
+        /* =========================================================
+           ORDER ITEMS
+        ========================================================= */
+
+        .order-items {
+            padding: 5px 0;
+        }
+
+        .seller-order-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            padding: 18px 0;
+            border-bottom: 1px solid #f1f1f1;
+        }
+
+        .seller-order-item:last-child {
+            border-bottom: none;
+        }
+
+        .item-info h3 {
+            font-size: 16px;
+            color: #30213b;
+            margin-bottom: 7px;
+        }
+
+        .item-info p {
+            color: #777;
+            font-size: 13px;
+        }
+
+        .item-price {
+            color: #5c32ad;
+            font-size: 16px;
+            font-weight: 800;
+            white-space: nowrap;
+        }
+
+
+        /* =========================================================
+           ORDER TOTAL
+        ========================================================= */
+
+        .order-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 8px;
+            padding-top: 19px;
+            border-top: 1px solid #eee;
+        }
+
+        .order-bottom span {
+            color: #777;
+            font-size: 15px;
+        }
+
+        .order-bottom strong {
+            font-size: 23px;
+            color: #25113f;
+        }
+
+
+        /* =========================================================
+           LOADING / EMPTY
+        ========================================================= */
+
+        .empty-orders,
+        .loading-box {
+            background: white;
+            border-radius: 20px;
+            padding: 65px 20px;
+            text-align: center;
+            box-shadow: 0 5px 22px rgba(0, 0, 0, 0.06);
+        }
+
+        .empty-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        .empty-orders h2 {
+            margin-bottom: 10px;
+            color: #2d183d;
+        }
+
+        .empty-orders p {
+            color: #777;
+            margin-bottom: 20px;
+        }
+
+        .primary-btn {
+            display: inline-block;
+            border: none;
+            text-decoration: none;
+            padding: 12px 22px;
+            border-radius: 11px;
+            background: #6c3fc9;
+            color: white;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+
+        /* =========================================================
+           CUSTOMER MODAL
+        ========================================================= */
+
+        .customer-modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(20, 10, 30, 0.58);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            z-index: 9999;
+            backdrop-filter: blur(4px);
+        }
+
+        .customer-modal.active {
+            display: flex;
+        }
+
+        .modal-card {
+            width: 100%;
+            max-width: 570px;
+            max-height: 90vh;
+            overflow-y: auto;
+            background: white;
+            border-radius: 22px;
+            box-shadow: 0 18px 60px rgba(0, 0, 0, 0.25);
+            animation: modalOpen 0.18s ease-out;
+        }
+
+        @keyframes modalOpen {
+            from {
+                opacity: 0;
+                transform: translateY(12px) scale(0.98);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            padding: 22px 24px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .modal-header h2 {
+            color: #2c143f;
+            font-size: 21px;
+        }
+
+        .close-modal {
+            width: 36px;
+            height: 36px;
+            border: none;
+            border-radius: 50%;
+            background: #f3eef8;
+            color: #543079;
+            font-size: 21px;
+            cursor: pointer;
+        }
+
+        .close-modal:hover {
+            background: #e9def5;
+        }
+
+        .modal-body {
+            padding: 24px;
+        }
+
+        .customer-profile {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 16px;
+            border-radius: 15px;
+            background: #f8f5fc;
+            margin-bottom: 22px;
+        }
+
+        .modal-avatar {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            background: #e9ddfa;
+            color: #6336b5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 21px;
+            font-weight: 800;
+        }
+
+        .profile-name {
+            font-size: 17px;
+            font-weight: 800;
+            color: #2c2033;
+        }
+
+        .profile-id {
+            color: #888;
+            font-size: 13px;
+            margin-top: 4px;
+        }
+
+        .details-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .detail-box {
+            padding: 15px;
+            border: 1px solid #eee8f5;
+            border-radius: 13px;
+            background: #fff;
+        }
+
+        .detail-box.full {
+            grid-column: 1 / -1;
+        }
+
+        .detail-label {
+            color: #888;
+            font-size: 12px;
+            margin-bottom: 6px;
+        }
+
+        .detail-value {
+            color: #302238;
+            font-size: 14px;
+            font-weight: 700;
+            word-break: break-word;
+        }
+
+        .delivery-heading {
+            font-size: 15px;
+            color: #352047;
+            font-weight: 800;
+            margin: 25px 0 12px;
+        }
+
+        .modal-footer {
+            padding: 18px 24px 24px;
+        }
+
+        .close-footer-btn {
+            width: 100%;
+            border: none;
+            padding: 12px;
+            border-radius: 11px;
+            background: #6c3fc9;
+            color: white;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+
+        /* =========================================================
+           RESPONSIVE
+        ========================================================= */
+
+        @media (max-width: 768px) {
+
+            .orders-page {
+                padding: 30px 15px 50px;
+            }
+
+            .orders-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .orders-summary {
+                grid-template-columns: 1fr;
+            }
+
+            .order-top {
+                flex-direction: column;
+            }
+
+            .customer-preview {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .view-customer-btn {
+                width: 100%;
+            }
+
+            .seller-order-item {
+                align-items: flex-start;
+            }
+
+            .details-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .detail-box.full {
+                grid-column: auto;
+            }
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+<header class="header">
+
+    <div class="logo">
+        KaviyaMart
+    </div>
+
+    <nav>
+        <a href="seller.html">Dashboard</a>
+        <a href="add-product.html">Add Product</a>
+        <a href="seller-orders.html">Orders</a>
+        <a href="index.html">Home</a>
+    </nav>
+
+</header>
+
+
+<main class="orders-page">
+
+
+    <!-- =====================================================
+         PAGE HEADER
+    ====================================================== -->
+
+    <section class="orders-header">
+
+        <div class="orders-title">
+
+            <h1>Seller Orders</h1>
+
+            <p>
+                Manage customer orders and delivery information.
+            </p>
+
+        </div>
+
+        <button
+            class="refresh-btn"
+            onclick="loadSellerOrders()">
+
+            ↻ Refresh Orders
+
+        </button>
+
+    </section>
+
+
+    <!-- =====================================================
+         SUMMARY
+    ====================================================== -->
+
+    <section
+        class="orders-summary"
+        id="ordersSummary"
+        style="display:none;">
+
+        <div class="summary-card">
+
+            <div class="summary-label">
+                Total Orders
+            </div>
+
+            <div
+                class="summary-value"
+                id="totalOrders">
+
+                0
+
+            </div>
+
+        </div>
+
+
+        <div class="summary-card">
+
+            <div class="summary-label">
+                Products Sold
+            </div>
+
+            <div
+                class="summary-value"
+                id="productsSold">
+
+                0
+
+            </div>
+
+        </div>
+
+
+        <div class="summary-card">
+
+            <div class="summary-label">
+                Total Sales
+            </div>
+
+            <div
+                class="summary-value"
+                id="totalSales">
+
+                ₹0.00
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         ORDERS
+    ====================================================== -->
+
+    <section id="ordersContainer">
+
+        <div class="loading-box">
+
+            <p>
+                Loading seller orders...
+            </p>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<!-- =========================================================
+     CUSTOMER DETAILS MODAL
+========================================================= -->
+
+<div
+    id="customerModal"
+    class="customer-modal"
+    onclick="handleModalBackgroundClick(event)">
+
+    <div class="modal-card">
+
+        <div class="modal-header">
+
+            <h2>
+                Customer Details
+            </h2>
+
+            <button
+                class="close-modal"
+                onclick="closeCustomerModal()"
+                aria-label="Close">
+
+                ×
+
+            </button>
+
+        </div>
+
+
+        <div class="modal-body">
+
+            <div class="customer-profile">
+
+                <div
+                    class="modal-avatar"
+                    id="modalAvatar">
+
+                    👤
+
+                </div>
+
+                <div>
+
+                    <div
+                        class="profile-name"
+                        id="modalCustomerName">
+
+                        Customer
+
+                    </div>
+
+                    <div
+                        class="profile-id"
+                        id="modalCustomerId">
+
+                        Customer ID: —
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="details-grid">
+
+                <div class="detail-box">
+
+                    <div class="detail-label">
+                        Mobile
+                    </div>
+
+                    <div
+                        class="detail-value"
+                        id="modalMobile">
+
+                        —
+
+                    </div>
+
+                </div>
+
+
+                <div class="detail-box">
+
+                    <div class="detail-label">
+                        Email
+                    </div>
+
+                    <div
+                        class="detail-value"
+                        id="modalEmail">
+
+                        —
+
+                    </div>
+
+                </div>
+
+
+                <div class="detail-box">
+
+                    <div class="detail-label">
+                        Order Status
+                    </div>
+
+                    <div
+                        class="detail-value"
+                        id="modalStatus">
+
+                        Pending
+
+                    </div>
+
+                </div>
+
+
+                <div class="detail-box">
+
+                    <div class="detail-label">
+                        Order Date
+                    </div>
+
+                    <div
+                        class="detail-value"
+                        id="modalOrderDate">
+
+                        —
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="delivery-heading">
+                📍 Delivery Information
+            </div>
+
+
+            <div class="details-grid">
+
+                <div class="detail-box full">
+
+                    <div class="detail-label">
+                        Delivery Address
+                    </div>
+
+                    <div
+                        class="detail-value"
+                        id="modalAddress">
+
+                        —
+
+                    </div>
+
+                </div>
+
+
+                <div class="detail-box">
+
+                    <div class="detail-label">
+                        City
+                    </div>
+
+                    <div
+                        class="detail-value"
+                        id="modalCity">
+
+                        —
+
+                    </div>
+
+                </div>
+
+
+                <div class="detail-box">
+
+                    <div class="detail-label">
+                        PIN Code
+                    </div>
+
+                    <div
+                        class="detail-value"
+                        id="modalPincode">
+
+                        —
+
+                    </div>
+
+                </div>
+
+
+                <div class="detail-box full">
+
+                    <div class="detail-label">
+                        Delivery Name
+                    </div>
+
+                    <div
+                        class="detail-value"
+                        id="modalDeliveryName">
+
+                        —
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="modal-footer">
+
+            <button
+                class="close-footer-btn"
+                onclick="closeCustomerModal()">
+
+                Close
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+const API_BASE = "http://127.0.0.1:8080";
+
+
+// ============================================================
+// GET LOGGED-IN SELLER
+// ============================================================
+
+function getLoggedInSeller()
+{
+    const userId =
+        localStorage.getItem("user_id");
+
+    const userRole =
+        localStorage.getItem("user_role");
+
+    if (!userId)
+    {
+        return null;
+    }
+
+    return {
+        user_id: userId,
+        role: String(userRole || "").toLowerCase()
+    };
+}
+
+
+// ============================================================
+// ESCAPE HTML
+// ============================================================
+
+function escapeHTML(value)
+{
+    const div =
+        document.createElement("div");
+
+    div.textContent =
+        value === undefined ||
+        value === null
+            ? ""
+            : String(value);
+
+    return div.innerHTML;
+}
+
+
+// ============================================================
+// GET CUSTOMER NAME
+// ============================================================
+
+function getCustomerName(order)
+{
+    return (
+        order.customer_name ||
+        order.delivery_name ||
+        order.user_name ||
+        order.name ||
+        "Customer"
+    );
+}
+
+
+// ============================================================
+// GET CUSTOMER EMAIL
+// ============================================================
+
+function getCustomerEmail(order)
+{
+    return (
+        order.customer_email ||
+        order.email ||
+        ""
+    );
+}
+
+
+// ============================================================
+// GET CUSTOMER MOBILE
+// ============================================================
+
+function getCustomerMobile(order)
+{
+    return (
+        order.customer_mobile ||
+        order.delivery_mobile ||
+        order.mobile ||
+        ""
+    );
+}
+
+
+// ============================================================
+// LOAD SELLER ORDERS
+// ============================================================
+
+async function loadSellerOrders()
+{
+    const container =
+        document.getElementById("ordersContainer");
+
+    const user =
+        getLoggedInSeller();
+
+    const userId =
+        user ? user.user_id : null;
+
+
+    // --------------------------------------------------------
+    // LOGIN CHECK
+    // --------------------------------------------------------
+
+    if (!user || !userId)
+    {
+        container.innerHTML = `
+
+            <div class="empty-orders">
+
+                <div class="empty-icon">
+                    🔐
+                </div>
+
+                <h2>Please Login</h2>
+
+                <p>
+                    Login as a seller to view your orders.
+                </p>
+
+                <a
+                    href="login.html"
+                    class="primary-btn">
+
+                    Login
+
+                </a>
+
+            </div>
+
+        `;
+
+        return;
+    }
+
+
+    // --------------------------------------------------------
+    // SELLER CHECK
+    // --------------------------------------------------------
+
+    if (user.role !== "seller")
+    {
+        container.innerHTML = `
+
+            <div class="empty-orders">
+
+                <div class="empty-icon">
+                    🚫
+                </div>
+
+                <h2>Seller Access Required</h2>
+
+                <p>
+                    This page is available only for sellers.
+                </p>
+
+            </div>
+
+        `;
+
+        return;
+    }
+
+
+    // --------------------------------------------------------
+    // LOADING
+    // --------------------------------------------------------
+
+    container.innerHTML = `
+
+        <div class="loading-box">
+
+            <p>
+                Loading seller orders...
+            </p>
+
+        </div>
+
+    `;
+
+
+    try
+    {
+        const response =
+            await fetch(
+                `${API_BASE}/api/orders/seller/${userId}`
+            );
+
+
+        if (!response.ok)
+        {
+            throw new Error(
+                `HTTP ${response.status}`
+            );
+        }
+
+
+        const data =
+            await response.json();
+
+
+        console.log(
+            "Seller Orders API Response:",
+            data
+        );
+
+
+        let orders = [];
+
+
+        if (Array.isArray(data))
+        {
+            orders = data;
+        }
+        else if (Array.isArray(data.orders))
+        {
+            orders = data.orders;
+        }
+        else if (Array.isArray(data.data))
+        {
+            orders = data.data;
+        }
+
+
+        displayOrders(orders);
+
+    }
+    catch (error)
+    {
+        console.error(
+            "Seller Orders Error:",
+            error
+        );
+
+
+        container.innerHTML = `
+
+            <div class="empty-orders">
+
+                <div class="empty-icon">
+                    ⚠️
+                </div>
+
+                <h2>Unable to Load Orders</h2>
+
+                <p>
+                    ${escapeHTML(error.message)}
+                </p>
+
+                <button
+                    class="primary-btn"
+                    onclick="loadSellerOrders()">
+
+                    Try Again
+
+                </button>
+
+            </div>
+
+        `;
+    }
+}
+
+
+// ============================================================
+// DISPLAY ORDERS
+// ============================================================
+
+function displayOrders(orders)
+{
+    const container =
+        document.getElementById("ordersContainer");
+
+    const summary =
+        document.getElementById("ordersSummary");
+
+
+    // --------------------------------------------------------
+    // EMPTY
+    // --------------------------------------------------------
+
+    if (!orders || orders.length === 0)
+    {
+        summary.style.display = "none";
+
+        container.innerHTML = `
+
+            <div class="empty-orders">
+
+                <div class="empty-icon">
+                    📦
+                </div>
+
+                <h2>No Orders Yet</h2>
+
+                <p>
+                    When customers purchase your products,
+                    their orders will appear here.
+                </p>
+
+            </div>
+
+        `;
+
+        return;
+    }
+
+
+    // --------------------------------------------------------
+    // SUMMARY
+    // --------------------------------------------------------
+
+    summary.style.display = "grid";
+
+
+    let productsSold = 0;
+    let totalSales = 0;
+
+
+    orders.forEach(order =>
+    {
+        totalSales +=
+            Number(order.total_amount || 0);
+
+
+        if (Array.isArray(order.items))
+        {
+            order.items.forEach(item =>
+            {
+                productsSold +=
+                    Number(item.quantity || 0);
+            });
+        }
+    });
+
+
+    document.getElementById("totalOrders")
+        .textContent = orders.length;
+
+
+    document.getElementById("productsSold")
+        .textContent = productsSold;
+
+
+    document.getElementById("totalSales")
+        .textContent =
+        `₹${totalSales.toFixed(2)}`;
+
+
+    // --------------------------------------------------------
+    // ORDER CARDS
+    // --------------------------------------------------------
+
+    container.innerHTML =
+        orders.map(order =>
+        {
+
+            const orderId =
+                order.order_id ??
+                order.orderId ??
+                "N/A";
+
+
+            const status =
+                order.status ||
+                "Pending";
+
+
+            const date =
+                order.created_at
+                    ? new Date(
+                        order.created_at
+                    ).toLocaleString()
+                    : "Date unavailable";
+
+
+            const customerName =
+                getCustomerName(order);
+
+
+            const customerEmail =
+                getCustomerEmail(order);
+
+
+            const customerMobile =
+                getCustomerMobile(order);
+
+
+            const customerId =
+                order.customer_id ??
+                order.user_id ??
+                "—";
+
+
+            const items =
+                Array.isArray(order.items)
+                    ? order.items
+                    : [];
+
+
+            let itemsHTML = "";
+
+
+            if (items.length === 0)
+            {
+                itemsHTML = `
+
+                    <p style="
+                        padding:20px 0;
+                        color:#888;
+                    ">
+                        No item details available.
+                    </p>
+
+                `;
+            }
+            else
+            {
+                itemsHTML =
+                    items.map(item =>
+                    {
+
+                        const productName =
+                            item.product_name ||
+                            item.productName ||
+                            item.name ||
+                            "Product";
+
+
+                        const quantity =
+                            Number(
+                                item.quantity || 0
+                            );
+
+
+                        const price =
+                            Number(
+                                item.price || 0
+                            );
+
+
+                        const subtotal =
+                            Number(
+                                item.subtotal ??
+                                price * quantity
+                            );
+
+
+                        return `
+
+                            <div class="seller-order-item">
+
+                                <div class="item-info">
+
+                                    <h3>
+                                        ${escapeHTML(
+                                            productName
+                                        )}
+                                    </h3>
+
+                                    <p>
+                                        Quantity:
+                                        <strong>
+                                            ${quantity}
+                                        </strong>
+
+                                        &nbsp; × &nbsp;
+
+                                        ₹${price.toFixed(2)}
+                                    </p>
+
+                                </div>
+
+
+                                <div class="item-price">
+
+                                    ₹${subtotal.toFixed(2)}
+
+                                </div>
+
+                            </div>
+
+                        `;
+
+                    }).join("");
+            }
+
+
+            return `
+
+                <article class="seller-order-card">
+
+                    <!-- ORDER HEADER -->
+
+                    <div class="order-top">
+
+                        <div>
+
+                            <div class="order-number">
+                                Order #${escapeHTML(orderId)}
+                            </div>
+
+                            <div class="order-date">
+                                ${escapeHTML(date)}
+                            </div>
+
+                        </div>
+
+
+                        <span class="order-status">
+
+                            <span class="status-dot"></span>
+
+                            ${escapeHTML(status)}
+
+                        </span>
+
+                    </div>
+
+
+                    <!-- CUSTOMER -->
+
+                    <div class="customer-section">
+
+                        <div class="section-title">
+                            Customer
+                        </div>
+
+
+                        <div class="customer-preview">
+
+                            <div class="customer-left">
+
+                                <div class="customer-avatar">
+                                    👤
+                                </div>
+
+
+                                <div>
+
+                                    <div class="customer-name">
+                                        ${escapeHTML(
+                                            customerName
+                                        )}
+                                    </div>
+
+                                    <div class="customer-contact">
+
+                                        ${
+                                            customerMobile
+                                                ? escapeHTML(
+                                                    customerMobile
+                                                )
+                                                : "Contact details available"
+                                        }
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+                            <button
+                                class="view-customer-btn"
+                                onclick='openCustomerModal(${JSON.stringify(order).replace(/'/g, "&#39;")})'>
+
+                                View Customer Details
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- ITEMS -->
+
+                    <div class="order-items">
+
+                        ${itemsHTML}
+
+                    </div>
+
+
+                    <!-- TOTAL -->
+
+                    <div class="order-bottom">
+
+                        <span>
+                            Order Total
+                        </span>
+
+                        <strong>
+                            ₹${Number(
+                                order.total_amount || 0
+                            ).toFixed(2)}
+                        </strong>
+
+                    </div>
+
+                </article>
+
+            `;
+
+        }).join("");
+}
+
+
+// ============================================================
+// OPEN CUSTOMER MODAL
+// ============================================================
+
+function openCustomerModal(order)
+{
+    const modal =
+        document.getElementById("customerModal");
+
+
+    const customerName =
+        getCustomerName(order);
+
+
+    const customerEmail =
+        getCustomerEmail(order);
+
+
+    const customerMobile =
+        getCustomerMobile(order);
+
+
+    const customerId =
+        order.customer_id ??
+        order.user_id ??
+        "—";
+
+
+    const deliveryName =
+        order.delivery_name ||
+        customerName ||
+        "—";
+
+
+    const address =
+        order.delivery_address ||
+        order.address ||
+        "—";
+
+
+    const city =
+        order.delivery_city ||
+        order.city ||
+        "—";
+
+
+    const pincode =
+        order.delivery_pincode ||
+        order.pincode ||
+        order.pin ||
+        "—";
+
+
+    const status =
+        order.status ||
+        "Pending";
+
+
+    const orderDate =
+        order.created_at
+            ? new Date(
+                order.created_at
+            ).toLocaleString()
+            : "—";
+
+
+    document.getElementById(
+        "modalCustomerName"
+    ).textContent =
+        customerName;
+
+
+    document.getElementById(
+        "modalCustomerId"
+    ).textContent =
+        `Customer ID: ${customerId}`;
+
+
+    document.getElementById(
+        "modalMobile"
+    ).textContent =
+        customerMobile || "—";
+
+
+    document.getElementById(
+        "modalEmail"
+    ).textContent =
+        customerEmail || "—";
+
+
+    document.getElementById(
+        "modalStatus"
+    ).textContent =
+        status;
+
+
+    document.getElementById(
+        "modalOrderDate"
+    ).textContent =
+        orderDate;
+
+
+    document.getElementById(
+        "modalAddress"
+    ).textContent =
+        address;
+
+
+    document.getElementById(
+        "modalCity"
+    ).textContent =
+        city;
+
+
+    document.getElementById(
+        "modalPincode"
+    ).textContent =
+        pincode;
+
+
+    document.getElementById(
+        "modalDeliveryName"
+    ).textContent =
+        deliveryName;
+
+
+    const avatar =
+        document.getElementById("modalAvatar");
+
+
+    avatar.textContent =
+        customerName
+            ? customerName
+                .charAt(0)
+                .toUpperCase()
+            : "👤";
+
+
+    modal.classList.add("active");
+
+    document.body.style.overflow = "hidden";
+}
+
+
+// ============================================================
+// CLOSE CUSTOMER MODAL
+// ============================================================
+
+function closeCustomerModal()
+{
+    const modal =
+        document.getElementById("customerModal");
+
+    modal.classList.remove("active");
+
+    document.body.style.overflow = "";
+}
+
+
+// ============================================================
+// CLOSE WHEN CLICKING OUTSIDE MODAL
+// ============================================================
+
+function handleModalBackgroundClick(event)
+{
+    if (
+        event.target.id ===
+        "customerModal"
+    )
+    {
+        closeCustomerModal();
+    }
+}
+
+
+// ============================================================
+// ESC KEY CLOSE
+// ============================================================
+
+document.addEventListener(
+    "keydown",
+    function(event)
+    {
+        if (event.key === "Escape")
+        {
+            closeCustomerModal();
+        }
+    }
+);
+
+
+// ============================================================
+// PAGE LOAD
+// ============================================================
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function()
+    {
+        loadSellerOrders();
+    }
+);
+
+</script>
+
+</body>
+
+</html>
