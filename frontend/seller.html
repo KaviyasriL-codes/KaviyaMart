@@ -10,33 +10,76 @@
     <link rel="stylesheet" href="style.css">
 </head>
 
+
 <body>
+
+
+<!-- ============================================================
+     HEADER
+============================================================ -->
 
 <header class="header">
 
-    <a href="index.html" class="logo" aria-label="KaviyaMart Home">
-        <img src="kaviyamart-logo.png" alt="KaviyaMart Logo">
+    <a
+        href="index.html"
+        class="logo"
+        aria-label="KaviyaMart Home"
+    >
+        <img
+            src="kaviyamart-logo.png"
+            alt="KaviyaMart Logo"
+        >
     </a>
 
-    <nav>
-        <a href="index.html">Home</a>
-        <a href="seller.html" class="active">Dashboard</a>
 
-        <a href="add-product.html" class="header-action">
-            + Add Product
+    <nav>
+
+        <a href="index.html">
+            Home
         </a>
 
-        <a href="#" id="logoutLink">
+
+        <a
+            href="seller.html"
+            class="active"
+        >
+            Dashboard
+        </a>
+
+
+        <a href="add-product.html">
+            Add Product
+        </a>
+
+
+        <a href="seller-orders.html">
+            Orders
+        </a>
+
+
+        <a
+            href="#"
+            id="logoutLink"
+        >
             Logout
         </a>
+
     </nav>
 
 </header>
 
 
+
+<!-- ============================================================
+     MAIN SELLER DASHBOARD
+============================================================ -->
+
 <main class="seller-page">
 
-    <!-- SELLER WELCOME -->
+
+    <!-- ========================================================
+         WELCOME SECTION
+    ========================================================= -->
 
     <section class="seller-hero">
 
@@ -46,14 +89,16 @@
                 SELLER DASHBOARD
             </span>
 
+
             <h1>
                 Welcome back,
                 <span id="sellerName">Seller</span> 👋
             </h1>
 
+
             <p>
-                Manage your products and grow your business
-                with KaviyaMart.
+                Manage your products, view customer orders
+                and grow your KaviyaMart store.
             </p>
 
         </div>
@@ -65,7 +110,7 @@
                 href="add-product.html"
                 class="btn"
             >
-                + Add New Product
+                + Add Product
             </a>
 
         </div>
@@ -73,47 +118,67 @@
     </section>
 
 
-    <!-- SELLER STATS -->
+
+    <!-- ========================================================
+         SELLER STATS
+    ========================================================= -->
 
     <section class="stats-grid">
+
+
+        <!-- PRODUCTS -->
 
         <div class="stat-card">
 
             <div class="stat-icon">
-                
+                🛍️
             </div>
 
+
             <div>
+
                 <span class="stat-label">
                     My Products
                 </span>
 
+
                 <strong id="productCount">
                     0
                 </strong>
+
             </div>
 
         </div>
 
+
+
+        <!-- ORDERS -->
 
         <div class="stat-card">
 
             <div class="stat-icon">
-                
+                📦
             </div>
 
+
             <div>
+
                 <span class="stat-label">
                     Orders
                 </span>
 
+
                 <strong id="orderCount">
                     —
                 </strong>
+
             </div>
 
         </div>
 
+
+
+        <!-- SALES -->
 
         <div class="stat-card">
 
@@ -121,14 +186,18 @@
                 ₹
             </div>
 
+
             <div>
+
                 <span class="stat-label">
                     Sales
                 </span>
 
+
                 <strong id="salesAmount">
                     —
                 </strong>
+
             </div>
 
         </div>
@@ -136,26 +205,43 @@
     </section>
 
 
-    <!-- QUICK ACTIONS -->
+
+    <!-- ========================================================
+         STORE MANAGEMENT
+    ========================================================= -->
 
     <section class="seller-actions">
+
 
         <div class="seller-section-heading">
 
             <div>
+
                 <span class="eyebrow">
-                    QUICK ACTIONS
+                    STORE MANAGEMENT
                 </span>
+
 
                 <h2>
                     Manage Your Store
                 </h2>
+
+
+                <p>
+                    Quickly access the important parts of your
+                    seller account.
+                </p>
+
             </div>
 
         </div>
 
 
+
         <div class="seller-action-grid">
+
+
+            <!-- ADD PRODUCT -->
 
             <a
                 href="add-product.html"
@@ -166,15 +252,20 @@
                     ＋
                 </div>
 
+
                 <div>
+
                     <h3>
                         Add Product
                     </h3>
 
+
                     <p>
                         List a new product in your store.
                     </p>
+
                 </div>
+
 
                 <span class="action-arrow">
                     →
@@ -182,6 +273,9 @@
 
             </a>
 
+
+
+            <!-- MY PRODUCTS -->
 
             <a
                 href="#my-products"
@@ -189,18 +283,23 @@
             >
 
                 <div class="action-card-icon">
-                    
+                    🛍️
                 </div>
 
+
                 <div>
+
                     <h3>
                         My Products
                     </h3>
 
+
                     <p>
                         View the products you have listed.
                     </p>
+
                 </div>
+
 
                 <span class="action-arrow">
                     →
@@ -209,68 +308,81 @@
             </a>
 
 
-            <div
-                class="seller-action-card disabled-action"
-                onclick="alert('Seller orders management will be available in the next version.')"
+
+            <!-- ORDERS -->
+
+            <a
+                href="seller-orders.html"
+                class="seller-action-card"
             >
 
                 <div class="action-card-icon">
                     🧾
                 </div>
 
+
                 <div>
+
                     <h3>
                         Orders
                     </h3>
 
+
                     <p>
-                        Manage customer orders.
+                        View and manage customer orders.
                     </p>
+
                 </div>
+
 
                 <span class="action-arrow">
                     →
                 </span>
 
-            </div>
+            </a>
+
 
         </div>
 
     </section>
 
 
-    <!-- MY PRODUCTS -->
+
+    <!-- ========================================================
+         MY PRODUCTS
+    ========================================================= -->
 
     <section
         class="seller-products-section"
         id="my-products"
     >
 
+
         <div class="seller-section-heading">
 
+
             <div>
+
                 <span class="eyebrow">
                     YOUR STORE
                 </span>
+
 
                 <h2>
                     My Products
                 </h2>
 
+
                 <p>
-                    Products currently listed in your KaviyaMart store.
+                    Products currently listed in your
+                    KaviyaMart store.
                 </p>
+
             </div>
 
 
-            <a
-                href="add-product.html"
-                class="btn secondary-btn"
-            >
-                + Add Product
-            </a>
-
         </div>
+
 
 
         <div
@@ -287,13 +399,18 @@
     </section>
 
 
-    <!-- SELLER TIP -->
+
+    <!-- ========================================================
+         SELLER TIP
+    ========================================================= -->
 
     <section class="seller-tip">
+
 
         <div class="seller-tip-icon">
             ✦
         </div>
+
 
         <div>
 
@@ -301,9 +418,11 @@
                 SELLER TIP
             </span>
 
+
             <h2>
                 Make your products stand out
             </h2>
+
 
             <p>
                 Use clear product images, attractive descriptions
@@ -313,36 +432,61 @@
 
         </div>
 
+
     </section>
+
 
 </main>
 
 
+
+<!-- ============================================================
+     FOOTER
+============================================================ -->
+
 <footer class="footer">
+
 
     <div class="footer-content">
 
+
         <div>
-            <h3>KaviyaMart</h3>
+
+            <h3>
+                KaviyaMart
+            </h3>
+
 
             <p>
-                A modern multi-vendor marketplace built for buyers
-                and sellers.
+                A modern multi-vendor marketplace built for
+                buyers and sellers.
             </p>
+
         </div>
 
+
         <div>
+
             <p class="brand-line">
                 © 2026 KaviyaMart. All rights reserved.
             </p>
+
         </div>
 
+
     </div>
+
 
 </footer>
 
 
+
+<!-- ============================================================
+     JAVASCRIPT
+============================================================ -->
+
 <script src="script.js"></script>
+
 
 </body>
 

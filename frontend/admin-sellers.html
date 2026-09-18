@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>KaviyaMart - Sellers</title>
+
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+
+        :root {
+
+            --deep-violet: #45106f;
+            --violet: #5b148c;
+            --bright-violet: #7020b5;
+
+            --gold: #e3b52f;
+
+            --cream: #fff8ec;
+            --white: #ffffff;
+
+            --dark-text: #260b46;
+            --normal-text: #604d70;
+
+            --border: #eadfce;
+        }
+
+
+        body {
+
+            font-family:
+                Arial,
+                Helvetica,
+                sans-serif;
+
+            background: var(--cream);
+
+            color: var(--dark-text);
+
+            min-height: 100vh;
+        }
+
+
+        /* ================= HEADER ================= */
+
+        header {
+
+            background:
+                linear-gradient(
+                    135deg,
+                    var(--deep-violet),
+                    var(--violet)
+                );
+
+            min-height: 120px;
+
+            padding: 12px 6%;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            border-bottom:
+                4px solid var(--gold);
+        }
+
+
+        .logo {
+
+            width: 125px;
+
+            height: 95px;
+
+            object-fit: contain;
+        }
+
+
+        nav {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 20px;
+        }
+
+
+        nav a {
+
+            color: white;
+
+            text-decoration: none;
+
+            font-weight: bold;
+
+            padding: 10px 16px;
+
+            border-radius: 8px;
+        }
+
+
+        nav a:hover {
+
+            color: var(--gold);
+
+            background:
+                rgba(227,181,47,0.15);
+        }
+
+
+        .logout-btn {
+
+            border: none;
+
+            background: var(--gold);
+
+            color: var(--deep-violet);
+
+            padding: 11px 20px;
+
+            border-radius: 8px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+        }
+
+
+        /* ================= MAIN ================= */
+
+        main {
+
+            width: 90%;
+
+            max-width: 1100px;
+
+            margin: 38px auto 60px;
+        }
+
+
+        .page-title {
+
+            text-align: center;
+
+            margin-bottom: 30px;
+        }
+
+
+        .page-title h1 {
+
+            color: var(--deep-violet);
+
+            font-size: 32px;
+
+            margin-bottom: 10px;
+        }
+
+
+        .page-title p {
+
+            color: var(--normal-text);
+
+            font-size: 16px;
+        }
+
+
+        .gold-line {
+
+            width: 65px;
+
+            height: 4px;
+
+            background: var(--gold);
+
+            border-radius: 5px;
+
+            margin: 13px auto;
+        }
+
+
+        /* ================= SUMMARY ================= */
+
+        .summary {
+
+            background: var(--white);
+
+            border: 1px solid var(--border);
+
+            border-radius: 14px;
+
+            padding: 20px 24px;
+
+            margin-bottom: 25px;
+
+            box-shadow:
+                0 5px 15px
+                rgba(69,16,111,0.07);
+        }
+
+
+        .summary strong {
+
+            color: var(--deep-violet);
+
+            font-size: 22px;
+        }
+
+
+        .summary span {
+
+            color: var(--normal-text);
+
+            margin-left: 8px;
+        }
+
+
+        /* ================= TABLE ================= */
+
+        .table-container {
+
+            background: var(--white);
+
+            border:
+                1px solid var(--border);
+
+            border-radius: 14px;
+
+            overflow-x: auto;
+
+            box-shadow:
+                0 5px 15px
+                rgba(69,16,111,0.07);
+        }
+
+
+        table {
+
+            width: 100%;
+
+            border-collapse: collapse;
+
+            min-width: 700px;
+        }
+
+
+        th {
+
+            background: var(--deep-violet);
+
+            color: white;
+
+            text-align: left;
+
+            padding: 16px;
+
+            font-size: 14px;
+        }
+
+
+        td {
+
+            padding: 16px;
+
+            border-bottom:
+                1px solid #eee5da;
+
+            color: var(--normal-text);
+
+            font-size: 14px;
+        }
+
+
+        tr:last-child td {
+
+            border-bottom: none;
+        }
+
+
+        tr:hover td {
+
+            background: #fffaf3;
+        }
+
+
+        .seller-name {
+
+            color: var(--deep-violet);
+
+            font-weight: bold;
+        }
+
+
+        .seller-id {
+
+            color: var(--gold-dark, #bd8b12);
+
+            font-weight: bold;
+        }
+
+
+        /* ================= LOADING ================= */
+
+        .loading {
+
+            text-align: center;
+
+            padding: 45px;
+
+            color: var(--normal-text);
+
+            font-size: 16px;
+        }
+
+
+        /* ================= EMPTY ================= */
+
+        .empty {
+
+            text-align: center;
+
+            padding: 45px;
+
+            color: var(--normal-text);
+        }
+
+
+        /* ================= ERROR ================= */
+
+        .error {
+
+            text-align: center;
+
+            background: #fff0ed;
+
+            color: #a33a2d;
+
+            border:
+                1px solid #f0c8c0;
+
+            border-radius: 10px;
+
+            padding: 18px;
+
+            margin-bottom: 20px;
+
+            display: none;
+        }
+
+
+        /* ================= FOOTER ================= */
+
+        footer {
+
+            background: var(--deep-violet);
+
+            color: white;
+
+            text-align: center;
+
+            padding: 18px;
+
+            border-top:
+                3px solid var(--gold);
+
+            font-size: 14px;
+        }
+
+
+        /* ================= MOBILE ================= */
+
+        @media (max-width: 700px) {
+
+            header {
+
+                flex-direction: column;
+
+                gap: 10px;
+            }
+
+
+            nav {
+
+                flex-wrap: wrap;
+
+                justify-content: center;
+            }
+
+
+            .logo {
+
+                width: 110px;
+
+                height: 85px;
+            }
+
+
+            main {
+
+                width: 94%;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- ================= HEADER ================= -->
+
+<header>
+
+    <a href="admin.html">
+
+        <img
+            src="kaviyamart-logo.png"
+            alt="KaviyaMart Logo"
+            class="logo"
+        >
+
+    </a>
+
+
+    <nav>
+
+        <a href="index.html">
+            Home
+        </a>
+
+        <a href="admin.html">
+            Dashboard
+        </a>
+
+        <button
+            class="logout-btn"
+            onclick="logout()">
+
+            Logout
+
+        </button>
+
+    </nav>
+
+</header>
+
+
+
+<!-- ================= MAIN ================= -->
+
+<main>
+
+
+    <section class="page-title">
+
+        <h1>
+            Registered Sellers
+        </h1>
+
+        <div class="gold-line"></div>
+
+        <p>
+            View sellers registered on KaviyaMart.
+        </p>
+
+    </section>
+
+
+
+    <!-- SUMMARY -->
+
+    <div class="summary">
+
+        <strong id="sellerCount">
+            Loading...
+        </strong>
+
+        <span>
+            sellers registered
+        </span>
+
+    </div>
+
+
+
+    <!-- ERROR -->
+
+    <div
+        id="errorBox"
+        class="error">
+    </div>
+
+
+
+    <!-- SELLER TABLE -->
+
+    <div class="table-container">
+
+        <div
+            id="loading"
+            class="loading">
+
+            Loading sellers...
+
+        </div>
+
+
+        <div
+            id="empty"
+            class="empty"
+            style="display:none;">
+
+            No sellers found.
+
+        </div>
+
+
+        <table
+            id="sellerTable"
+            style="display:none;">
+
+            <thead>
+
+                <tr>
+
+                    <th>
+                        Seller ID
+                    </th>
+
+                    <th>
+                        Seller Name
+                    </th>
+
+                    <th>
+                        Email
+                    </th>
+
+                    <th>
+                        Mobile
+                    </th>
+
+                    <th>
+                        Registered On
+                    </th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody id="sellerBody">
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</main>
+
+
+
+<!-- ================= FOOTER ================= -->
+
+<footer>
+
+    © 2026 KaviyaMart. Admin Dashboard.
+
+</footer>
+
+
+
+<script>
+
+
+    /* =====================================================
+       ADMIN AUTHENTICATION
+    ===================================================== */
+
+
+    const userId =
+        localStorage.getItem("user_id");
+
+
+    const userRole =
+        localStorage.getItem("user_role");
+
+
+    if (
+        !userId ||
+        userRole !== "admin"
+    ) {
+
+        alert(
+            "Admin access required."
+        );
+
+        window.location.href =
+            "login.html";
+    }
+
+
+
+    /* =====================================================
+       LOAD SELLERS
+    ===================================================== */
+
+
+    async function loadSellers()
+    {
+        try
+        {
+
+            const response =
+                await fetch(
+                    `/api/admin/sellers?user_id=${encodeURIComponent(userId)}`
+                );
+
+
+            const data =
+                await response.json();
+
+
+            console.log(
+                "Seller API response:",
+                data
+            );
+
+
+            if (
+                !response.ok ||
+                !data.success
+            )
+            {
+                throw new Error(
+                    data.message ||
+                    "Failed to load sellers."
+                );
+            }
+
+
+            const sellers =
+                data.sellers || [];
+
+
+            document.getElementById(
+                "sellerCount"
+            ).textContent =
+                sellers.length;
+
+
+            document.getElementById(
+                "loading"
+            ).style.display =
+                "none";
+
+
+            if (
+                sellers.length === 0
+            )
+            {
+
+                document.getElementById(
+                    "empty"
+                ).style.display =
+                    "block";
+
+                return;
+            }
+
+
+            const table =
+                document.getElementById(
+                    "sellerTable"
+                );
+
+
+            const body =
+                document.getElementById(
+                    "sellerBody"
+                );
+
+
+            body.innerHTML = "";
+
+
+            sellers.forEach(
+                seller =>
+                {
+
+                    const row =
+                        document.createElement(
+                            "tr"
+                        );
+
+
+                    let registeredDate =
+                        "-";
+
+
+                    if (
+                        seller.created_at
+                    )
+                    {
+
+                        const date =
+                            new Date(
+                                seller.created_at
+                            );
+
+
+                        if (
+                            !isNaN(
+                                date.getTime()
+                            )
+                        )
+                        {
+
+                            registeredDate =
+                                date.toLocaleDateString(
+                                    "en-IN",
+                                    {
+                                        day: "2-digit",
+                                        month: "short",
+                                        year: "numeric"
+                                    }
+                                );
+                        }
+                    }
+
+
+                    row.innerHTML = `
+
+                        <td>
+                            <span class="seller-id">
+                                #${seller.user_id}
+                            </span>
+                        </td>
+
+                        <td>
+                            <span class="seller-name">
+                                ${escapeHtml(
+                                    seller.name || "-"
+                                )}
+                            </span>
+                        </td>
+
+                        <td>
+                            ${escapeHtml(
+                                seller.email || "-"
+                            )}
+                        </td>
+
+                        <td>
+                            ${escapeHtml(
+                                seller.mobile || "-"
+                            )}
+                        </td>
+
+                        <td>
+                            ${registeredDate}
+                        </td>
+
+                    `;
+
+
+                    body.appendChild(row);
+
+                }
+            );
+
+
+            table.style.display =
+                "table";
+
+        }
+
+        catch (error)
+        {
+
+            console.error(
+                "Failed to load sellers:",
+                error
+            );
+
+
+            document.getElementById(
+                "loading"
+            ).style.display =
+                "none";
+
+
+            const errorBox =
+                document.getElementById(
+                    "errorBox"
+                );
+
+
+            errorBox.textContent =
+                error.message;
+
+
+            errorBox.style.display =
+                "block";
+
+
+            document.getElementById(
+                "sellerCount"
+            ).textContent =
+                "-";
+        }
+    }
+
+
+
+    /* =====================================================
+       HTML ESCAPE
+    ===================================================== */
+
+
+    function escapeHtml(value)
+    {
+
+        return String(value)
+
+            .replace(
+                /&/g,
+                "&amp;"
+            )
+
+            .replace(
+                /</g,
+                "&lt;"
+            )
+
+            .replace(
+                />/g,
+                "&gt;"
+            )
+
+            .replace(
+                /"/g,
+                "&quot;"
+            )
+
+            .replace(
+                /'/g,
+                "&#039;"
+            );
+    }
+
+
+
+    /* =====================================================
+       LOGOUT
+    ===================================================== */
+
+
+    function logout()
+    {
+
+        localStorage.removeItem(
+            "user_id"
+        );
+
+        localStorage.removeItem(
+            "user_name"
+        );
+
+        localStorage.removeItem(
+            "user_email"
+        );
+
+        localStorage.removeItem(
+            "user_role"
+        );
+
+
+        window.location.href =
+            "index.html";
+    }
+
+
+
+    /* =====================================================
+       START
+    ===================================================== */
+
+
+    loadSellers();
+
+</script>
+
+
+</body>
+
+</html>

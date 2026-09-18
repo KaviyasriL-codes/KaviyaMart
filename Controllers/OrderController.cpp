@@ -1,4 +1,4 @@
-#include "OrderController.h"
+﻿#include "OrderController.h"
 #include "../Services/Database.h"
 
 #include <drogon/drogon.h>
@@ -239,24 +239,15 @@ void OrderController::placeOrder(
 
             double price =
                 productResult[0]["price"].as<double>();
-
-            double subtotal =
-                price * quantity;
-
-            // ------------------------------------------------
-            // Insert item
-            // ------------------------------------------------
-
             transaction.exec_params(
-                "INSERT INTO order_items "
-                "(order_id, product_id, quantity, price, subtotal) "
-                "VALUES ($1, $2, $3, $4, $5)",
-                orderId,
-                productId,
-                quantity,
-                price,
-                subtotal
-            );
+    "INSERT INTO order_items "
+    "(order_id, product_id, quantity, price) "
+    "VALUES ($1, $2, $3, $4)",
+    orderId,
+    productId,
+    quantity,
+    price
+);
         }
 
         transaction.commit();
@@ -770,6 +761,10 @@ void OrderController::confirmDelivery(
 // SELLER - ORDERS / SALES
 // ============================================================
 
+// ============================================================
+// SELLER - VIEW ORDERS
+// ============================================================
+
 void OrderController::getSellerOrders(
     const HttpRequestPtr& req,
     std::function<void(const HttpResponsePtr&)>&& callback,
@@ -778,18 +773,22 @@ void OrderController::getSellerOrders(
 {
     try
     {
+        // ----------------------------------------------------
+        // Validate seller ID
+        // ----------------------------------------------------
+
         if (sellerId <= 0)
         {
             Json::Value response;
 
             response["success"] = false;
-            response["message"] =
-                "Invalid seller ID.";
+            response["message"] = "Invalid seller ID.";
 
             auto result =
                 HttpResponse::newHttpJsonResponse(response);
 
             result->setStatusCode(k400BadRequest);
+
             callback(result);
             return;
         }
@@ -799,7 +798,18 @@ void OrderController::getSellerOrders(
         pqxx::work transaction(*db);
 
         // ----------------------------------------------------
-        // Get orders containing seller's products
+        // Get orders containing this seller's products
+        //
+        // orders
+        //    â†“
+        // order_items
+        //    â†“
+        // products
+        //    â†“
+        // users
+        //
+        // p.seller_id = sellerId ensures that the seller
+        // sees only their own products from an order.
         // ----------------------------------------------------
 
         pqxx::result result =
@@ -811,37 +821,63 @@ void OrderController::getSellerOrders(
                 "o.status, "
                 "o.created_at, "
                 "o.payment_method, "
+
+                // Customer information
+                "u.name AS customer_name, "
+                "u.email AS customer_email, "
+                "u.mobile AS customer_mobile, "
+
+                // Delivery information
                 "o.delivery_name, "
                 "o.delivery_mobile, "
                 "o.delivery_address, "
                 "o.delivery_city, "
                 "o.delivery_pincode, "
+
+                // Product/order item information
                 "oi.order_item_id, "
                 "oi.product_id, "
                 "oi.quantity, "
                 "oi.price, "
                 "oi.subtotal, "
                 "p.product_name, "
-                "p.description "
+                "p.description, "
+                "p.image_path "
+
                 "FROM orders o "
+
                 "JOIN order_items oi "
                 "ON o.order_id = oi.order_id "
+
                 "JOIN products p "
                 "ON oi.product_id = p.product_id "
+
+                "JOIN users u "
+                "ON o.user_id = u.user_id "
+
                 "WHERE p.seller_id = $1 "
+
                 "ORDER BY o.created_at DESC, "
                 "oi.order_item_id",
                 sellerId
             );
 
+        // ----------------------------------------------------
+        // Response
+        // ----------------------------------------------------
+
         Json::Value response;
 
         response["success"] = true;
-        response["orders"] =
-            Json::arrayValue;
+        response["orders"] = Json::arrayValue;
 
         int currentOrderId = -1;
+
         Json::Value currentOrder;
+
+        // ----------------------------------------------------
+        // Build grouped orders
+        // ----------------------------------------------------
 
         for (const auto& row : result)
         {
@@ -854,6 +890,7 @@ void OrderController::getSellerOrders(
 
             if (currentOrderId != orderId)
             {
+                // Save previous order
                 if (currentOrderId != -1)
                 {
                     response["orders"].append(
@@ -866,23 +903,77 @@ void OrderController::getSellerOrders(
                 currentOrder =
                     Json::Value(Json::objectValue);
 
+                // --------------------------------------------
+                // Order information
+                // --------------------------------------------
+
                 currentOrder["order_id"] =
                     orderId;
 
                 currentOrder["user_id"] =
                     row["user_id"].as<int>();
 
+                // Customer ID
+                currentOrder["customer_id"] =
+                    row["user_id"].as<int>();
+
+                // --------------------------------------------
+                // Customer information
+                // --------------------------------------------
+
+                if (!row["customer_name"].is_null())
+                {
+                    currentOrder["customer_name"] =
+                        row["customer_name"].as<std::string>();
+                }
+                else
+                {
+                    currentOrder["customer_name"] = "";
+                }
+
+                if (!row["customer_email"].is_null())
+                {
+                    currentOrder["customer_email"] =
+                        row["customer_email"].as<std::string>();
+                }
+                else
+                {
+                    currentOrder["customer_email"] = "";
+                }
+
+                if (!row["customer_mobile"].is_null())
+                {
+                    currentOrder["customer_mobile"] =
+                        row["customer_mobile"].as<std::string>();
+                }
+                else
+                {
+                    currentOrder["customer_mobile"] = "";
+                }
+
+                // --------------------------------------------
+                // Order total
+                // --------------------------------------------
+
                 currentOrder["total_amount"] =
                     row["total_amount"].as<double>();
 
+                // --------------------------------------------
+                // Status
+                // --------------------------------------------
+
                 currentOrder["status"] =
                     row["status"].as<std::string>();
+
+                // --------------------------------------------
+                // Created date
+                // --------------------------------------------
 
                 currentOrder["created_at"] =
                     row["created_at"].as<std::string>();
 
                 // --------------------------------------------
-                // Payment
+                // Payment method
                 // --------------------------------------------
 
                 if (!row["payment_method"].is_null())
@@ -892,12 +983,11 @@ void OrderController::getSellerOrders(
                 }
                 else
                 {
-                    currentOrder["payment_method"] =
-                        "COD";
+                    currentOrder["payment_method"] = "COD";
                 }
 
                 // --------------------------------------------
-                // Delivery
+                // Delivery name
                 // --------------------------------------------
 
                 if (!row["delivery_name"].is_null())
@@ -910,6 +1000,10 @@ void OrderController::getSellerOrders(
                     currentOrder["delivery_name"] = "";
                 }
 
+                // --------------------------------------------
+                // Delivery mobile
+                // --------------------------------------------
+
                 if (!row["delivery_mobile"].is_null())
                 {
                     currentOrder["delivery_mobile"] =
@@ -919,6 +1013,10 @@ void OrderController::getSellerOrders(
                 {
                     currentOrder["delivery_mobile"] = "";
                 }
+
+                // --------------------------------------------
+                // Delivery address
+                // --------------------------------------------
 
                 if (!row["delivery_address"].is_null())
                 {
@@ -930,6 +1028,10 @@ void OrderController::getSellerOrders(
                     currentOrder["delivery_address"] = "";
                 }
 
+                // --------------------------------------------
+                // Delivery city
+                // --------------------------------------------
+
                 if (!row["delivery_city"].is_null())
                 {
                     currentOrder["delivery_city"] =
@@ -939,6 +1041,10 @@ void OrderController::getSellerOrders(
                 {
                     currentOrder["delivery_city"] = "";
                 }
+
+                // --------------------------------------------
+                // Delivery PIN
+                // --------------------------------------------
 
                 if (!row["delivery_pincode"].is_null())
                 {
@@ -950,12 +1056,16 @@ void OrderController::getSellerOrders(
                     currentOrder["delivery_pincode"] = "";
                 }
 
+                // --------------------------------------------
+                // Items array
+                // --------------------------------------------
+
                 currentOrder["items"] =
                     Json::arrayValue;
             }
 
             // ------------------------------------------------
-            // Item
+            // Product item
             // ------------------------------------------------
 
             Json::Value item;
@@ -975,6 +1085,10 @@ void OrderController::getSellerOrders(
             item["price"] =
                 row["price"].as<double>();
 
+            // ------------------------------------------------
+            // Subtotal
+            // ------------------------------------------------
+
             if (!row["subtotal"].is_null())
             {
                 item["subtotal"] =
@@ -987,6 +1101,10 @@ void OrderController::getSellerOrders(
                     row["quantity"].as<int>();
             }
 
+            // ------------------------------------------------
+            // Description
+            // ------------------------------------------------
+
             if (!row["description"].is_null())
             {
                 item["description"] =
@@ -997,6 +1115,21 @@ void OrderController::getSellerOrders(
                 item["description"] = "";
             }
 
+            // ------------------------------------------------
+            // Image
+            // ------------------------------------------------
+
+            if (!row["image_path"].is_null())
+            {
+                item["image_path"] =
+                    row["image_path"].as<std::string>();
+            }
+            else
+            {
+                item["image_path"] = "";
+            }
+
+            // Add item to current order
             currentOrder["items"].append(item);
         }
 
@@ -1013,6 +1146,10 @@ void OrderController::getSellerOrders(
 
         transaction.commit();
 
+        // ----------------------------------------------------
+        // Send response
+        // ----------------------------------------------------
+
         callback(
             HttpResponse::newHttpJsonResponse(response)
         );
@@ -1026,17 +1163,16 @@ void OrderController::getSellerOrders(
         Json::Value response;
 
         response["success"] = false;
-
         response["message"] =
             "Failed to load seller orders.";
 
-        auto responseHttp =
+        auto result =
             HttpResponse::newHttpJsonResponse(response);
 
-        responseHttp->setStatusCode(
+        result->setStatusCode(
             k500InternalServerError
         );
 
-        callback(responseHttp);
+        callback(result);
     }
 }

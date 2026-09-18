@@ -145,19 +145,24 @@ async function handleLogin(event) {
                 localStorage.setItem("user_role", result.user.role);
             }
         }
+const role = localStorage.getItem("user_role");
 
-        const role = localStorage.getItem("user_role");
+showMessage("Login successful!");
 
-        showMessage("Login successful!");
+setTimeout(() => {
 
-        setTimeout(() => {
-            if (role === "seller") {
-                window.location.href = "seller.html";
-            } else {
-                window.location.href = "buyer.html";
-            }
-        }, 500);
+    if (role === "admin") {
+        window.location.href = "admin.html";
 
+    } else if (role === "seller") {
+        window.location.href = "seller.html";
+
+    } else {
+        window.location.href = "buyer.html";
+    }
+
+}, 500);
+       
     } catch (error) {
         console.error("Login error:", error);
         showMessage(

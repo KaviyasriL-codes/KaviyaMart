@@ -1,0 +1,1330 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>KaviyaMart - Admin Dashboard</title>
+
+
+    <style>
+
+        /* =====================================================
+           RESET
+        ===================================================== */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+
+        /* =====================================================
+           ORIGINAL KAVIYAMART COLORS
+        ===================================================== */
+
+        :root {
+
+            --deep-violet: #45106f;
+            --violet: #5b148c;
+            --bright-violet: #7020b5;
+
+            --gold: #e3b52f;
+            --gold-dark: #bd8b12;
+
+            --cream: #fff8ec;
+            --peach: #f8eee0;
+
+            --white: #ffffff;
+
+            --dark-text: #260b46;
+            --normal-text: #604d70;
+
+            --green: #159878;
+
+            --border: #eadfce;
+        }
+
+
+        /* =====================================================
+           BODY
+        ===================================================== */
+
+        body {
+
+            font-family:
+                Arial,
+                Helvetica,
+                sans-serif;
+
+            background: var(--cream);
+
+            color: var(--dark-text);
+
+            min-height: 100vh;
+        }
+
+
+        /* =====================================================
+           HEADER
+        ===================================================== */
+
+        header {
+
+            background:
+                linear-gradient(
+                    135deg,
+                    var(--deep-violet),
+                    var(--violet)
+                );
+
+            min-height: 120px;
+
+            padding: 14px 6%;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            border-bottom:
+                4px solid var(--gold);
+        }
+
+
+        /* =====================================================
+           LOGO
+        ===================================================== */
+
+        .logo {
+
+            width: 125px;
+
+            height: 95px;
+
+            object-fit: contain;
+
+            display: block;
+        }
+
+
+        /* =====================================================
+           NAVIGATION
+        ===================================================== */
+
+        nav {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 28px;
+        }
+
+
+        nav a {
+
+            text-decoration: none;
+
+            color: white;
+
+            font-size: 17px;
+
+            font-weight: bold;
+
+            padding: 11px 17px;
+
+            border-radius: 9px;
+
+            transition: 0.2s;
+        }
+
+
+        nav a:hover {
+
+            background:
+                rgba(227, 181, 47, 0.18);
+
+            color: var(--gold);
+        }
+
+
+        nav a.active {
+
+            background:
+                rgba(227, 181, 47, 0.18);
+
+            border:
+                1px solid rgba(227, 181, 47, 0.35);
+        }
+
+
+        /* =====================================================
+           LOGOUT
+        ===================================================== */
+
+        .logout-btn {
+
+            border: none;
+
+            background: var(--gold);
+
+            color: var(--deep-violet);
+
+            padding: 12px 22px;
+
+            border-radius: 9px;
+
+            font-size: 15px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+
+            transition: 0.2s;
+        }
+
+
+        .logout-btn:hover {
+
+            background: #f0c746;
+
+            transform: translateY(-1px);
+        }
+
+
+        /* =====================================================
+           MAIN
+        ===================================================== */
+
+        main {
+
+            width: 90%;
+
+            max-width: 1150px;
+
+            margin:
+                38px auto 60px;
+        }
+
+
+        /* =====================================================
+           WELCOME
+        ===================================================== */
+
+        .welcome {
+
+            text-align: center;
+
+            margin-bottom: 38px;
+        }
+
+
+        .welcome h1 {
+
+            color: var(--deep-violet);
+
+            font-size: 34px;
+
+            margin-bottom: 10px;
+
+            font-weight: 800;
+        }
+
+
+        .welcome h1::after {
+
+            content: "";
+
+            display: block;
+
+            width: 70px;
+
+            height: 4px;
+
+            background: var(--gold);
+
+            margin: 12px auto 0;
+
+            border-radius: 5px;
+        }
+
+
+        .welcome p {
+
+            color: var(--normal-text);
+
+            font-size: 17px;
+
+            margin-top: 14px;
+        }
+
+
+        /* =====================================================
+           SECTION TITLE
+        ===================================================== */
+
+        .section-title {
+
+            color: var(--deep-violet);
+
+            font-size: 24px;
+
+            margin-bottom: 20px;
+
+            font-weight: 800;
+        }
+
+
+        /* =====================================================
+           STATISTICS
+        ===================================================== */
+
+        .stats-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, 1fr);
+
+            gap: 20px;
+
+            margin-bottom: 48px;
+        }
+
+
+        .stat-card {
+
+            background: var(--white);
+
+            border:
+                1px solid var(--border);
+
+            border-radius: 14px;
+
+            padding: 24px;
+
+            box-shadow:
+                0 5px 16px
+                rgba(69, 16, 111, 0.08);
+
+            position: relative;
+
+            overflow: hidden;
+        }
+
+
+        .stat-card::before {
+
+            content: "";
+
+            position: absolute;
+
+            left: 0;
+
+            top: 0;
+
+            width: 5px;
+
+            height: 100%;
+
+            background: var(--gold);
+        }
+
+
+        .stat-card h3 {
+
+            color: var(--normal-text);
+
+            font-size: 15px;
+
+            margin-bottom: 12px;
+
+            font-weight: 600;
+        }
+
+
+        .stat-number {
+
+            color: var(--deep-violet);
+
+            font-size: 31px;
+
+            font-weight: 800;
+        }
+
+
+        /* =====================================================
+           MANAGEMENT
+        ===================================================== */
+
+        .management-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(2, 1fr);
+
+            gap: 22px;
+
+            margin-bottom: 40px;
+        }
+
+
+        .manage-card {
+
+            background: var(--white);
+
+            border:
+                1px solid var(--border);
+
+            border-radius: 14px;
+
+            padding: 26px;
+
+            box-shadow:
+                0 5px 16px
+                rgba(69, 16, 111, 0.07);
+
+            transition: 0.2s;
+        }
+
+
+        .manage-card:hover {
+
+            transform: translateY(-2px);
+
+            box-shadow:
+                0 8px 20px
+                rgba(69, 16, 111, 0.12);
+        }
+
+
+        .manage-icon {
+
+            width: 52px;
+
+            height: 52px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            background:
+                #eaf7f2;
+
+            border-radius: 12px;
+
+            font-size: 25px;
+
+            margin-bottom: 16px;
+        }
+
+
+        .manage-card h3 {
+
+            color: var(--deep-violet);
+
+            font-size: 21px;
+
+            margin-bottom: 8px;
+        }
+
+
+        .manage-card p {
+
+            color: var(--normal-text);
+
+            font-size: 15px;
+
+            line-height: 1.55;
+
+            margin-bottom: 19px;
+        }
+
+
+        /* =====================================================
+           VIEW BUTTON
+        ===================================================== */
+
+        .view-btn {
+
+            background:
+                linear-gradient(
+                    135deg,
+                    var(--deep-violet),
+                    var(--bright-violet)
+                );
+
+            color: white;
+
+            border: none;
+
+            padding: 12px 23px;
+
+            border-radius: 9px;
+
+            font-size: 15px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+
+            transition: 0.2s;
+        }
+
+
+        .view-btn:hover {
+
+            background:
+                linear-gradient(
+                    135deg,
+                    var(--violet),
+                    #8229ca
+                );
+
+            transform: translateY(-1px);
+        }
+
+
+        /* =====================================================
+           ADMIN INFORMATION
+        ===================================================== */
+
+        .admin-info {
+
+            background: var(--white);
+
+            border:
+                1px solid var(--border);
+
+            border-radius: 14px;
+
+            padding: 24px;
+
+            box-shadow:
+                0 5px 16px
+                rgba(69, 16, 111, 0.06);
+        }
+
+
+        .admin-info h3 {
+
+            color: var(--deep-violet);
+
+            font-size: 20px;
+
+            margin-bottom: 15px;
+        }
+
+
+        .admin-info p {
+
+            color: var(--normal-text);
+
+            margin: 7px 0;
+
+            font-size: 15px;
+        }
+
+
+        .admin-info strong {
+
+            color: var(--dark-text);
+        }
+
+
+        /* =====================================================
+           FOOTER
+        ===================================================== */
+
+        footer {
+
+            background:
+                var(--deep-violet);
+
+            color: white;
+
+            text-align: center;
+
+            padding: 18px;
+
+            font-size: 14px;
+
+            border-top:
+                3px solid var(--gold);
+        }
+
+
+        /* =====================================================
+           RESPONSIVE
+        ===================================================== */
+
+        @media (max-width: 800px) {
+
+            header {
+
+                flex-direction: column;
+
+                gap: 12px;
+
+                padding: 15px;
+            }
+
+
+            nav {
+
+                flex-wrap: wrap;
+
+                justify-content: center;
+
+                gap: 8px;
+            }
+
+
+            .stats-grid {
+
+                grid-template-columns:
+                    repeat(2, 1fr);
+            }
+
+
+            .management-grid {
+
+                grid-template-columns: 1fr;
+            }
+        }
+
+
+        @media (max-width: 500px) {
+
+            main {
+
+                width: 92%;
+            }
+
+
+            .logo {
+
+                width: 110px;
+
+                height: 85px;
+            }
+
+
+            .stats-grid {
+
+                grid-template-columns: 1fr;
+            }
+
+
+            .welcome h1 {
+
+                font-size: 28px;
+            }
+
+
+            nav a {
+
+                font-size: 14px;
+
+                padding: 8px 10px;
+            }
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- =========================================================
+     HEADER
+========================================================= -->
+
+<header>
+
+
+    <!-- LARGE KAVIYAMART LOGO -->
+
+    <a href="index.html">
+
+        <img
+            src="kaviyamart-logo.png"
+            alt="KaviyaMart Logo"
+            class="logo"
+        >
+
+    </a>
+
+
+    <!-- NAVIGATION -->
+
+    <nav>
+
+        <a href="index.html">
+            Home
+        </a>
+
+        <a
+            href="admin.html"
+            class="active">
+            Dashboard
+        </a>
+
+        <button
+            class="logout-btn"
+            onclick="logout()">
+
+            Logout
+
+        </button>
+
+    </nav>
+
+</header>
+
+
+
+<!-- =========================================================
+     MAIN
+========================================================= -->
+
+<main>
+
+
+    <!-- =====================================================
+         WELCOME
+    ====================================================== -->
+
+    <section class="welcome">
+
+        <h1>
+            Admin Dashboard
+        </h1>
+
+        <p>
+            Welcome,
+            <strong id="adminName">
+                Admin
+            </strong>
+        </p>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         PLATFORM OVERVIEW
+    ====================================================== -->
+
+    <h2 class="section-title">
+        Platform Overview
+    </h2>
+
+
+    <div class="stats-grid">
+
+
+        <!-- TOTAL USERS -->
+
+        <div class="stat-card">
+
+            <h3>
+                Total Users
+            </h3>
+
+            <div
+                class="stat-number"
+                id="totalUsers">
+
+                Loading...
+
+            </div>
+
+        </div>
+
+
+        <!-- TOTAL SELLERS -->
+
+        <div class="stat-card">
+
+            <h3>
+                Total Sellers
+            </h3>
+
+            <div
+                class="stat-number"
+                id="totalSellers">
+
+                Loading...
+
+            </div>
+
+        </div>
+
+
+        <!-- TOTAL BUYERS -->
+
+        <div class="stat-card">
+
+            <h3>
+                Total Buyers
+            </h3>
+
+            <div
+                class="stat-number"
+                id="totalBuyers">
+
+                Loading...
+
+            </div>
+
+        </div>
+
+
+        <!-- TOTAL PRODUCTS -->
+
+        <div class="stat-card">
+
+            <h3>
+                Total Products
+            </h3>
+
+            <div
+                class="stat-number"
+                id="totalProducts">
+
+                Loading...
+
+            </div>
+
+        </div>
+
+
+        <!-- TOTAL ORDERS -->
+
+        <div class="stat-card">
+
+            <h3>
+                Total Orders
+            </h3>
+
+            <div
+                class="stat-number"
+                id="totalOrders">
+
+                Loading...
+
+            </div>
+
+        </div>
+
+
+        <!-- TOTAL SALES -->
+
+        <div class="stat-card">
+
+            <h3>
+                Total Sales
+            </h3>
+
+            <div
+                class="stat-number"
+                id="totalSales">
+
+                Loading...
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =====================================================
+         MANAGEMENT
+    ====================================================== -->
+
+    <h2 class="section-title">
+        Management
+    </h2>
+
+
+    <div class="management-grid">
+
+
+        <!-- =================================================
+             VIEW SELLERS
+        ================================================== -->
+
+        <div class="manage-card">
+
+            <div class="manage-icon">
+                🏪
+            </div>
+
+            <h3>
+                View Sellers
+            </h3>
+
+            <p>
+                View sellers registered on the
+                KaviyaMart platform.
+            </p>
+
+            <button
+                class="view-btn"
+                onclick="openSellers()">
+
+                View Sellers
+
+            </button>
+
+        </div>
+
+
+
+        <!-- =================================================
+             VIEW BUYERS
+        ================================================== -->
+
+        <div class="manage-card">
+
+            <div class="manage-icon">
+                🛒
+            </div>
+
+            <h3>
+                View Buyers
+            </h3>
+
+            <p>
+                View buyers registered on the
+                KaviyaMart platform.
+            </p>
+
+            <button
+                class="view-btn"
+                onclick="openBuyers()">
+
+                View Buyers
+
+            </button>
+
+        </div>
+
+
+
+        <!-- =================================================
+             VIEW PRODUCTS
+        ================================================== -->
+
+        <div class="manage-card">
+
+            <div class="manage-icon">
+                📦
+            </div>
+
+            <h3>
+                View Products
+            </h3>
+
+            <p>
+                View all products listed by sellers
+                on KaviyaMart.
+            </p>
+
+            <button
+                class="view-btn"
+                onclick="openProducts()">
+
+                View Products
+
+            </button>
+
+        </div>
+
+
+
+        <!-- =================================================
+             VIEW ORDERS
+        ================================================== -->
+
+        <div class="manage-card">
+
+            <div class="manage-icon">
+                📋
+            </div>
+
+            <h3>
+                View Orders
+            </h3>
+
+            <p>
+                View and monitor orders placed
+                by buyers.
+            </p>
+
+            <button
+                class="view-btn"
+                onclick="openOrders()">
+
+                View Orders
+
+            </button>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =====================================================
+         ADMIN INFORMATION
+    ====================================================== -->
+
+    <div class="admin-info">
+
+        <h3>
+            Admin Information
+        </h3>
+
+
+        <p>
+
+            <strong>
+                Name:
+            </strong>
+
+            <span id="adminInfoName">
+                Loading...
+            </span>
+
+        </p>
+
+
+        <p>
+
+            <strong>
+                Email:
+            </strong>
+
+            <span id="adminEmail">
+                Loading...
+            </span>
+
+        </p>
+
+
+        <p>
+
+            <strong>
+                Role:
+            </strong>
+
+            Administrator
+
+        </p>
+
+    </div>
+
+</main>
+
+
+
+<!-- =========================================================
+     FOOTER
+========================================================= -->
+
+<footer>
+
+    © 2026 KaviyaMart. Admin Dashboard.
+
+</footer>
+
+
+
+<script>
+
+
+    /* =========================================================
+       ADMIN AUTHENTICATION
+    ========================================================= */
+
+
+    const userId =
+        localStorage.getItem("user_id");
+
+
+    const userRole =
+        localStorage.getItem("user_role");
+
+
+    const userName =
+        localStorage.getItem("user_name");
+
+
+    const userEmail =
+        localStorage.getItem("user_email");
+
+
+
+    /* =========================================================
+       PROTECT ADMIN PAGE
+    ========================================================= */
+
+
+    if (!userId || userRole !== "admin") {
+
+        alert(
+            "Admin access required."
+        );
+
+        window.location.href =
+            "login.html";
+    }
+
+
+
+    /* =========================================================
+       DISPLAY ADMIN INFORMATION
+    ========================================================= */
+
+
+    document.getElementById(
+        "adminName"
+    ).textContent =
+        userName || "Kaviya Admin";
+
+
+    document.getElementById(
+        "adminInfoName"
+    ).textContent =
+        userName || "Kaviya Admin";
+
+
+    document.getElementById(
+        "adminEmail"
+    ).textContent =
+        userEmail || "admin@gmail.com";
+
+
+
+    /* =========================================================
+       LOAD ADMIN STATISTICS
+    ========================================================= */
+
+
+    async function loadAdminStats() {
+
+        try {
+
+            const response =
+                await fetch(
+                    `/api/admin/stats?user_id=${encodeURIComponent(userId)}`
+                );
+
+
+            const data =
+                await response.json();
+
+
+            console.log(
+                "Admin statistics:",
+                data
+            );
+
+
+            if (
+                !response.ok ||
+                !data.success
+            ) {
+
+                throw new Error(
+                    data.message ||
+                    "Failed to load statistics."
+                );
+            }
+
+
+            /* TOTAL USERS */
+
+            document.getElementById(
+                "totalUsers"
+            ).textContent =
+                data.total_users;
+
+
+            /* TOTAL SELLERS */
+
+            document.getElementById(
+                "totalSellers"
+            ).textContent =
+                data.total_sellers;
+
+
+            /* TOTAL BUYERS */
+
+            document.getElementById(
+                "totalBuyers"
+            ).textContent =
+                data.total_buyers;
+
+
+            /* TOTAL PRODUCTS */
+
+            document.getElementById(
+                "totalProducts"
+            ).textContent =
+                data.total_products;
+
+
+            /* TOTAL ORDERS */
+
+            document.getElementById(
+                "totalOrders"
+            ).textContent =
+                data.total_orders;
+
+
+            /* TOTAL SALES */
+
+            document.getElementById(
+                "totalSales"
+            ).textContent =
+                "₹" +
+                Number(
+                    data.total_sales || 0
+                ).toLocaleString(
+                    "en-IN"
+                );
+
+        }
+
+        catch (error) {
+
+            console.error(
+                "Failed to load admin statistics:",
+                error
+            );
+
+
+            document.getElementById(
+                "totalUsers"
+            ).textContent = "-";
+
+
+            document.getElementById(
+                "totalSellers"
+            ).textContent = "-";
+
+
+            document.getElementById(
+                "totalBuyers"
+            ).textContent = "-";
+
+
+            document.getElementById(
+                "totalProducts"
+            ).textContent = "-";
+
+
+            document.getElementById(
+                "totalOrders"
+            ).textContent = "-";
+
+
+            document.getElementById(
+                "totalSales"
+            ).textContent = "-";
+        }
+    }
+
+
+
+    /* =========================================================
+       MANAGEMENT BUTTONS
+
+       These will be connected to the actual admin pages
+       in the next step.
+    ========================================================= */
+
+
+   function openSellers() {
+
+    window.location.href =
+        "admin-sellers.html";
+
+}
+function openBuyers() {
+
+    window.location.href =
+        "admin-buyers.html";
+
+}
+
+function openProducts() {
+    window.location.href = "admin-products.html";
+}
+   function openOrders() {
+    window.location.href = "admin-orders.html";
+}
+    
+
+
+
+    /* =========================================================
+       LOGOUT
+    ========================================================= */
+
+
+    function logout() {
+
+        localStorage.removeItem(
+            "user_id"
+        );
+
+        localStorage.removeItem(
+            "user_name"
+        );
+
+        localStorage.removeItem(
+            "user_email"
+        );
+
+        localStorage.removeItem(
+            "user_role"
+        );
+
+
+        window.location.href =
+            "index.html";
+    }
+
+
+
+    /* =========================================================
+       START ADMIN DASHBOARD
+    ========================================================= */
+
+
+    loadAdminStats();
+
+</script>
+
+
+</body>
+
+</html>

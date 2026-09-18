@@ -823,406 +823,401 @@
 <body>
 
 
-    <main class="checkout-page">
+<main class="checkout-page">
 
-        <div class="checkout-wrapper">
+    <div class="checkout-wrapper">
 
 
-            <!-- =================================================
-                 CHECKOUT CONTENT
-                 ================================================= -->
+        <!-- =================================================
+             CHECKOUT CONTENT
+             ================================================= -->
 
-            <div id="checkoutContent">
+        <div id="checkoutContent">
 
 
-                <div class="checkout-header">
+            <div class="checkout-header">
 
-                    <h1>
-                        Checkout
-                    </h1>
+                <h1>
+                    Checkout
+                </h1>
 
-                    <p>
-                        Complete your delivery details
-                        and place your order.
-                    </p>
-
-                </div>
-
-
-                <!-- Error -->
-
-                <div
-                    id="checkoutError"
-                    class="checkout-error"
-                ></div>
-
-
-                <div class="checkout-layout">
-
-
-                    <!-- =================================================
-                         LEFT SIDE
-                         ================================================= -->
-
-                    <div class="checkout-card">
-
-
-                        <div class="checkout-section">
-
-
-                            <h2>
-                                📦 Delivery Details
-                            </h2>
-
-
-                            <form id="checkoutForm">
-
-
-                                <!-- Name + Mobile -->
-
-                                <div class="form-row">
-
-
-                                    <div class="checkout-field">
-
-                                        <label
-                                            for="checkoutName"
-                                        >
-                                            Full Name
-                                        </label>
-
-                                        <input
-                                            type="text"
-                                            id="checkoutName"
-                                            required
-                                            autocomplete="name"
-                                            placeholder="Enter your full name"
-                                        >
-
-                                    </div>
-
-
-                                    <div class="checkout-field">
-
-                                        <label
-                                            for="checkoutMobile"
-                                        >
-                                            Mobile Number
-                                        </label>
-
-                                        <input
-                                            type="tel"
-                                            id="checkoutMobile"
-                                            required
-                                            pattern="[0-9]{10}"
-                                            maxlength="10"
-                                            autocomplete="tel"
-                                            inputmode="numeric"
-                                            placeholder="10-digit mobile number"
-                                        >
-
-                                    </div>
-
-
-                                </div>
-
-
-                                <!-- Address -->
-
-                                <div class="checkout-field">
-
-                                    <label
-                                        for="checkoutAddress"
-                                    >
-                                        Delivery Address
-                                    </label>
-
-                                    <textarea
-                                        id="checkoutAddress"
-                                        required
-                                        autocomplete="street-address"
-                                        placeholder="House / Door No, Street, Area"
-                                    ></textarea>
-
-                                </div>
-
-
-                                <!-- City + PIN -->
-
-                                <div class="form-row">
-
-
-                                    <div class="checkout-field">
-
-                                        <label
-                                            for="checkoutCity"
-                                        >
-                                            City
-                                        </label>
-
-                                        <input
-                                            type="text"
-                                            id="checkoutCity"
-                                            required
-                                            autocomplete="address-level2"
-                                            placeholder="City"
-                                        >
-
-                                    </div>
-
-
-                                    <div class="checkout-field">
-
-                                        <label
-                                            for="checkoutPincode"
-                                        >
-                                            PIN Code
-                                        </label>
-
-                                        <input
-                                            type="text"
-                                            id="checkoutPincode"
-                                            required
-                                            pattern="[0-9]{6}"
-                                            maxlength="6"
-                                            inputmode="numeric"
-                                            autocomplete="postal-code"
-                                            placeholder="6-digit PIN"
-                                        >
-
-                                    </div>
-
-
-                                </div>
-
-
-                                <!-- =================================================
-                                     PAYMENT
-                                     ================================================= -->
-
-                                <div class="checkout-section">
-
-
-                                    <h2>
-                                        💵 Payment Method
-                                    </h2>
-
-
-                                    <label
-                                        class="payment-option"
-                                    >
-
-
-                                        <input
-                                            type="radio"
-                                            name="paymentMethod"
-                                            value="COD"
-                                            checked
-                                        >
-
-
-                                        <span>
-
-                                            <span
-                                                class="payment-title"
-                                            >
-                                                Cash on Delivery
-                                            </span>
-
-
-                                            <span
-                                                class="payment-subtitle"
-                                            >
-                                                Pay when your order
-                                                is delivered
-                                            </span>
-
-                                        </span>
-
-
-                                    </label>
-
-
-                                </div>
-
-
-                                <!-- =================================================
-                                     PLACE ORDER
-                                     ================================================= -->
-
-                                <button
-                                    type="submit"
-                                    class="place-order-btn"
-                                    id="placeOrderBtn"
-                                >
-                                    Place Order — Cash on Delivery
-                                </button>
-
-
-                            </form>
-
-
-                            <a
-                                href="buyer.html"
-                                class="back-shop-btn"
-                            >
-                                ← Continue Shopping
-                            </a>
-
-
-                        </div>
-
-
-                    </div>
-
-
-                    <!-- =================================================
-                         RIGHT SIDE - ORDER SUMMARY
-                         ================================================= -->
-
-                    <div class="checkout-card">
-
-
-                        <h2>
-                            🧾 Order Summary
-                        </h2>
-
-
-                        <div
-                            id="checkoutItems"
-                            class="order-items"
-                        ></div>
-
-
-                        <div class="summary-row">
-
-                            <span>
-                                Subtotal
-                            </span>
-
-                            <strong
-                                id="checkoutSubtotal"
-                            >
-                                ₹0.00
-                            </strong>
-
-                        </div>
-
-
-                        <div class="summary-row">
-
-                            <span>
-                                Delivery
-                            </span>
-
-                            <strong>
-                                FREE
-                            </strong>
-
-                        </div>
-
-
-                        <div class="summary-total">
-
-                            <span>
-                                Total
-                            </span>
-
-                            <span
-                                id="checkoutTotal"
-                            >
-                                ₹0.00
-                            </span>
-
-                        </div>
-
-
-                        <div class="cod-badge">
-
-                            ✓ Cash on Delivery
-
-                        </div>
-
-
-                    </div>
-
-
-                </div>
+                <p>
+                    Complete your delivery details
+                    and place your order.
+                </p>
 
             </div>
 
 
-            <!-- =================================================
-                 ORDER SUCCESS
-                 ================================================= -->
+            <!-- ERROR -->
 
             <div
-                id="orderSuccess"
-                class="order-success"
-            >
+                id="checkoutError"
+                class="checkout-error"
+            ></div>
 
 
-                <div class="success-card">
+            <div class="checkout-layout">
 
 
-                    <div class="success-icon">
-                        ✓
-                    </div>
+                <!-- =================================================
+                     LEFT SIDE
+                     ================================================= -->
+
+                <div class="checkout-card">
 
 
-                    <h1>
-                        Order Placed Successfully!
-                    </h1>
+                    <div class="checkout-section">
 
 
-                    <p>
-                        Thank you for shopping with
-                        KaviyaMart.
-                    </p>
+                        <h2>
+                            📦 Delivery Details
+                        </h2>
 
 
-                    <div
-                        id="successOrderId"
-                        class="success-order-id"
-                    >
-                        Order ID: —
-                    </div>
+                        <form id="checkoutForm">
 
 
-                    <div
-                        id="successTotal"
-                        class="success-total"
-                    >
-                        ₹0.00
-                    </div>
+                            <!-- NAME + MOBILE -->
+
+                            <div class="form-row">
 
 
-                    <p>
-                        Your order will be delivered
-                        to the address you provided.
-                    </p>
+                                <div class="checkout-field">
+
+                                    <label
+                                        for="checkoutName"
+                                    >
+                                        Full Name
+                                    </label>
+
+                                    <input
+                                        type="text"
+                                        id="checkoutName"
+                                        required
+                                        autocomplete="name"
+                                        placeholder="Enter your full name"
+                                    >
+
+                                </div>
 
 
-                    <div class="success-actions">
+                                <div class="checkout-field">
+
+                                    <label
+                                        for="checkoutMobile"
+                                    >
+                                        Mobile Number
+                                    </label>
+
+                                    <input
+                                        type="tel"
+                                        id="checkoutMobile"
+                                        required
+                                        pattern="[0-9]{10}"
+                                        maxlength="10"
+                                        autocomplete="tel"
+                                        inputmode="numeric"
+                                        placeholder="10-digit mobile number"
+                                    >
+
+                                </div>
+
+
+                            </div>
+
+
+                            <!-- ADDRESS -->
+
+                            <div class="checkout-field">
+
+                                <label
+                                    for="checkoutAddress"
+                                >
+                                    Delivery Address
+                                </label>
+
+                                <textarea
+                                    id="checkoutAddress"
+                                    required
+                                    autocomplete="street-address"
+                                    placeholder="House / Door No, Street, Area"
+                                ></textarea>
+
+                            </div>
+
+
+                            <!-- CITY + PIN -->
+
+                            <div class="form-row">
+
+
+                                <div class="checkout-field">
+
+                                    <label
+                                        for="checkoutCity"
+                                    >
+                                        City
+                                    </label>
+
+                                    <input
+                                        type="text"
+                                        id="checkoutCity"
+                                        required
+                                        autocomplete="address-level2"
+                                        placeholder="City"
+                                    >
+
+                                </div>
+
+
+                                <div class="checkout-field">
+
+                                    <label
+                                        for="checkoutPincode"
+                                    >
+                                        PIN Code
+                                    </label>
+
+                                    <input
+                                        type="text"
+                                        id="checkoutPincode"
+                                        required
+                                        pattern="[0-9]{6}"
+                                        maxlength="6"
+                                        inputmode="numeric"
+                                        autocomplete="postal-code"
+                                        placeholder="6-digit PIN"
+                                    >
+
+                                </div>
+
+
+                            </div>
+
+
+                            <!-- =================================================
+                                 PAYMENT
+                                 ================================================= -->
+
+                            <div class="checkout-section">
+
+
+                                <h2>
+                                    💵 Payment Method
+                                </h2>
+
+
+                                <label
+                                    class="payment-option"
+                                >
+
+
+                                    <input
+                                        type="radio"
+                                        name="paymentMethod"
+                                        value="COD"
+                                        checked
+                                    >
+
+
+                                    <span>
+
+                                        <span
+                                            class="payment-title"
+                                        >
+                                            Cash on Delivery
+                                        </span>
+
+
+                                        <span
+                                            class="payment-subtitle"
+                                        >
+                                            Pay when your order
+                                            is delivered
+                                        </span>
+
+                                    </span>
+
+
+                                </label>
+
+
+                            </div>
+
+
+                            <!-- PLACE ORDER -->
+
+                            <button
+                                type="submit"
+                                class="place-order-btn"
+                                id="placeOrderBtn"
+                            >
+                                Place Order — Cash on Delivery
+                            </button>
+
+
+                        </form>
 
 
                         <a
                             href="buyer.html"
-                            class="success-shop"
+                            class="back-shop-btn"
                         >
-                            Continue Shopping
-                        </a>
-
-
-                        <a
-                            href="index.html"
-                            class="success-home"
-                        >
-                            Back to Home
+                            ← Continue Shopping
                         </a>
 
 
                     </div>
+
+
+                </div>
+
+
+                <!-- =================================================
+                     RIGHT SIDE - ORDER SUMMARY
+                     ================================================= -->
+
+                <div class="checkout-card">
+
+
+                    <h2>
+                        🧾 Order Summary
+                    </h2>
+
+
+                    <div
+                        id="checkoutItems"
+                        class="order-items"
+                    ></div>
+
+
+                    <div class="summary-row">
+
+                        <span>
+                            Subtotal
+                        </span>
+
+                        <strong
+                            id="checkoutSubtotal"
+                        >
+                            ₹0.00
+                        </strong>
+
+                    </div>
+
+
+                    <div class="summary-row">
+
+                        <span>
+                            Delivery
+                        </span>
+
+                        <strong>
+                            FREE
+                        </strong>
+
+                    </div>
+
+
+                    <div class="summary-total">
+
+                        <span>
+                            Total
+                        </span>
+
+                        <span
+                            id="checkoutTotal"
+                        >
+                            ₹0.00
+                        </span>
+
+                    </div>
+
+
+                    <div class="cod-badge">
+
+                        ✓ Cash on Delivery
+
+                    </div>
+
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             ORDER SUCCESS
+             ================================================= -->
+
+        <div
+            id="orderSuccess"
+            class="order-success"
+        >
+
+
+            <div class="success-card">
+
+
+                <div class="success-icon">
+                    ✓
+                </div>
+
+
+                <h1>
+                    Order Placed Successfully!
+                </h1>
+
+
+                <p>
+                    Thank you for shopping with
+                    KaviyaMart.
+                </p>
+
+
+                <div
+                    id="successOrderId"
+                    class="success-order-id"
+                >
+                    Order ID: —
+                </div>
+
+
+                <div
+                    id="successTotal"
+                    class="success-total"
+                >
+                    ₹0.00
+                </div>
+
+
+                <p>
+                    Your order will be delivered
+                    to the address you provided.
+                </p>
+
+
+                <div class="success-actions">
+
+
+                    <a
+                        href="buyer.html"
+                        class="success-shop"
+                    >
+                        Continue Shopping
+                    </a>
+
+
+                    <a
+                        href="index.html"
+                        class="success-home"
+                    >
+                        Back to Home
+                    </a>
 
 
                 </div>
@@ -1233,219 +1228,186 @@
 
         </div>
 
-    </main>
+
+    </div>
+
+</main>
 
 
-    <!-- =====================================================
-         EXISTING KAVIYAMART SCRIPT
-         ===================================================== -->
+<!-- =====================================================
+     EXISTING KAVIYAMART SCRIPT
+     ===================================================== -->
 
-    <script src="script.js"></script>
-
-
-    <script>
-
-        // =====================================================
-        // CHECKOUT PAGE
-        // =====================================================
-
-        let checkoutItems = [];
+<script src="script.js"></script>
 
 
-        // =====================================================
-        // PAGE LOAD
-        // =====================================================
+<script>
 
-        document.addEventListener(
-            "DOMContentLoaded",
-            function () {
+    // =====================================================
+    // CHECKOUT PAGE
+    // =====================================================
 
-
-                const userId =
-                    localStorage.getItem(
-                        "user_id"
-                    );
+    let checkoutItems = [];
 
 
-                const role =
-                    localStorage.getItem(
-                        "user_role"
-                    );
+    // =====================================================
+    // PAGE LOAD
+    // =====================================================
 
+    document.addEventListener(
+        "DOMContentLoaded",
+        function () {
 
-                // -------------------------------------------------
-                // Login protection
-                // -------------------------------------------------
-
-                if (!userId) {
-
-                    window.location.href =
-                        "login.html";
-
-                    return;
-                }
-
-
-                // -------------------------------------------------
-                // Buyer protection
-                // -------------------------------------------------
-
-                if (role !== "buyer") {
-
-                    alert(
-                        "Please login as a buyer to checkout."
-                    );
-
-                    window.location.href =
-                        "login.html";
-
-                    return;
-                }
-
-
-                // -------------------------------------------------
-                // Get checkout items
-                // -------------------------------------------------
-
-                checkoutItems =
-                    getCheckoutItems();
-
-
-                // -------------------------------------------------
-                // Empty checkout
-                // -------------------------------------------------
-
-                if (
-                    !checkoutItems ||
-                    checkoutItems.length === 0
-                ) {
-
-
-                    document.getElementById(
-                        "checkoutContent"
-                    ).innerHTML = `
-
-                        <div class="checkout-card empty-checkout">
-
-                            <h2>
-                                Your cart is empty
-                            </h2>
-
-                            <p>
-                                Add a product before
-                                continuing to checkout.
-                            </p>
-
-                            <a
-                                href="buyer.html"
-                                class="back-shop-btn"
-                            >
-                                ← Go to Shop
-                            </a>
-
-                        </div>
-
-                    `;
-
-
-                    return;
-                }
-
-
-                // -------------------------------------------------
-                // Display products
-                // -------------------------------------------------
-
-                loadCheckout();
-
-
-                // -------------------------------------------------
-                // Prefill user information
-                // -------------------------------------------------
-
-                prefillBuyerDetails();
-
-            }
-        );
-
-
-        // =====================================================
-        // GET CHECKOUT ITEMS
-        // =====================================================
-
-        function getCheckoutItems() {
-
-
-            // -------------------------------------------------
-            // BUY NOW
-            // -------------------------------------------------
-
-            const buyNowData =
-                sessionStorage.getItem(
-                    "kaviyaMartBuyNow"
+            const userId =
+                localStorage.getItem(
+                    "user_id"
                 );
 
 
-            if (buyNowData) {
+            const role =
+                localStorage.getItem(
+                    "user_role"
+                );
 
 
-                try {
+            // -------------------------------------------------
+            // LOGIN PROTECTION
+            // -------------------------------------------------
 
-                    const product =
-                        JSON.parse(
-                            buyNowData
-                        );
+            if (!userId) {
 
+                window.location.href =
+                    "login.html";
 
-                    return [
-
-                        {
-                            ...product,
-
-                            quantity:
-                                Number(
-                                    product.quantity || 1
-                                )
-                        }
-
-                    ];
-
-                }
-                catch (error) {
-
-                    console.error(
-                        "Buy Now data error:",
-                        error
-                    );
-
-                    return [];
-                }
-
+                return;
             }
 
 
             // -------------------------------------------------
-            // CART
+            // BUYER PROTECTION
             // -------------------------------------------------
+
+            if (role !== "buyer") {
+
+                alert(
+                    "Please login as a buyer to checkout."
+                );
+
+                window.location.href =
+                    "login.html";
+
+                return;
+            }
+
+
+            // -------------------------------------------------
+            // GET CHECKOUT ITEMS
+            // -------------------------------------------------
+
+            checkoutItems =
+                getCheckoutItems();
+
+
+            // -------------------------------------------------
+            // EMPTY CHECKOUT
+            // -------------------------------------------------
+
+            if (
+                !checkoutItems ||
+                checkoutItems.length === 0
+            ) {
+
+                document.getElementById(
+                    "checkoutContent"
+                ).innerHTML = `
+
+                    <div class="checkout-card empty-checkout">
+
+                        <h2>
+                            Your cart is empty
+                        </h2>
+
+                        <p>
+                            Add a product before
+                            continuing to checkout.
+                        </p>
+
+                        <a
+                            href="buyer.html"
+                            class="back-shop-btn"
+                        >
+                            ← Go to Shop
+                        </a>
+
+                    </div>
+
+                `;
+
+                return;
+            }
+
+
+            // -------------------------------------------------
+            // DISPLAY PRODUCTS
+            // -------------------------------------------------
+
+            loadCheckout();
+
+
+            // -------------------------------------------------
+            // PREFILL USER INFORMATION
+            // -------------------------------------------------
+
+            prefillBuyerDetails();
+
+        }
+    );
+
+
+    // =====================================================
+    // GET CHECKOUT ITEMS
+    // =====================================================
+
+    function getCheckoutItems() {
+
+        // -------------------------------------------------
+        // BUY NOW
+        // -------------------------------------------------
+
+        const buyNowData =
+            sessionStorage.getItem(
+                "kaviyaMartBuyNow"
+            );
+
+
+        if (buyNowData) {
 
             try {
 
-                if (
-                    typeof getCart ===
-                    "function"
-                ) {
-
-                    return getCart();
-                }
+                const product =
+                    JSON.parse(
+                        buyNowData
+                    );
 
 
-                return [];
+                return [
+
+                    {
+                        ...product,
+
+                        quantity:
+                            Number(
+                                product.quantity || 1
+                            )
+                    }
+
+                ];
 
             }
             catch (error) {
 
                 console.error(
-                    "Cart error:",
+                    "Buy Now data error:",
                     error
                 );
 
@@ -1455,616 +1417,692 @@
         }
 
 
-        // =====================================================
-        // IMAGE URL
-        // =====================================================
+        // -------------------------------------------------
+        // CART
+        // -------------------------------------------------
 
-        function checkoutImageUrl(
-            imagePath
+        try {
+
+            if (
+                typeof getCart ===
+                "function"
+            ) {
+
+                return getCart();
+            }
+
+
+            return [];
+
+        }
+        catch (error) {
+
+            console.error(
+                "Cart error:",
+                error
+            );
+
+            return [];
+        }
+
+    }
+
+
+    // =====================================================
+    // IMAGE URL
+    // =====================================================
+
+    function checkoutImageUrl(
+        imagePath
+    ) {
+
+        if (!imagePath) {
+
+            return "";
+        }
+
+
+        if (
+            imagePath.startsWith(
+                "http://"
+            ) ||
+            imagePath.startsWith(
+                "https://"
+            )
         ) {
 
+            return imagePath;
+        }
 
-            if (!imagePath) {
 
-                return "";
+        if (
+            imagePath.startsWith("/")
+        ) {
+
+            return imagePath;
+        }
+
+
+        return "/" + imagePath;
+
+    }
+
+
+    // =====================================================
+    // LOAD CHECKOUT
+    // =====================================================
+
+    function loadCheckout() {
+
+        const container =
+            document.getElementById(
+                "checkoutItems"
+            );
+
+
+        container.innerHTML = "";
+
+
+        let subtotal = 0;
+
+
+        checkoutItems.forEach(
+            function (item) {
+
+                const quantity =
+                    Number(
+                        item.quantity || 1
+                    );
+
+
+                const price =
+                    Number(
+                        item.price || 0
+                    );
+
+
+                const itemTotal =
+                    price * quantity;
+
+
+                subtotal += itemTotal;
+
+
+                const div =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                div.className =
+                    "checkout-item";
+
+
+                const image =
+                    checkoutImageUrl(
+                        item.image_path
+                    );
+
+
+                div.innerHTML = `
+
+                    ${
+                        image
+                        ?
+                        `
+                            <img
+                                src="${image}"
+                                class="checkout-item-image"
+                                alt=""
+                                onerror="this.style.display='none';"
+                            >
+                        `
+                        :
+                        `
+                            <div
+                                class="checkout-item-image"
+                            ></div>
+                        `
+                    }
+
+
+                    <div class="checkout-item-info">
+
+                        <div class="checkout-item-name">
+
+                            ${escapeCheckoutHtml(
+                                item.product_name
+                            )}
+
+                        </div>
+
+
+                        <div class="checkout-item-qty">
+
+                            Quantity:
+                            ${quantity}
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="checkout-item-price">
+
+                        ₹${itemTotal.toFixed(2)}
+
+                    </div>
+
+                `;
+
+
+                container.appendChild(
+                    div
+                );
+
+            }
+        );
+
+
+        document.getElementById(
+            "checkoutSubtotal"
+        ).textContent =
+            "₹" +
+            subtotal.toFixed(2);
+
+
+        document.getElementById(
+            "checkoutTotal"
+        ).textContent =
+            "₹" +
+            subtotal.toFixed(2);
+
+    }
+
+
+    // =====================================================
+    // ESCAPE HTML
+    // =====================================================
+
+    function escapeCheckoutHtml(
+        value
+    ) {
+
+        return String(
+            value || ""
+        )
+
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+
+        .replace(
+            /</g,
+            "&lt;"
+        )
+
+        .replace(
+            />/g,
+            "&gt;"
+        )
+
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+
+        .replace(
+            /'/g,
+            "&#039;"
+        );
+
+    }
+
+
+    // =====================================================
+    // PREFILL USER DETAILS
+    // =====================================================
+
+    function prefillBuyerDetails() {
+
+        const savedName =
+            localStorage.getItem(
+                "user_name"
+            );
+
+
+        if (savedName) {
+
+            document.getElementById(
+                "checkoutName"
+            ).value =
+                savedName;
+        }
+
+    }
+
+
+    // =====================================================
+    // PLACE ORDER
+    // =====================================================
+
+    document.getElementById(
+        "checkoutForm"
+    ).addEventListener(
+        "submit",
+        async function (event) {
+
+            event.preventDefault();
+
+
+            const userId =
+                localStorage.getItem(
+                    "user_id"
+                );
+
+
+            // -------------------------------------------------
+            // LOGIN CHECK
+            // -------------------------------------------------
+
+            if (!userId) {
+
+                window.location.href =
+                    "login.html";
+
+                return;
+            }
+
+
+            // -------------------------------------------------
+            // ITEMS CHECK
+            // -------------------------------------------------
+
+            if (
+                !checkoutItems ||
+                checkoutItems.length === 0
+            ) {
+
+                showCheckoutError(
+                    "Your cart is empty."
+                );
+
+                return;
+            }
+
+
+            // -------------------------------------------------
+            // READ FORM
+            // -------------------------------------------------
+
+            const name =
+                document.getElementById(
+                    "checkoutName"
+                ).value.trim();
+
+
+            const mobile =
+                document.getElementById(
+                    "checkoutMobile"
+                ).value.trim();
+
+
+            const address =
+                document.getElementById(
+                    "checkoutAddress"
+                ).value.trim();
+
+
+            const city =
+                document.getElementById(
+                    "checkoutCity"
+                ).value.trim();
+
+
+            const pincode =
+                document.getElementById(
+                    "checkoutPincode"
+                ).value.trim();
+
+
+            // -------------------------------------------------
+            // BASIC VALIDATION
+            // -------------------------------------------------
+
+            if (
+                !name ||
+                !mobile ||
+                !address ||
+                !city ||
+                !pincode
+            ) {
+
+                showCheckoutError(
+                    "Please complete all delivery details."
+                );
+
+                return;
             }
 
 
             if (
-                imagePath.startsWith(
-                    "http://"
-                ) ||
-                imagePath.startsWith(
-                    "https://"
+                !/^[0-9]{10}$/.test(
+                    mobile
                 )
             ) {
 
-                return imagePath;
+                showCheckoutError(
+                    "Please enter a valid 10-digit mobile number."
+                );
+
+                return;
             }
 
 
             if (
-                imagePath.startsWith("/")
+                !/^[0-9]{6}$/.test(
+                    pincode
+                )
             ) {
 
-                return imagePath;
+                showCheckoutError(
+                    "Please enter a valid 6-digit PIN code."
+                );
+
+                return;
             }
 
 
-            return "/" + imagePath;
-
-        }
-
-
-        // =====================================================
-        // LOAD CHECKOUT
-        // =====================================================
-
-        function loadCheckout() {
-
-
-            const container =
-                document.getElementById(
-                    "checkoutItems"
-                );
-
-
-            container.innerHTML = "";
-
-
-            let subtotal = 0;
-
-
-            checkoutItems.forEach(
-                function (item) {
-
-
-                    const quantity =
-                        Number(
-                            item.quantity || 1
-                        );
-
-
-                    const price =
-                        Number(
-                            item.price || 0
-                        );
-
-
-                    const itemTotal =
-                        price * quantity;
-
-
-                    subtotal += itemTotal;
-
-
-                    const div =
-                        document.createElement(
-                            "div"
-                        );
-
-
-                    div.className =
-                        "checkout-item";
-
-
-                    const image =
-                        checkoutImageUrl(
-                            item.image_path
-                        );
-
-
-                    div.innerHTML = `
-
-                        ${
-                            image
-                            ?
-                            `
-                                <img
-                                    src="${image}"
-                                    class="checkout-item-image"
-                                    alt=""
-                                    onerror="this.style.display='none';"
-                                >
-                            `
-                            :
-                            `
-                                <div
-                                    class="checkout-item-image"
-                                ></div>
-                            `
-                        }
-
-
-                        <div class="checkout-item-info">
-
-                            <div class="checkout-item-name">
-
-                                ${escapeCheckoutHtml(
-                                    item.product_name
-                                )}
-
-                            </div>
-
-
-                            <div class="checkout-item-qty">
-
-                                Quantity:
-                                ${quantity}
-
-                            </div>
-
-                        </div>
-
-
-                        <div class="checkout-item-price">
-
-                            ₹${itemTotal.toFixed(2)}
-
-                        </div>
-
-                    `;
-
-
-                    container.appendChild(
-                        div
-                    );
-
-                }
-            );
-
-
-            document.getElementById(
-                "checkoutSubtotal"
-            ).textContent =
-                "₹" +
-                subtotal.toFixed(2);
-
-
-            document.getElementById(
-                "checkoutTotal"
-            ).textContent =
-                "₹" +
-                subtotal.toFixed(2);
-
-        }
-
-
-        // =====================================================
-        // ESCAPE HTML
-        // =====================================================
-
-        function escapeCheckoutHtml(
-            value
-        ) {
-
-
-            return String(
-                value || ""
-            )
-
-            .replace(
-                /&/g,
-                "&amp;"
-            )
-
-            .replace(
-                /</g,
-                "&lt;"
-            )
-
-            .replace(
-                />/g,
-                "&gt;"
-            )
-
-            .replace(
-                /"/g,
-                "&quot;"
-            )
-
-            .replace(
-                /'/g,
-                "&#039;"
-            );
-
-        }
-
-
-        // =====================================================
-        // PREFILL USER DETAILS
-        // =====================================================
-
-        function prefillBuyerDetails() {
-
-
-            const savedName =
-                localStorage.getItem(
-                    "user_name"
-                );
-
-
-            if (savedName) {
-
-                document.getElementById(
-                    "checkoutName"
-                ).value =
-                    savedName;
-            }
-
-        }
-
-
-        // =====================================================
-        // PLACE ORDER
-        // =====================================================
-
-        document.getElementById(
-            "checkoutForm"
-        ).addEventListener(
-            "submit",
-            async function (event) {
-
-
-                event.preventDefault();
-
-
-                const userId =
-                    localStorage.getItem(
-                        "user_id"
-                    );
-
-
-                if (!userId) {
-
-                    window.location.href =
-                        "login.html";
-
-                    return;
-                }
-
-
-                // -------------------------------------------------
-                // Validate items
-                // -------------------------------------------------
-
-                if (
-                    !checkoutItems ||
-                    checkoutItems.length === 0
-                ) {
-
-                    showCheckoutError(
-                        "Your cart is empty."
-                    );
-
-                    return;
-                }
-
-
-                // -------------------------------------------------
-                // Read form
-                // -------------------------------------------------
-
-                const name =
-                    document.getElementById(
-                        "checkoutName"
-                    ).value.trim();
-
-
-                const mobile =
-                    document.getElementById(
-                        "checkoutMobile"
-                    ).value.trim();
-
-
-                const address =
-                    document.getElementById(
-                        "checkoutAddress"
-                    ).value.trim();
-
-
-                const city =
-                    document.getElementById(
-                        "checkoutCity"
-                    ).value.trim();
-
-
-                const pincode =
-                    document.getElementById(
-                        "checkoutPincode"
-                    ).value.trim();
-
-
-                // -------------------------------------------------
-                // Basic validation
-                // -------------------------------------------------
-
-                if (
-                    !name ||
-                    !mobile ||
-                    !address ||
-                    !city ||
-                    !pincode
-                ) {
-
-                    showCheckoutError(
-                        "Please complete all delivery details."
-                    );
-
-                    return;
-                }
-
-
-                if (
-                    !/^[0-9]{10}$/.test(
-                        mobile
-                    )
-                ) {
-
-                    showCheckoutError(
-                        "Please enter a valid 10-digit mobile number."
-                    );
-
-                    return;
-                }
-
-
-                if (
-                    !/^[0-9]{6}$/.test(
-                        pincode
-                    )
-                ) {
-
-                    showCheckoutError(
-                        "Please enter a valid 6-digit PIN code."
-                    );
-
-                    return;
-                }
-
-
-                // -------------------------------------------------
-                // Button loading
-                // -------------------------------------------------
-
-                const placeButton =
-                    document.getElementById(
-                        "placeOrderBtn"
-                    );
-
-
-                placeButton.disabled =
-                    true;
-
-
-                placeButton.textContent =
-                    "Placing Order...";
-
-
-                // -------------------------------------------------
-                // Prepare products
-                // -------------------------------------------------
-
-                const items =
-                    checkoutItems.map(
-                        function (item) {
-
-                            return {
-
-                                product_id:
-                                    Number(
-                                        item.product_id
-                                    ),
-
-                                quantity:
-                                    Number(
-                                        item.quantity || 1
-                                    )
-
-                            };
-
-                        }
-                    );
-
-
-                // -------------------------------------------------
-                // Order request
-                // -------------------------------------------------
-
-                const orderData = {
-
-
-                    user_id:
-                        Number(
-                            userId
-                        ),
-
-
-                    items:
-                        items,
-
-
-                    payment_method:
-                        "COD",
-
-
-                    delivery_name:
-                        name,
-
-
-                    delivery_mobile:
-                        mobile,
-
-
-                    delivery_address:
-                        address,
-
-
-                    delivery_city:
-                        city,
-
-
-                    delivery_pincode:
-                        pincode
-
-                };
-
-
-                console.log(
-                    "Sending order:",
-                    orderData
-                );
-
-
-                // -------------------------------------------------
-                // Send request
-                // -------------------------------------------------
-
-                try {
-
-
-                    const response =
-                        await fetch(
-                            "/api/orders",
-                            {
-
-                                method:
-                                    "POST",
-
-
-                                headers: {
-
-                                    "Content-Type":
-                                        "application/json"
-
-                                },
-
-
-                                body:
-                                    JSON.stringify(
-                                        orderData
-                                    )
-
-                            }
-                        );
-
-
-                    const result =
-                        await response.json();
-
-
-                    console.log(
-                        "Order response:",
-                        result
-                    );
-
-
-                    // -------------------------------------------------
-                    // SUCCESS
-                    // -------------------------------------------------
-
-                    if (
-                        response.ok &&
-                        result.success
+            // -------------------------------------------------
+            // CALCULATE TOTAL
+            // -------------------------------------------------
+
+            const totalAmount =
+                checkoutItems.reduce(
+                    function (
+                        total,
+                        item
                     ) {
 
-
-                        const wasBuyNow =
-                            sessionStorage.getItem(
-                                "kaviyaMartBuyNow"
-                            ) !== null;
-
-
-                        // Clear Buy Now
-                        sessionStorage.removeItem(
-                            "kaviyaMartBuyNow"
-                        );
-
-
-                        // Clear cart only when
-                        // normal cart checkout
-                        if (
-                            !wasBuyNow &&
-                            typeof saveCart ===
-                                "function"
-                        ) {
-
-                            saveCart([]);
-                        }
-
-
-                        // Hide checkout
-                        document.getElementById(
-                            "checkoutContent"
-                        ).style.display =
-                            "none";
-
-
-                        // Show success
-                        document.getElementById(
-                            "orderSuccess"
-                        ).style.display =
-                            "flex";
-
-
-                        // Order ID
-                        document.getElementById(
-                            "successOrderId"
-                        ).textContent =
-                            "Order ID: #" +
-                            (
-                                result.order_id
-                                || "—"
+                        const price =
+                            Number(
+                                item.price || 0
                             );
 
 
-                        // Total
-                        document.getElementById(
-                            "successTotal"
-                        ).textContent =
-                            "₹" +
+                        const quantity =
                             Number(
-                                result.total_amount
-                                || 0
-                            ).toFixed(2);
-
-                    }
+                                item.quantity || 1
+                            );
 
 
-                    // -------------------------------------------------
-                    // SERVER ERROR
-                    // -------------------------------------------------
-
-                    else {
-
-
-                        showCheckoutError(
-                            result.message ||
-                            "Unable to place your order."
+                        return (
+                            total +
+                            (
+                                price *
+                                quantity
+                            )
                         );
 
+                    },
+                    0
+                );
 
-                        placeButton.disabled =
-                            false;
+
+            // -------------------------------------------------
+            // BUTTON LOADING
+            // -------------------------------------------------
+
+            const placeButton =
+                document.getElementById(
+                    "placeOrderBtn"
+                );
 
 
-                        placeButton.textContent =
-                            "Place Order — Cash on Delivery";
+            placeButton.disabled =
+                true;
+
+
+            placeButton.textContent =
+                "Placing Order...";
+
+
+            // -------------------------------------------------
+            // PREPARE PRODUCTS
+            // -------------------------------------------------
+
+            const items =
+                checkoutItems.map(
+                    function (item) {
+
+                        return {
+
+                            product_id:
+                                Number(
+                                    item.product_id
+                                ),
+
+                            quantity:
+                                Number(
+                                    item.quantity || 1
+                                )
+
+                        };
+
                     }
+                );
 
+
+            // -------------------------------------------------
+            // ORDER DATA
+            // IMPORTANT:
+            // total_amount is included here.
+            // -------------------------------------------------
+
+            const orderData = {
+
+                user_id:
+                    Number(
+                        userId
+                    ),
+
+
+                total_amount:
+                    Number(
+                        totalAmount.toFixed(2)
+                    ),
+
+
+                items:
+                    items,
+
+
+                payment_method:
+                    "COD",
+
+
+                delivery_name:
+                    name,
+
+
+                delivery_mobile:
+                    mobile,
+
+
+                delivery_address:
+                    address,
+
+
+                delivery_city:
+                    city,
+
+
+                delivery_pincode:
+                    pincode
+
+            };
+
+
+            console.log(
+                "Sending order:",
+                orderData
+            );
+
+
+            // -------------------------------------------------
+            // SEND REQUEST
+            // -------------------------------------------------
+
+            try {
+
+                const response =
+                    await fetch(
+                        "/api/orders",
+                        {
+
+                            method:
+                                "POST",
+
+
+                            headers: {
+
+                                "Content-Type":
+                                    "application/json"
+
+                            },
+
+
+                            body:
+                                JSON.stringify(
+                                    orderData
+                                )
+
+                        }
+                    );
+
+
+                let result;
+
+
+                try {
+
+                    result =
+                        await response.json();
 
                 }
-                catch (error) {
-
+                catch (jsonError) {
 
                     console.error(
-                        "Checkout error:",
-                        error
+                        "Invalid server response:",
+                        jsonError
                     );
 
 
                     showCheckoutError(
-                        "Cannot connect to the KaviyaMart server."
+                        "Server returned an invalid response."
+                    );
+
+
+                    placeButton.disabled =
+                        false;
+
+
+                    placeButton.textContent =
+                        "Place Order — Cash on Delivery";
+
+
+                    return;
+                }
+
+
+                console.log(
+                    "Order response:",
+                    result
+                );
+
+
+                // -------------------------------------------------
+                // SUCCESS
+                // -------------------------------------------------
+
+                if (
+                    response.ok &&
+                    result.success
+                ) {
+
+                    const wasBuyNow =
+                        sessionStorage.getItem(
+                            "kaviyaMartBuyNow"
+                        ) !== null;
+
+
+                    // Clear Buy Now
+                    sessionStorage.removeItem(
+                        "kaviyaMartBuyNow"
+                    );
+
+
+                    // Clear cart only for
+                    // normal cart checkout
+                    if (
+                        !wasBuyNow &&
+                        typeof saveCart ===
+                            "function"
+                    ) {
+
+                        saveCart([]);
+
+                    }
+
+
+                    // Hide checkout
+                    document.getElementById(
+                        "checkoutContent"
+                    ).style.display =
+                        "none";
+
+
+                    // Show success
+                    document.getElementById(
+                        "orderSuccess"
+                    ).style.display =
+                        "flex";
+
+
+                    // Order ID
+                    document.getElementById(
+                        "successOrderId"
+                    ).textContent =
+                        "Order ID: #" +
+                        (
+                            result.order_id
+                            || "—"
+                        );
+
+
+                    // Total
+                    document.getElementById(
+                        "successTotal"
+                    ).textContent =
+                        "₹" +
+                        Number(
+                            result.total_amount
+                            || totalAmount
+                        ).toFixed(2);
+
+                }
+
+
+                // -------------------------------------------------
+                // SERVER ERROR
+                // -------------------------------------------------
+
+                else {
+
+                    showCheckoutError(
+                        result.message ||
+                        "Unable to place your order."
                     );
 
 
@@ -2076,44 +2114,67 @@
                         "Place Order — Cash on Delivery";
                 }
 
+
             }
-        );
+            catch (error) {
 
-
-        // =====================================================
-        // SHOW ERROR
-        // =====================================================
-
-        function showCheckoutError(
-            message
-        ) {
-
-
-            const box =
-                document.getElementById(
-                    "checkoutError"
+                console.error(
+                    "Checkout error:",
+                    error
                 );
 
 
-            box.textContent =
-                message;
+                showCheckoutError(
+                    "Cannot connect to the KaviyaMart server."
+                );
 
 
-            box.style.display =
-                "block";
+                placeButton.disabled =
+                    false;
 
 
-            window.scrollTo({
+                placeButton.textContent =
+                    "Place Order — Cash on Delivery";
 
-                top: 0,
-
-                behavior: "smooth"
-
-            });
+            }
 
         }
+    );
 
-    </script>
+
+    // =====================================================
+    // SHOW ERROR
+    // =====================================================
+
+    function showCheckoutError(
+        message
+    ) {
+
+        const box =
+            document.getElementById(
+                "checkoutError"
+            );
+
+
+        box.textContent =
+            message;
+
+
+        box.style.display =
+            "block";
+
+
+        window.scrollTo({
+
+            top: 0,
+
+            behavior: "smooth"
+
+        });
+
+    }
+
+</script>
 
 
 </body>

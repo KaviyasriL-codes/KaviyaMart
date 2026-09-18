@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>KaviyaMart - Product Management</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #fff8ed;
+            color: #2b123f;
+        }
+
+        /* HEADER */
+
+        header {
+            height: 78px;
+            background: #3b0a57;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 45px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
+        }
+
+        .logo {
+            height: 58px;
+            width: auto;
+            object-fit: contain;
+        }
+
+        nav {
+            display: flex;
+            align-items: center;
+            gap: 28px;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+        nav a:hover {
+            color: #ffd34e;
+        }
+
+        .logout {
+            background: #f5b700;
+            color: #3b0a57 !important;
+            padding: 10px 20px;
+            border-radius: 8px;
+        }
+
+        .logout:hover {
+            background: #ffd34e;
+        }
+
+        /* MAIN */
+
+        .container {
+            width: 92%;
+            max-width: 1300px;
+            margin: 40px auto;
+        }
+
+        .top-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 28px;
+            gap: 20px;
+        }
+
+        .title-section h1 {
+            color: #3b0a57;
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+
+        .title-section p {
+            color: #6d5a72;
+            font-size: 15px;
+        }
+
+        .back-btn {
+            background: #3b0a57;
+            color: white;
+            text-decoration: none;
+            padding: 12px 22px;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+
+        .back-btn:hover {
+            background: #55147a;
+        }
+
+        /* SUMMARY */
+
+        .summary-card {
+            background: linear-gradient(135deg, #3b0a57, #57127c);
+            color: white;
+            padding: 22px 28px;
+            border-radius: 14px;
+            margin-bottom: 28px;
+            box-shadow: 0 6px 18px rgba(59, 10, 87, 0.2);
+        }
+
+        .summary-card span {
+            display: block;
+            font-size: 14px;
+            opacity: 0.85;
+            margin-bottom: 6px;
+        }
+
+        .summary-card strong {
+            font-size: 30px;
+            color: #ffd34e;
+        }
+
+        /* TABLE */
+
+        .table-card {
+            background: white;
+            border-radius: 14px;
+            overflow: hidden;
+            border: 1px solid #f0e4d5;
+            box-shadow: 0 5px 20px rgba(60, 30, 70, 0.12);
+        }
+
+        .table-header {
+            padding: 20px 25px;
+            background: #fff2dc;
+            border-bottom: 1px solid #eadbc8;
+        }
+
+        .table-header h2 {
+            color: #3b0a57;
+            font-size: 21px;
+        }
+
+        .table-wrapper {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 1000px;
+        }
+
+        th {
+            background: #3b0a57;
+            color: white;
+            padding: 15px 16px;
+            text-align: left;
+            font-size: 14px;
+        }
+
+        td {
+            padding: 15px 16px;
+            border-bottom: 1px solid #eee3d7;
+            font-size: 14px;
+            color: #45334d;
+        }
+
+        tbody tr:hover {
+            background: #fffaf3;
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .product-id {
+            color: #3b0a57;
+            font-weight: bold;
+        }
+
+        .product-name {
+            color: #3b0a57;
+            font-weight: 600;
+        }
+
+        .price {
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .seller {
+            font-weight: 600;
+        }
+
+        .rating {
+            white-space: nowrap;
+        }
+
+        .date {
+            white-space: nowrap;
+            color: #6d5a72;
+        }
+
+        /* MESSAGES */
+
+        .message {
+            text-align: center;
+            padding: 45px 20px;
+            color: #6d5a72;
+            font-size: 16px;
+        }
+
+        .error {
+            color: #b42318;
+        }
+
+        .empty {
+            color: #7a687f;
+        }
+
+        /* FOOTER */
+
+        footer {
+            text-align: center;
+            padding: 30px 20px;
+            margin-top: 45px;
+            color: #806e84;
+            font-size: 13px;
+        }
+
+        /* MOBILE */
+
+        @media (max-width: 700px) {
+
+            header {
+                padding: 0 18px;
+                height: 70px;
+            }
+
+            .logo {
+                height: 48px;
+            }
+
+            nav {
+                gap: 12px;
+            }
+
+            nav a {
+                font-size: 13px;
+            }
+
+            .logout {
+                padding: 8px 12px;
+            }
+
+            .container {
+                width: 94%;
+                margin: 25px auto;
+            }
+
+            .top-section {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .title-section h1 {
+                font-size: 26px;
+            }
+
+            .back-btn {
+                width: 100%;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+
+    <a href="admin.html">
+        <img
+            src="kaviyamart-logo.png"
+            alt="KaviyaMart"
+            class="logo"
+        >
+    </a>
+
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="admin.html">Dashboard</a>
+        <a href="#" class="logout" onclick="logout()">Logout</a>
+    </nav>
+
+</header>
+
+
+<main class="container">
+
+    <div class="top-section">
+
+        <div class="title-section">
+            <h1>Product Management</h1>
+            <p>View all products listed by KaviyaMart sellers.</p>
+        </div>
+
+        <a href="admin.html" class="back-btn">
+            ← Back to Dashboard
+        </a>
+
+    </div>
+
+
+    <div class="summary-card">
+
+        <span>Total Products</span>
+
+        <strong id="totalProducts">
+            0
+        </strong>
+
+    </div>
+
+
+    <div class="table-card">
+
+        <div class="table-header">
+            <h2>All Products</h2>
+        </div>
+
+        <div class="table-wrapper">
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>Product ID</th>
+                        <th>Product Name</th>
+                        <th>Category</th>
+                        <th>Price</th>
+                        <th>Seller</th>
+                        <th>Rating</th>
+                        <th>Created Date</th>
+                    </tr>
+                </thead>
+
+                <tbody id="productsTableBody">
+
+                    <tr>
+                        <td colspan="7" class="message">
+                            Loading products...
+                        </td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</main>
+
+
+<footer>
+    © 2026 KaviyaMart. All rights reserved.
+</footer>
+
+
+<script>
+
+    const API_BASE = "http://127.0.0.1:8080";
+
+
+    // ==========================================
+    // ADMIN AUTHENTICATION
+    // ==========================================
+
+    const userId = localStorage.getItem("user_id");
+    const userRole = localStorage.getItem("user_role");
+
+    if (!userId || userRole !== "admin") {
+
+        alert("Admin access required.");
+
+        window.location.href = "login.html";
+    }
+
+
+    // ==========================================
+    // LOAD PRODUCTS
+    // ==========================================
+
+    async function loadProducts() {
+
+        const tableBody =
+            document.getElementById("productsTableBody");
+
+        try {
+
+            const response = await fetch(
+                `${API_BASE}/api/admin/products?user_id=${encodeURIComponent(userId)}`
+            );
+
+            const data = await response.json();
+
+
+            if (!response.ok || !data.success) {
+
+                throw new Error(
+                    data.message || "Failed to load products."
+                );
+            }
+
+
+            document.getElementById("totalProducts").textContent =
+                data.total_products ?? 0;
+
+
+            tableBody.innerHTML = "";
+
+
+            if (!data.products || data.products.length === 0) {
+
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="7" class="message empty">
+                            No products available.
+                        </td>
+                    </tr>
+                `;
+
+                return;
+            }
+
+
+            data.products.forEach(product => {
+
+                const row = document.createElement("tr");
+
+
+                const createdDate =
+                    product.created_at
+                        ? new Date(product.created_at).toLocaleDateString(
+                            "en-IN",
+                            {
+                                day: "2-digit",
+                                month: "short",
+                                year: "numeric"
+                            }
+                        )
+                        : "-";
+
+
+                const price =
+                    Number(product.price || 0).toLocaleString(
+                        "en-IN",
+                        {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2
+                        }
+                    );
+
+
+                const rating =
+                    Number(product.rating || 0).toFixed(1);
+
+
+                row.innerHTML = `
+
+                    <td class="product-id">
+                        #${escapeHtml(product.product_id)}
+                    </td>
+
+                    <td class="product-name">
+                        ${escapeHtml(product.product_name || "-")}
+                    </td>
+
+                    <td>
+                        ${escapeHtml(product.category || "-")}
+                    </td>
+
+                    <td class="price">
+                        ₹${escapeHtml(price)}
+                    </td>
+
+                    <td class="seller">
+                        ${escapeHtml(product.seller_name || "-")}
+                    </td>
+
+                    <td class="rating">
+                        ⭐ ${escapeHtml(rating)}
+                    </td>
+
+                    <td class="date">
+                        ${escapeHtml(createdDate)}
+                    </td>
+
+                `;
+
+
+                tableBody.appendChild(row);
+
+            });
+
+        }
+
+        catch (error) {
+
+            console.error("Product loading error:", error);
+
+            tableBody.innerHTML = `
+                <tr>
+                    <td colspan="7" class="message error">
+                        Unable to load products.<br>
+                        ${escapeHtml(error.message)}
+                    </td>
+                </tr>
+            `;
+
+        }
+
+    }
+
+
+    // ==========================================
+    // HTML ESCAPE
+    // ==========================================
+
+    function escapeHtml(value) {
+
+        return String(value)
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+
+    }
+
+
+    // ==========================================
+    // LOGOUT
+    // ==========================================
+
+    function logout() {
+
+        localStorage.removeItem("user_id");
+        localStorage.removeItem("user_name");
+        localStorage.removeItem("user_role");
+
+        window.location.href = "login.html";
+
+    }
+
+
+    // ==========================================
+    // START
+    // ==========================================
+
+    loadProducts();
+
+</script>
+
+</body>
+</html>

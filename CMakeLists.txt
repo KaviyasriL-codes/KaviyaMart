@@ -9,12 +9,14 @@ find_package(Drogon CONFIG REQUIRED)
 find_package(libpqxx CONFIG REQUIRED)
 find_package(PostgreSQL REQUIRED)
 find_package(OpenSSL REQUIRED)
+
 add_executable(KaviyaMart
     main.cpp
 
     Controllers/AuthController.cpp
     Controllers/ProductController.cpp
     Controllers/OrderController.cpp
+    Controllers/AdminController.cpp
 
     Services/Database.cpp
 )
@@ -22,6 +24,7 @@ add_executable(KaviyaMart
 target_include_directories(KaviyaMart PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}
 )
+
 target_link_libraries(KaviyaMart PRIVATE
     Drogon::Drogon
     libpqxx::pqxx
