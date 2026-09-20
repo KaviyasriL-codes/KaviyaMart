@@ -10,6 +10,7 @@
 #include <chrono>
 #include <cctype>
 #include <iostream>
+#include <cstdlib>
 
 namespace fs = std::filesystem;
 
@@ -67,6 +68,57 @@ static std::string generateImageName(const std::string& extension)
 
 
 // ============================================================
+// Helper: Read multipart form parameter
+//
+// Compatible with older Drogon versions.
+// getParameter<T>() is not available in older versions,
+// so we use getParameters() instead.
+// ============================================================
+
+static std::string getMultipartParameter(
+    const MultiPartParser& parser,
+    const std::string& key)
+{
+    const auto& parameters = parser.getParameters();
+
+    auto it = parameters.find(key);
+
+    if (it == parameters.end())
+    {
+        return "";
+    }
+
+    return it->second;
+}
+
+
+// ============================================================
+// Helper: Get upload directory
+//
+// Local Windows:
+// C:/capstonekaviya/frontend/uploads
+//
+// Docker:
+// Uses UPLOAD_DIR environment variable.
+// ============================================================
+
+static fs::path getUploadDirectory()
+{
+    const char* uploadEnv = std::getenv("UPLOAD_DIR");
+
+    if (uploadEnv != nullptr &&
+        std::string(uploadEnv).size() > 0)
+    {
+        return fs::path(uploadEnv);
+    }
+
+    return fs::path(
+        "C:/capstonekaviya/frontend/uploads"
+    );
+}
+
+
+// ============================================================
 // ADD PRODUCT
 // POST /api/products
 // ============================================================
@@ -82,12 +134,18 @@ void ProductController::addProduct(
         if (parser.parse(req) != 0)
         {
             Json::Value result;
+
             result["success"] = false;
-            result["message"] = "Unable to process product form.";
+            result["message"] =
+                "Unable to process product form.";
 
             callback(
-                makeJsonResponse(result, k400BadRequest)
+                makeJsonResponse(
+                    result,
+                    k400BadRequest
+                )
             );
+
             return;
         }
 
@@ -97,19 +155,34 @@ void ProductController::addProduct(
         // ----------------------------------------------------
 
         std::string sellerIdText =
-            parser.getParameter<std::string>("seller_id");
+            getMultipartParameter(
+                parser,
+                "seller_id"
+            );
 
         std::string productName =
-            parser.getParameter<std::string>("product_name");
+            getMultipartParameter(
+                parser,
+                "product_name"
+            );
 
         std::string category =
-            parser.getParameter<std::string>("category");
+            getMultipartParameter(
+                parser,
+                "category"
+            );
 
         std::string priceText =
-            parser.getParameter<std::string>("price");
+            getMultipartParameter(
+                parser,
+                "price"
+            );
 
         std::string description =
-            parser.getParameter<std::string>("description");
+            getMultipartParameter(
+                parser,
+                "description"
+            );
 
 
         if (sellerIdText.empty() ||
@@ -119,18 +192,25 @@ void ProductController::addProduct(
             description.empty())
         {
             Json::Value result;
+
             result["success"] = false;
-            result["message"] = "All product fields are required.";
+            result["message"] =
+                "All product fields are required.";
 
             callback(
-                makeJsonResponse(result, k400BadRequest)
+                makeJsonResponse(
+                    result,
+                    k400BadRequest
+                )
             );
+
             return;
         }
 
 
         int sellerId = 0;
         double price = 0.0;
+
 
         try
         {
@@ -140,12 +220,18 @@ void ProductController::addProduct(
         catch (...)
         {
             Json::Value result;
+
             result["success"] = false;
-            result["message"] = "Invalid seller ID or price.";
+            result["message"] =
+                "Invalid seller ID or price.";
 
             callback(
-                makeJsonResponse(result, k400BadRequest)
+                makeJsonResponse(
+                    result,
+                    k400BadRequest
+                )
             );
+
             return;
         }
 
@@ -153,12 +239,18 @@ void ProductController::addProduct(
         if (price < 0)
         {
             Json::Value result;
+
             result["success"] = false;
-            result["message"] = "Price cannot be negative.";
+            result["message"] =
+                "Price cannot be negative.";
 
             callback(
-                makeJsonResponse(result, k400BadRequest)
+                makeJsonResponse(
+                    result,
+                    k400BadRequest
+                )
             );
+
             return;
         }
 
@@ -172,12 +264,18 @@ void ProductController::addProduct(
         if (files.empty())
         {
             Json::Value result;
+
             result["success"] = false;
-            result["message"] = "Product image is required.";
+            result["message"] =
+                "Product image is required.";
 
             callback(
-                makeJsonResponse(result, k400BadRequest)
+                makeJsonResponse(
+                    result,
+                    k400BadRequest
+                )
             );
+
             return;
         }
 
@@ -190,7 +288,9 @@ void ProductController::addProduct(
         fs::path originalPath(originalFilename);
 
         std::string extension =
-            lowerExtension(originalPath.extension().string());
+            lowerExtension(
+                originalPath.extension().string()
+            );
 
 
         if (extension != ".jpg" &&
@@ -199,13 +299,18 @@ void ProductController::addProduct(
             extension != ".webp")
         {
             Json::Value result;
+
             result["success"] = false;
             result["message"] =
                 "Only JPG, JPEG, PNG and WEBP images are allowed.";
 
             callback(
-                makeJsonResponse(result, k400BadRequest)
+                makeJsonResponse(
+                    result,
+                    k400BadRequest
+                )
             );
+
             return;
         }
 
@@ -215,7 +320,8 @@ void ProductController::addProduct(
         // ----------------------------------------------------
 
         const fs::path uploadDirectory =
-            "C:/capstonekaviya/frontend/uploads";
+            getUploadDirectory();
+
 
         try
         {
@@ -224,14 +330,20 @@ void ProductController::addProduct(
         catch (const std::exception& e)
         {
             Json::Value result;
+
             result["success"] = false;
             result["message"] =
-                std::string("Could not create upload directory: ")
-                + e.what();
+                std::string(
+                    "Could not create upload directory: "
+                ) + e.what();
 
             callback(
-                makeJsonResponse(result, k500InternalServerError)
+                makeJsonResponse(
+                    result,
+                    k500InternalServerError
+                )
             );
+
             return;
         }
 
@@ -253,19 +365,27 @@ void ProductController::addProduct(
 
         try
         {
-            imageFile.saveAs(fullFilePath.string());
+            imageFile.saveAs(
+                fullFilePath.string()
+            );
         }
         catch (const std::exception& e)
         {
             Json::Value result;
+
             result["success"] = false;
             result["message"] =
-                std::string("Could not save product image: ")
-                + e.what();
+                std::string(
+                    "Could not save product image: "
+                ) + e.what();
 
             callback(
-                makeJsonResponse(result, k500InternalServerError)
+                makeJsonResponse(
+                    result,
+                    k500InternalServerError
+                )
             );
+
             return;
         }
 
@@ -282,13 +402,22 @@ void ProductController::addProduct(
 
         if (!db || !db->is_open())
         {
+            std::error_code ec;
+            fs::remove(fullFilePath, ec);
+
             Json::Value result;
+
             result["success"] = false;
-            result["message"] = "Database connection failed.";
+            result["message"] =
+                "Database connection failed.";
 
             callback(
-                makeJsonResponse(result, k500InternalServerError)
+                makeJsonResponse(
+                    result,
+                    k500InternalServerError
+                )
             );
+
             return;
         }
 
@@ -316,12 +445,18 @@ void ProductController::addProduct(
             fs::remove(fullFilePath, ec);
 
             Json::Value result;
+
             result["success"] = false;
-            result["message"] = "Seller account not found.";
+            result["message"] =
+                "Seller account not found.";
 
             callback(
-                makeJsonResponse(result, k404NotFound)
+                makeJsonResponse(
+                    result,
+                    k404NotFound
+                )
             );
+
             return;
         }
 
@@ -338,13 +473,18 @@ void ProductController::addProduct(
             fs::remove(fullFilePath, ec);
 
             Json::Value result;
+
             result["success"] = false;
             result["message"] =
                 "Only seller accounts can add products.";
 
             callback(
-                makeJsonResponse(result, k403Forbidden)
+                makeJsonResponse(
+                    result,
+                    k403Forbidden
+                )
             );
+
             return;
         }
 
@@ -383,12 +523,20 @@ void ProductController::addProduct(
         Json::Value result;
 
         result["success"] = true;
-        result["message"] = "Product added successfully.";
-        result["product_id"] = productId;
-        result["image_path"] = imagePath;
+        result["message"] =
+            "Product added successfully.";
+
+        result["product_id"] =
+            productId;
+
+        result["image_path"] =
+            imagePath;
 
         callback(
-            makeJsonResponse(result, k201Created)
+            makeJsonResponse(
+                result,
+                k201Created
+            )
         );
     }
     catch (const std::exception& e)
@@ -397,11 +545,15 @@ void ProductController::addProduct(
 
         result["success"] = false;
         result["message"] =
-            std::string("Failed to add product: ")
-            + e.what();
+            std::string(
+                "Failed to add product: "
+            ) + e.what();
 
         callback(
-            makeJsonResponse(result, k500InternalServerError)
+            makeJsonResponse(
+                result,
+                k500InternalServerError
+            )
         );
     }
 }
@@ -423,12 +575,18 @@ void ProductController::getProducts(
         if (!db || !db->is_open())
         {
             Json::Value result;
+
             result["success"] = false;
-            result["message"] = "Database connection failed.";
+            result["message"] =
+                "Database connection failed.";
 
             callback(
-                makeJsonResponse(result, k500InternalServerError)
+                makeJsonResponse(
+                    result,
+                    k500InternalServerError
+                )
             );
+
             return;
         }
 
@@ -454,8 +612,10 @@ void ProductController::getProducts(
 
 
         Json::Value result;
+
         result["success"] = true;
-        result["products"] = Json::arrayValue;
+        result["products"] =
+            Json::arrayValue;
 
 
         for (const auto& row : products)
@@ -480,6 +640,7 @@ void ProductController::getProducts(
             product["description"] =
                 row["description"].as<std::string>();
 
+
             if (row["image_path"].is_null())
             {
                 product["image_path"] = "";
@@ -490,6 +651,7 @@ void ProductController::getProducts(
                     row["image_path"].as<std::string>();
             }
 
+
             if (row["rating"].is_null())
             {
                 product["rating"] = 0;
@@ -499,6 +661,7 @@ void ProductController::getProducts(
                 product["rating"] =
                     row["rating"].as<double>();
             }
+
 
             result["products"].append(product);
         }
@@ -514,11 +677,15 @@ void ProductController::getProducts(
 
         result["success"] = false;
         result["message"] =
-            std::string("Failed to load products: ")
-            + e.what();
+            std::string(
+                "Failed to load products: "
+            ) + e.what();
 
         callback(
-            makeJsonResponse(result, k500InternalServerError)
+            makeJsonResponse(
+                result,
+                k500InternalServerError
+            )
         );
     }
 }
@@ -541,12 +708,18 @@ void ProductController::getSellerProducts(
         if (!db || !db->is_open())
         {
             Json::Value result;
+
             result["success"] = false;
-            result["message"] = "Database connection failed.";
+            result["message"] =
+                "Database connection failed.";
 
             callback(
-                makeJsonResponse(result, k500InternalServerError)
+                makeJsonResponse(
+                    result,
+                    k500InternalServerError
+                )
             );
+
             return;
         }
 
@@ -576,7 +749,8 @@ void ProductController::getSellerProducts(
         Json::Value result;
 
         result["success"] = true;
-        result["products"] = Json::arrayValue;
+        result["products"] =
+            Json::arrayValue;
 
 
         for (const auto& row : products)
@@ -601,6 +775,7 @@ void ProductController::getSellerProducts(
             product["description"] =
                 row["description"].as<std::string>();
 
+
             if (row["image_path"].is_null())
             {
                 product["image_path"] = "";
@@ -611,6 +786,7 @@ void ProductController::getSellerProducts(
                     row["image_path"].as<std::string>();
             }
 
+
             if (row["rating"].is_null())
             {
                 product["rating"] = 0;
@@ -620,6 +796,7 @@ void ProductController::getSellerProducts(
                 product["rating"] =
                     row["rating"].as<double>();
             }
+
 
             result["products"].append(product);
         }
@@ -635,11 +812,15 @@ void ProductController::getSellerProducts(
 
         result["success"] = false;
         result["message"] =
-            std::string("Failed to load seller products: ")
-            + e.what();
+            std::string(
+                "Failed to load seller products: "
+            ) + e.what();
 
         callback(
-            makeJsonResponse(result, k500InternalServerError)
+            makeJsonResponse(
+                result,
+                k500InternalServerError
+            )
         );
     }
 }
@@ -662,12 +843,18 @@ void ProductController::getProduct(
         if (!db || !db->is_open())
         {
             Json::Value result;
+
             result["success"] = false;
-            result["message"] = "Database connection failed.";
+            result["message"] =
+                "Database connection failed.";
 
             callback(
-                makeJsonResponse(result, k500InternalServerError)
+                makeJsonResponse(
+                    result,
+                    k500InternalServerError
+                )
             );
+
             return;
         }
 
@@ -698,11 +885,16 @@ void ProductController::getProduct(
             Json::Value result;
 
             result["success"] = false;
-            result["message"] = "Product not found.";
+            result["message"] =
+                "Product not found.";
 
             callback(
-                makeJsonResponse(result, k404NotFound)
+                makeJsonResponse(
+                    result,
+                    k404NotFound
+                )
             );
+
             return;
         }
 
@@ -729,6 +921,7 @@ void ProductController::getProduct(
         product["description"] =
             row["description"].as<std::string>();
 
+
         if (row["image_path"].is_null())
         {
             product["image_path"] = "";
@@ -738,6 +931,7 @@ void ProductController::getProduct(
             product["image_path"] =
                 row["image_path"].as<std::string>();
         }
+
 
         if (row["rating"].is_null())
         {
@@ -765,11 +959,15 @@ void ProductController::getProduct(
 
         result["success"] = false;
         result["message"] =
-            std::string("Failed to load product: ")
-            + e.what();
+            std::string(
+                "Failed to load product: "
+            ) + e.what();
 
         callback(
-            makeJsonResponse(result, k500InternalServerError)
+            makeJsonResponse(
+                result,
+                k500InternalServerError
+            )
         );
     }
 }
@@ -809,8 +1007,12 @@ void ProductController::updateProduct(
                 "Unable to process product update form.";
 
             callback(
-                makeJsonResponse(result, k400BadRequest)
+                makeJsonResponse(
+                    result,
+                    k400BadRequest
+                )
             );
+
             return;
         }
 
@@ -820,19 +1022,34 @@ void ProductController::updateProduct(
         // ----------------------------------------------------
 
         std::string sellerIdText =
-            parser.getParameter<std::string>("seller_id");
+            getMultipartParameter(
+                parser,
+                "seller_id"
+            );
 
         std::string productName =
-            parser.getParameter<std::string>("product_name");
+            getMultipartParameter(
+                parser,
+                "product_name"
+            );
 
         std::string category =
-            parser.getParameter<std::string>("category");
+            getMultipartParameter(
+                parser,
+                "category"
+            );
 
         std::string priceText =
-            parser.getParameter<std::string>("price");
+            getMultipartParameter(
+                parser,
+                "price"
+            );
 
         std::string description =
-            parser.getParameter<std::string>("description");
+            getMultipartParameter(
+                parser,
+                "description"
+            );
 
 
         if (sellerIdText.empty() ||
@@ -848,8 +1065,12 @@ void ProductController::updateProduct(
                 "All product fields are required.";
 
             callback(
-                makeJsonResponse(result, k400BadRequest)
+                makeJsonResponse(
+                    result,
+                    k400BadRequest
+                )
             );
+
             return;
         }
 
@@ -872,8 +1093,12 @@ void ProductController::updateProduct(
                 "Invalid seller ID or price.";
 
             callback(
-                makeJsonResponse(result, k400BadRequest)
+                makeJsonResponse(
+                    result,
+                    k400BadRequest
+                )
             );
+
             return;
         }
 
@@ -887,8 +1112,12 @@ void ProductController::updateProduct(
                 "Price cannot be negative.";
 
             callback(
-                makeJsonResponse(result, k400BadRequest)
+                makeJsonResponse(
+                    result,
+                    k400BadRequest
+                )
             );
+
             return;
         }
 
@@ -908,8 +1137,12 @@ void ProductController::updateProduct(
                 "Database connection failed.";
 
             callback(
-                makeJsonResponse(result, k500InternalServerError)
+                makeJsonResponse(
+                    result,
+                    k500InternalServerError
+                )
             );
+
             return;
         }
 
@@ -943,8 +1176,12 @@ void ProductController::updateProduct(
                 "Product not found.";
 
             callback(
-                makeJsonResponse(result, k404NotFound)
+                makeJsonResponse(
+                    result,
+                    k404NotFound
+                )
             );
+
             return;
         }
 
@@ -964,8 +1201,12 @@ void ProductController::updateProduct(
                 "You are not allowed to edit this product.";
 
             callback(
-                makeJsonResponse(result, k403Forbidden)
+                makeJsonResponse(
+                    result,
+                    k403Forbidden
+                )
             );
+
             return;
         }
 
@@ -984,7 +1225,8 @@ void ProductController::updateProduct(
 
         const auto& files = parser.getFiles();
 
-        bool hasNewImage = !files.empty();
+        bool hasNewImage =
+            !files.empty();
 
 
         // ----------------------------------------------------
@@ -993,12 +1235,15 @@ void ProductController::updateProduct(
 
         if (hasNewImage)
         {
-            const HttpFile& imageFile = files[0];
+            const HttpFile& imageFile =
+                files[0];
 
             std::string originalFilename =
                 imageFile.getFileName();
 
-            fs::path originalPath(originalFilename);
+            fs::path originalPath(
+                originalFilename
+            );
 
             std::string extension =
                 lowerExtension(
@@ -1020,8 +1265,12 @@ void ProductController::updateProduct(
                     "Only JPG, JPEG, PNG and WEBP images are allowed.";
 
                 callback(
-                    makeJsonResponse(result, k400BadRequest)
+                    makeJsonResponse(
+                        result,
+                        k400BadRequest
+                    )
                 );
+
                 return;
             }
 
@@ -1031,12 +1280,14 @@ void ProductController::updateProduct(
             // ------------------------------------------------
 
             const fs::path uploadDirectory =
-                "C:/capstonekaviya/frontend/uploads";
+                getUploadDirectory();
 
 
             try
             {
-                fs::create_directories(uploadDirectory);
+                fs::create_directories(
+                    uploadDirectory
+                );
             }
             catch (const std::exception& e)
             {
@@ -1056,6 +1307,7 @@ void ProductController::updateProduct(
                         k500InternalServerError
                     )
                 );
+
                 return;
             }
 
@@ -1109,6 +1361,7 @@ void ProductController::updateProduct(
                         k500InternalServerError
                     )
                 );
+
                 return;
             }
         }
@@ -1172,22 +1425,27 @@ void ProductController::updateProduct(
                 const std::string prefix =
                     "/uploads/";
 
+
                 if (oldFilename.rfind(prefix, 0) == 0)
                 {
                     oldFilename =
-                        oldFilename.substr(prefix.length());
+                        oldFilename.substr(
+                            prefix.length()
+                        );
                 }
 
 
                 // Security check
-                if (oldFilename.find("..") == std::string::npos &&
-                    oldFilename.find('/') == std::string::npos &&
-                    oldFilename.find('\\') == std::string::npos)
+                if (oldFilename.find("..") ==
+                        std::string::npos &&
+                    oldFilename.find('/') ==
+                        std::string::npos &&
+                    oldFilename.find('\\') ==
+                        std::string::npos)
                 {
                     fs::path oldFile =
-                        fs::path(
-                            "C:/capstonekaviya/frontend/uploads"
-                        ) / oldFilename;
+                        getUploadDirectory() /
+                        oldFilename;
 
 
                     if (fs::exists(oldFile) &&
@@ -1219,11 +1477,13 @@ void ProductController::updateProduct(
         Json::Value result;
 
         result["success"] = true;
+
         result["message"] =
             "Product updated successfully.";
 
         result["product_id"] =
             productId;
+
 
         if (hasNewImage)
         {
@@ -1254,7 +1514,9 @@ void ProductController::updateProduct(
             {
                 if (fs::exists(newImageFilePath))
                 {
-                    fs::remove(newImageFilePath);
+                    fs::remove(
+                        newImageFilePath
+                    );
                 }
             }
             catch (...)
@@ -1267,9 +1529,11 @@ void ProductController::updateProduct(
         Json::Value result;
 
         result["success"] = false;
+
         result["message"] =
-            std::string("Failed to update product: ")
-            + e.what();
+            std::string(
+                "Failed to update product: "
+            ) + e.what();
 
 
         callback(

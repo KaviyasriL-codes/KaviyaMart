@@ -1,0 +1,12 @@
+.git
+.gitignore
+.vs
+.vscode
+build
+*.exe
+*.dll
+*.pdb
+*.obj
+*.lib
+.env
+.env.*
