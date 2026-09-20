@@ -1,8 +1,9 @@
 #include <drogon/drogon.h>
 #include "Services/Database.h"
 
-#include <iostream>
+#include <cstdlib>
 #include <filesystem>
+#include <iostream>
 #include <string>
 
 namespace fs = std::filesystem;
@@ -30,6 +31,51 @@ int main()
             << "Database connection failed: "
             << e.what()
             << std::endl;
+
+        return 1;
+    }
+
+
+    // =====================================================
+    // Configuration from environment variables
+    // =====================================================
+
+    const char* frontendEnv =
+        std::getenv("FRONTEND_DIR");
+
+    const char* uploadEnv =
+        std::getenv("UPLOAD_DIR");
+
+    const char* portEnv =
+        std::getenv("PORT");
+
+
+    std::string frontendDirectory =
+        (frontendEnv != nullptr && std::string(frontendEnv).size() > 0)
+            ? frontendEnv
+            : "frontend";
+
+
+    std::string uploadDirectory =
+        (uploadEnv != nullptr && std::string(uploadEnv).size() > 0)
+            ? uploadEnv
+            : frontendDirectory + "/uploads";
+
+
+    int port = 8080;
+
+    if (portEnv != nullptr && std::string(portEnv).size() > 0)
+    {
+        try
+        {
+            port = std::stoi(portEnv);
+        }
+        catch (...)
+        {
+            std::cerr
+                << "Invalid PORT value. Using 8080."
+                << std::endl;
+        }
     }
 
 
@@ -44,25 +90,17 @@ int main()
     // Frontend document root
     // =====================================================
 
-    app.setDocumentRoot(
-        "C:/capstonekaviya/frontend"
-    );
+    app.setDocumentRoot(frontendDirectory);
 
 
     // =====================================================
     // Serve uploaded product images
-    //
-    // Example:
-    // /uploads/product_123.webp
-    //
-    // Actual folder:
-    // C:/capstonekaviya/frontend/uploads/
     // =====================================================
 
     app.registerHandler(
         "/uploads/{1}",
 
-        [](
+        [uploadDirectory](
             const drogon::HttpRequestPtr& req,
             std::function<void(
                 const drogon::HttpResponsePtr&
@@ -71,8 +109,8 @@ int main()
             const std::string& filename
         )
         {
-            const fs::path uploadDirectory =
-                "C:/capstonekaviya/frontend/uploads";
+            const fs::path uploadDir =
+                fs::path(uploadDirectory);
 
 
             // -------------------------------------------------
@@ -102,7 +140,7 @@ int main()
             // -------------------------------------------------
 
             const fs::path imagePath =
-                uploadDirectory / filename;
+                uploadDir / filename;
 
 
             // -------------------------------------------------
@@ -129,7 +167,7 @@ int main()
 
 
             // -------------------------------------------------
-            // Send image file
+            // Send image
             // -------------------------------------------------
 
             auto response =
@@ -139,7 +177,7 @@ int main()
 
 
             // -------------------------------------------------
-            // Set content type based on extension
+            // Set content type
             // -------------------------------------------------
 
             std::string extension =
@@ -176,8 +214,8 @@ int main()
     // =====================================================
 
     app.addListener(
-        "127.0.0.1",
-        8080
+        "0.0.0.0",
+        port
     );
 
 
@@ -186,7 +224,18 @@ int main()
         << std::endl;
 
     std::cout
-        << "Open: http://127.0.0.1:8080"
+        << "Frontend: "
+        << frontendDirectory
+        << std::endl;
+
+    std::cout
+        << "Upload directory: "
+        << uploadDirectory
+        << std::endl;
+
+    std::cout
+        << "Port: "
+        << port
         << std::endl;
 
 
