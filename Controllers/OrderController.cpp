@@ -7,6 +7,7 @@
 
 using namespace drogon;
 
+
 // ============================================================
 // PLACE ORDER
 // ============================================================
@@ -82,7 +83,8 @@ void OrderController::placeOrder(
         {
             Json::Value response;
             response["success"] = false;
-            response["message"] = "Order must contain products.";
+            response["message"] =
+                "Order must contain products.";
 
             auto result =
                 HttpResponse::newHttpJsonResponse(response);
@@ -116,24 +118,34 @@ void OrderController::placeOrder(
         std::string deliveryPincode = "";
 
         if (json->isMember("delivery_name"))
+        {
             deliveryName =
                 (*json)["delivery_name"].asString();
+        }
 
         if (json->isMember("delivery_mobile"))
+        {
             deliveryMobile =
                 (*json)["delivery_mobile"].asString();
+        }
 
         if (json->isMember("delivery_address"))
+        {
             deliveryAddress =
                 (*json)["delivery_address"].asString();
+        }
 
         if (json->isMember("delivery_city"))
+        {
             deliveryCity =
                 (*json)["delivery_city"].asString();
+        }
 
         if (json->isMember("delivery_pincode"))
+        {
             deliveryPincode =
                 (*json)["delivery_pincode"].asString();
+        }
 
         auto db = Database::connect();
 
@@ -193,6 +205,9 @@ void OrderController::placeOrder(
 
         // ----------------------------------------------------
         // Insert order items
+        //
+        // IMPORTANT:
+        // Every product starts as Pending.
         // ----------------------------------------------------
 
         for (const auto& item : items)
@@ -239,15 +254,20 @@ void OrderController::placeOrder(
 
             double price =
                 productResult[0]["price"].as<double>();
+
+            // ------------------------------------------------
+            // Insert item with Pending status
+            // ------------------------------------------------
+
             transaction.exec_params(
-    "INSERT INTO order_items "
-    "(order_id, product_id, quantity, price) "
-    "VALUES ($1, $2, $3, $4)",
-    orderId,
-    productId,
-    quantity,
-    price
-);
+                "INSERT INTO order_items "
+                "(order_id, product_id, quantity, price, status) "
+                "VALUES ($1, $2, $3, $4, 'Pending')",
+                orderId,
+                productId,
+                quantity,
+                price
+            );
         }
 
         transaction.commit();
@@ -378,6 +398,14 @@ void OrderController::getBuyerOrders(
             orderJson["total_amount"] =
                 order["total_amount"].as<double>();
 
+            // ------------------------------------------------
+            // Keep old order-level status for compatibility.
+            //
+            // IMPORTANT:
+            // The actual product delivery status is now
+            // item["status"] below.
+            // ------------------------------------------------
+
             orderJson["status"] =
                 order["status"].as<std::string>();
 
@@ -465,6 +493,7 @@ void OrderController::getBuyerOrders(
                     "oi.quantity, "
                     "oi.price, "
                     "oi.subtotal, "
+                    "oi.status, "
                     "p.product_name, "
                     "p.description, "
                     "p.image_path "
@@ -497,6 +526,21 @@ void OrderController::getBuyerOrders(
 
                 itemJson["price"] =
                     item["price"].as<double>();
+
+                // ------------------------------------------------
+                // ITEM DELIVERY STATUS
+                // ------------------------------------------------
+
+                if (!item["status"].is_null())
+                {
+                    itemJson["status"] =
+                        item["status"].as<std::string>();
+                }
+                else
+                {
+                    itemJson["status"] =
+                        "Pending";
+                }
 
                 // ------------------------------------------------
                 // Subtotal
@@ -580,188 +624,6 @@ void OrderController::getBuyerOrders(
 
 
 // ============================================================
-// BUYER - CONFIRM DELIVERY
-// ============================================================
-
-void OrderController::confirmDelivery(
-    const HttpRequestPtr& req,
-    std::function<void(const HttpResponsePtr&)>&& callback,
-    int orderId
-)
-{
-    try
-    {
-        if (orderId <= 0)
-        {
-            Json::Value response;
-
-            response["success"] = false;
-            response["message"] =
-                "Invalid order ID.";
-
-            auto result =
-                HttpResponse::newHttpJsonResponse(response);
-
-            result->setStatusCode(k400BadRequest);
-            callback(result);
-            return;
-        }
-
-        auto json = req->getJsonObject();
-
-        if (!json ||
-            !json->isMember("user_id"))
-        {
-            Json::Value response;
-
-            response["success"] = false;
-            response["message"] =
-                "User ID is required.";
-
-            auto result =
-                HttpResponse::newHttpJsonResponse(response);
-
-            result->setStatusCode(k400BadRequest);
-            callback(result);
-            return;
-        }
-
-        int userId =
-            (*json)["user_id"].asInt();
-
-        if (userId <= 0)
-        {
-            Json::Value response;
-
-            response["success"] = false;
-            response["message"] =
-                "Invalid user ID.";
-
-            auto result =
-                HttpResponse::newHttpJsonResponse(response);
-
-            result->setStatusCode(k400BadRequest);
-            callback(result);
-            return;
-        }
-
-        auto db = Database::connect();
-
-        pqxx::work transaction(*db);
-
-        // ----------------------------------------------------
-        // Check order belongs to buyer
-        // ----------------------------------------------------
-
-        pqxx::result check =
-            transaction.exec_params(
-                "SELECT order_id, status, created_at "
-                "FROM orders "
-                "WHERE order_id = $1 "
-                "AND user_id = $2",
-                orderId,
-                userId
-            );
-
-        if (check.empty())
-        {
-            Json::Value response;
-
-            response["success"] = false;
-            response["message"] =
-                "Order not found.";
-
-            auto result =
-                HttpResponse::newHttpJsonResponse(response);
-
-            result->setStatusCode(k404NotFound);
-            callback(result);
-            return;
-        }
-
-        std::string status =
-            check[0]["status"].as<std::string>();
-
-        if (status == "Delivered")
-        {
-            Json::Value response;
-
-            response["success"] = true;
-            response["message"] =
-                "Order is already marked as Delivered.";
-
-            response["status"] =
-                "Delivered";
-
-            callback(
-                HttpResponse::newHttpJsonResponse(response)
-            );
-
-            return;
-        }
-
-        // ----------------------------------------------------
-        // Change Pending -> Delivered
-        // ----------------------------------------------------
-
-        transaction.exec_params(
-            "UPDATE orders "
-            "SET status = 'Delivered' "
-            "WHERE order_id = $1 "
-            "AND user_id = $2",
-            orderId,
-            userId
-        );
-
-        transaction.commit();
-
-        Json::Value response;
-
-        response["success"] = true;
-
-        response["message"] =
-            "Order marked as Delivered.";
-
-        response["order_id"] =
-            orderId;
-
-        response["status"] =
-            "Delivered";
-
-        callback(
-            HttpResponse::newHttpJsonResponse(response)
-        );
-    }
-    catch (const std::exception& e)
-    {
-        LOG_ERROR
-            << "Confirm delivery error: "
-            << e.what();
-
-        Json::Value response;
-
-        response["success"] = false;
-
-        response["message"] =
-            "Failed to update delivery status.";
-
-        auto result =
-            HttpResponse::newHttpJsonResponse(response);
-
-        result->setStatusCode(
-            k500InternalServerError
-        );
-
-        callback(result);
-    }
-}
-
-
-// ============================================================
-// SELLER - ORDERS / SALES
-// ============================================================
-
-// ============================================================
 // SELLER - VIEW ORDERS
 // ============================================================
 
@@ -782,7 +644,8 @@ void OrderController::getSellerOrders(
             Json::Value response;
 
             response["success"] = false;
-            response["message"] = "Invalid seller ID.";
+            response["message"] =
+                "Invalid seller ID.";
 
             auto result =
                 HttpResponse::newHttpJsonResponse(response);
@@ -801,15 +664,15 @@ void OrderController::getSellerOrders(
         // Get orders containing this seller's products
         //
         // orders
-        //    â†“
+        //      ↓
         // order_items
-        //    â†“
+        //      ↓
         // products
-        //    â†“
+        //      ↓
         // users
         //
-        // p.seller_id = sellerId ensures that the seller
-        // sees only their own products from an order.
+        // p.seller_id = sellerId
+        // means seller sees only their own products.
         // ----------------------------------------------------
 
         pqxx::result result =
@@ -840,6 +703,7 @@ void OrderController::getSellerOrders(
                 "oi.quantity, "
                 "oi.price, "
                 "oi.subtotal, "
+                "oi.status AS item_status, "
                 "p.product_name, "
                 "p.description, "
                 "p.image_path "
@@ -869,7 +733,8 @@ void OrderController::getSellerOrders(
         Json::Value response;
 
         response["success"] = true;
-        response["orders"] = Json::arrayValue;
+        response["orders"] =
+            Json::arrayValue;
 
         int currentOrderId = -1;
 
@@ -913,12 +778,11 @@ void OrderController::getSellerOrders(
                 currentOrder["user_id"] =
                     row["user_id"].as<int>();
 
-                // Customer ID
                 currentOrder["customer_id"] =
                     row["user_id"].as<int>();
 
                 // --------------------------------------------
-                // Customer information
+                // Customer name
                 // --------------------------------------------
 
                 if (!row["customer_name"].is_null())
@@ -931,6 +795,10 @@ void OrderController::getSellerOrders(
                     currentOrder["customer_name"] = "";
                 }
 
+                // --------------------------------------------
+                // Customer email
+                // --------------------------------------------
+
                 if (!row["customer_email"].is_null())
                 {
                     currentOrder["customer_email"] =
@@ -940,6 +808,10 @@ void OrderController::getSellerOrders(
                 {
                     currentOrder["customer_email"] = "";
                 }
+
+                // --------------------------------------------
+                // Customer mobile
+                // --------------------------------------------
 
                 if (!row["customer_mobile"].is_null())
                 {
@@ -959,7 +831,7 @@ void OrderController::getSellerOrders(
                     row["total_amount"].as<double>();
 
                 // --------------------------------------------
-                // Status
+                // Keep order-level status for compatibility
                 // --------------------------------------------
 
                 currentOrder["status"] =
@@ -983,7 +855,8 @@ void OrderController::getSellerOrders(
                 }
                 else
                 {
-                    currentOrder["payment_method"] = "COD";
+                    currentOrder["payment_method"] =
+                        "COD";
                 }
 
                 // --------------------------------------------
@@ -1086,6 +959,21 @@ void OrderController::getSellerOrders(
                 row["price"].as<double>();
 
             // ------------------------------------------------
+            // ITEM DELIVERY STATUS
+            // ------------------------------------------------
+
+            if (!row["item_status"].is_null())
+            {
+                item["status"] =
+                    row["item_status"].as<std::string>();
+            }
+            else
+            {
+                item["status"] =
+                    "Pending";
+            }
+
+            // ------------------------------------------------
             // Subtotal
             // ------------------------------------------------
 
@@ -1129,7 +1017,10 @@ void OrderController::getSellerOrders(
                 item["image_path"] = "";
             }
 
+            // ------------------------------------------------
             // Add item to current order
+            // ------------------------------------------------
+
             currentOrder["items"].append(item);
         }
 
@@ -1163,8 +1054,235 @@ void OrderController::getSellerOrders(
         Json::Value response;
 
         response["success"] = false;
+
         response["message"] =
             "Failed to load seller orders.";
+
+        auto result =
+            HttpResponse::newHttpJsonResponse(response);
+
+        result->setStatusCode(
+            k500InternalServerError
+        );
+
+        callback(result);
+    }
+}
+
+
+// ============================================================
+// SELLER - MARK ONE PRODUCT AS DELIVERED
+// ============================================================
+
+void OrderController::markItemDelivered(
+    const HttpRequestPtr& req,
+    std::function<void(const HttpResponsePtr&)>&& callback,
+    int orderItemId
+)
+{
+    try
+    {
+        // ----------------------------------------------------
+        // Validate order item ID
+        // ----------------------------------------------------
+
+        if (orderItemId <= 0)
+        {
+            Json::Value response;
+
+            response["success"] = false;
+            response["message"] =
+                "Invalid order item ID.";
+
+            auto result =
+                HttpResponse::newHttpJsonResponse(response);
+
+            result->setStatusCode(k400BadRequest);
+
+            callback(result);
+            return;
+        }
+
+        // ----------------------------------------------------
+        // Request JSON
+        //
+        // Seller frontend sends:
+        //
+        // {
+        //     "seller_id": 2
+        // }
+        // ----------------------------------------------------
+
+        auto json = req->getJsonObject();
+
+        if (!json ||
+            !json->isMember("seller_id"))
+        {
+            Json::Value response;
+
+            response["success"] = false;
+            response["message"] =
+                "seller_id is required.";
+
+            auto result =
+                HttpResponse::newHttpJsonResponse(response);
+
+            result->setStatusCode(k400BadRequest);
+
+            callback(result);
+            return;
+        }
+
+        int sellerId =
+            (*json)["seller_id"].asInt();
+
+        if (sellerId <= 0)
+        {
+            Json::Value response;
+
+            response["success"] = false;
+            response["message"] =
+                "Invalid seller ID.";
+
+            auto result =
+                HttpResponse::newHttpJsonResponse(response);
+
+            result->setStatusCode(k400BadRequest);
+
+            callback(result);
+            return;
+        }
+
+        auto db = Database::connect();
+
+        pqxx::work transaction(*db);
+
+        // ----------------------------------------------------
+        // Check that this product/order item actually belongs
+        // to this seller.
+        //
+        // This prevents Seller A from changing Seller B's
+        // product status.
+        // ----------------------------------------------------
+
+        pqxx::result check =
+            transaction.exec_params(
+                "SELECT "
+                "oi.order_item_id, "
+                "oi.status, "
+                "p.seller_id, "
+                "p.product_name "
+                "FROM order_items oi "
+                "JOIN products p "
+                "ON oi.product_id = p.product_id "
+                "WHERE oi.order_item_id = $1 "
+                "AND p.seller_id = $2",
+                orderItemId,
+                sellerId
+            );
+
+        if (check.empty())
+        {
+            Json::Value response;
+
+            response["success"] = false;
+            response["message"] =
+                "Order item not found or it does not belong to this seller.";
+
+            auto result =
+                HttpResponse::newHttpJsonResponse(response);
+
+            result->setStatusCode(k404NotFound);
+
+            callback(result);
+            return;
+        }
+
+        std::string currentStatus =
+            check[0]["status"].is_null()
+                ? "Pending"
+                : check[0]["status"].as<std::string>();
+
+        // ----------------------------------------------------
+        // Already delivered
+        // ----------------------------------------------------
+
+        if (currentStatus == "Delivered")
+        {
+            transaction.commit();
+
+            Json::Value response;
+
+            response["success"] = true;
+
+            response["message"] =
+                "This product is already marked as Delivered.";
+
+            response["order_item_id"] =
+                orderItemId;
+
+            response["status"] =
+                "Delivered";
+
+            callback(
+                HttpResponse::newHttpJsonResponse(response)
+            );
+
+            return;
+        }
+
+        // ----------------------------------------------------
+        // Update ONLY this order item
+        // ----------------------------------------------------
+
+        transaction.exec_params(
+            "UPDATE order_items "
+            "SET status = 'Delivered' "
+            "WHERE order_item_id = $1",
+            orderItemId
+        );
+
+        transaction.commit();
+
+        // ----------------------------------------------------
+        // Success
+        // ----------------------------------------------------
+
+        Json::Value response;
+
+        response["success"] = true;
+
+        response["message"] =
+            "Product marked as Delivered.";
+
+        response["order_item_id"] =
+            orderItemId;
+
+        response["status"] =
+            "Delivered";
+
+        if (!check[0]["product_name"].is_null())
+        {
+            response["product_name"] =
+                check[0]["product_name"].as<std::string>();
+        }
+
+        callback(
+            HttpResponse::newHttpJsonResponse(response)
+        );
+    }
+    catch (const std::exception& e)
+    {
+        LOG_ERROR
+            << "Mark item delivered error: "
+            << e.what();
+
+        Json::Value response;
+
+        response["success"] = false;
+
+        response["message"] =
+            "Failed to update product delivery status.";
 
         auto result =
             HttpResponse::newHttpJsonResponse(response);

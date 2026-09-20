@@ -1,1022 +1,1136 @@
 <!DOCTYPE html>
+
 <html lang="en">
-
 <head>
-
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
+```
+<title>My Orders - KaviyaMart</title>
 
-    <title>My Orders | KaviyaMart</title>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
 
-    <link
-        rel="stylesheet"
-        href="style.css"
-    >
+   body
+{
+    background: #F5F0E6;
+    color: #222;
+}
+
+    /* ================================
+       HEADER
+    ================================= */
+
+    .header {
+        background: linear-gradient(135deg, #4b0082, #6a0dad);
+        color: white;
+        padding: 18px 7%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 3px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .logo {
+        font-size: 27px;
+        font-weight: bold;
+        letter-spacing: 0.5px;
+    }
+
+    .nav {
+        display: flex;
+        align-items: center;
+        gap: 22px;
+    }
+
+    .nav a {
+        color: white;
+        text-decoration: none;
+        font-size: 15px;
+        font-weight: 600;
+    }
+
+    .nav a:hover {
+        color: #ffd700;
+    }
+
+    .logout-btn {
+        background: #ffd700;
+        color: #4b0082;
+        border: none;
+        padding: 9px 16px;
+        border-radius: 7px;
+        cursor: pointer;
+        font-weight: bold;
+    }
+
+    .logout-btn:hover {
+        background: #fff;
+    }
+
+    /* ================================
+       PAGE
+    ================================= */
+
+    .container {
+        width: 90%;
+        max-width: 1100px;
+        margin: 35px auto;
+    }
+
+    .page-title {
+        text-align: center;
+        margin-bottom: 8px;
+        color: #4b0082;
+        font-size: 32px;
+    }
+
+    .page-subtitle {
+        text-align: center;
+        color: #666;
+        margin-bottom: 30px;
+    }
+
+    /* ================================
+       LOADING
+    ================================= */
+
+    .loading {
+        text-align: center;
+        padding: 50px;
+        font-size: 18px;
+        color: #666;
+    }
+
+    /* ================================
+       ERROR
+    ================================= */
+
+    .error-box {
+        display: none;
+        background: #ffe8e8;
+        color: #b00020;
+        padding: 16px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        text-align: center;
+        font-weight: 600;
+    }
+
+    /* ================================
+       EMPTY ORDERS
+    ================================= */
+
+    .empty-orders {
+        display: none;
+        background: white;
+        padding: 50px 20px;
+        text-align: center;
+        border-radius: 15px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    }
+
+    .empty-orders h2 {
+        color: #4b0082;
+        margin-bottom: 12px;
+    }
+
+    .empty-orders p {
+        color: #666;
+        margin-bottom: 20px;
+    }
+
+    .shop-btn {
+        display: inline-block;
+        background: #4b0082;
+        color: white;
+        text-decoration: none;
+        padding: 11px 22px;
+        border-radius: 8px;
+        font-weight: bold;
+    }
+
+    .shop-btn:hover {
+        background: #6a0dad;
+    }
+
+    /* ================================
+       ORDER CARD
+    ================================= */
+
+    .order-card {
+        background: white;
+        border-radius: 16px;
+        margin-bottom: 28px;
+        overflow: hidden;
+        box-shadow: 0 5px 18px rgba(0, 0, 0, 0.08);
+        border: 1px solid #eee;
+    }
+
+    /* ================================
+       ORDER HEADER
+    ================================= */
+
+    .order-header {
+        background: #faf7ff;
+        padding: 20px 24px;
+        border-bottom: 1px solid #eee;
+    }
+
+    .order-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 15px;
+        flex-wrap: wrap;
+    }
+
+    .order-id {
+        font-size: 19px;
+        font-weight: bold;
+        color: #4b0082;
+    }
+
+    .order-date {
+        color: #777;
+        font-size: 14px;
+        margin-top: 6px;
+    }
+
+    .order-total {
+        font-size: 19px;
+        font-weight: bold;
+        color: #222;
+    }
+
+    .payment-method {
+        margin-top: 7px;
+        color: #666;
+        font-size: 14px;
+    }
+
+    /* ================================
+       PRODUCTS
+    ================================= */
+
+    .products-container {
+        padding: 10px 24px 24px;
+    }
+
+    .product-card {
+        display: flex;
+        gap: 20px;
+        padding: 20px 0;
+        border-bottom: 1px solid #eee;
+    }
+
+    .product-card:last-child {
+        border-bottom: none;
+    }
+
+    .product-image-wrapper {
+        width: 120px;
+        height: 120px;
+        flex-shrink: 0;
+        border-radius: 12px;
+        overflow: hidden;
+        background: #f1edf6;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .product-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .no-image {
+        color: #999;
+        font-size: 13px;
+        text-align: center;
+        padding: 10px;
+    }
+
+    .product-info {
+        flex: 1;
+    }
+
+    .product-name {
+        color: #4b0082;
+        font-size: 19px;
+        font-weight: bold;
+        margin-bottom: 8px;
+    }
+
+    .product-description {
+        color: #666;
+        font-size: 14px;
+        line-height: 1.5;
+        margin-bottom: 12px;
+    }
+
+    .product-details {
+        display: flex;
+        gap: 20px;
+        flex-wrap: wrap;
+        color: #444;
+        font-size: 14px;
+    }
+
+    .product-price {
+        font-weight: bold;
+    }
+
+    .product-subtotal {
+        font-weight: bold;
+    }
+
+    /* ================================
+       ITEM STATUS
+    ================================= */
+
+    .item-status-section {
+        min-width: 145px;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        justify-content: center;
+        gap: 8px;
+    }
+
+    .status-label {
+        font-size: 12px;
+        color: #777;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-weight: bold;
+    }
+
+    .item-status {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 110px;
+        padding: 9px 14px;
+        border-radius: 20px;
+        font-size: 14px;
+        font-weight: bold;
+    }
+
+    .status-pending {
+        background: #fff4cc;
+        color: #9a6b00;
+    }
+
+    .status-delivered {
+        background: #dff7e5;
+        color: #18753a;
+    }
+
+    .status-unknown {
+        background: #eeeeee;
+        color: #555;
+    }
+
+    /* ================================
+       DELIVERY DETAILS
+    ================================= */
+
+    .delivery-section {
+        background: #fafafa;
+        padding: 18px 24px;
+        border-top: 1px solid #eee;
+    }
+
+    .delivery-title {
+        color: #4b0082;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+
+    .delivery-info {
+        color: #555;
+        line-height: 1.7;
+        font-size: 14px;
+    }
+
+    /* ================================
+       RESPONSIVE
+    ================================= */
+
+    @media (max-width: 750px) {
+
+        .header {
+            padding: 15px 5%;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .nav {
+            gap: 14px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .container {
+            width: 94%;
+            margin-top: 25px;
+        }
+
+        .product-card {
+            flex-direction: column;
+        }
+
+        .product-image-wrapper {
+            width: 100%;
+            height: 200px;
+        }
+
+        .item-status-section {
+            align-items: flex-start;
+        }
+
+        .order-top {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .order-total {
+            align-self: flex-start;
+        }
+    }
+</style>
+```
 
 </head>
-
 
 <body>
 
 <header class="header">
 
-    <a
-        href="index.html"
-        class="logo"
-        aria-label="KaviyaMart Home"
-    >
+```
+<div class="logo">
+    KaviyaMart
+</div>
 
-        <img
-            src="kaviyamart-logo.png"
-            alt="KaviyaMart Logo"
-        >
+<nav class="nav">
 
+    <a href="index.html">
+        Home
     </a>
 
+    <a href="buyer.html">
+        Shop
+    </a>
 
-    <nav>
+    <a href="my-orders.html">
+        My Orders
+    </a>
 
-        <a href="index.html">
-            Home
-        </a>
+    <button
+        class="logout-btn"
+        id="logoutBtn">
+        Logout
+    </button>
 
-        <a href="buyer.html">
-            Shop
-        </a>
-
-        <a
-            href="my-orders.html"
-            class="active"
-        >
-             My Orders
-        </a>
-
-        <a
-            href="#"
-            id="logoutLink"
-        >
-            Logout
-        </a>
-
-    </nav>
+</nav>
+```
 
 </header>
 
+<main class="container">
 
-<main class="buyer-page">
+```
+<h1 class="page-title">
+    My Orders
+</h1>
 
-    <!-- PAGE HERO -->
+<p class="page-subtitle">
+    Track the delivery status of each product you ordered
+</p>
 
-    <section class="shop-hero">
-
-        <div class="shop-hero-content">
-
-            <span class="eyebrow">
-                YOUR PURCHASES
-            </span>
-
-            <h1>
-                My <span>Orders</span>
-            </h1>
-
-            <p>
-                Track your purchases and confirm when
-                your products have been received.
-            </p>
-
-        </div>
-
-    </section>
-
-
-    <!-- ORDERS -->
-
-    <section class="products-section">
-
-        <div class="section-heading">
-
-            <div>
-
-                <span class="eyebrow">
-                    ORDER HISTORY
-                </span>
-
-                <h2>
-                    Your Orders
-                </h2>
-
-            </div>
-
-            <p id="orderResultText">
-                Loading your orders...
-            </p>
-
-        </div>
-
-
-        <div
-            id="ordersContainer"
-            class="orders-container"
-        >
-
-            <div class="loading-products">
-                Loading your orders...
-            </div>
-
-        </div>
-
-    </section>
-
-</main>
-
-
-<!-- TOAST -->
 
 <div
-    id="toast"
-    class="toast"
-    role="status"
-    aria-live="polite"
->
+    id="errorBox"
+    class="error-box">
 </div>
 
 
-<footer class="footer">
-
-    <div class="footer-content">
-
-        <div>
-
-            <h3>
-                KaviyaMart
-            </h3>
-
-            <p>
-                Your beautiful shopping app.
-            </p>
-
-        </div>
+<div
+    id="loading"
+    class="loading">
+    Loading your orders...
+</div>
 
 
-        <div>
+<div
+    id="emptyOrders"
+    class="empty-orders">
 
-            <p class="brand-line">
-                © 2026 KaviyaMart. All rights reserved.
-            </p>
+    <h2>No Orders Yet</h2>
 
-        </div>
+    <p>
+        You haven't placed any orders yet.
+    </p>
 
-    </div>
+    <a
+        href="buyer.html"
+        class="shop-btn">
+        Start Shopping
+    </a>
 
-</footer>
+</div>
 
 
-<script src="script.js"></script>
+<div id="ordersContainer"></div>
+```
 
+</main>
 
 <script>
 
-
-// ============================================================
-// MY ORDERS PAGE
-// ============================================================
-
-
-function showOrderMessage(message, type = "success")
-{
-    const existing =
-        document.querySelector(".order-message");
-
-    if (existing)
-    {
-        existing.remove();
-    }
-
-    const box =
-        document.createElement("div");
-
-    box.className =
-        "order-message " +
-        (type === "error"
-            ? "error-message"
-            : "success-message");
-
-    box.textContent = message;
-
-    box.style.position = "fixed";
-    box.style.top = "90px";
-    box.style.right = "20px";
-    box.style.zIndex = "9999";
-    box.style.padding = "14px 20px";
-    box.style.borderRadius = "10px";
-    box.style.boxShadow =
-        "0 8px 25px rgba(0,0,0,0.15)";
-
-    document.body.appendChild(box);
-
-    setTimeout(() =>
-    {
-        box.remove();
-    }, 3000);
-}
-
-
-// ------------------------------------------------------------
-// FORMAT DATE
-// ------------------------------------------------------------
-
-function formatOrderDate(dateValue)
-{
-    if (!dateValue)
-    {
-        return "Date unavailable";
-    }
-
-    const date =
-        new Date(dateValue);
-
-    if (isNaN(date.getTime()))
-    {
-        return "Date unavailable";
-    }
-
-    return date.toLocaleDateString(
-        "en-IN",
-        {
-            day: "2-digit",
-            month: "short",
-            year: "numeric"
-        }
-    );
-}
-
-
-// ------------------------------------------------------------
-// DELIVERY DATE
-// ------------------------------------------------------------
-
-function getDeliveryInfo(createdAt)
-{
-    if (!createdAt)
-    {
-        return {
-            deliveredDate: null,
-            daysPassed: 0,
-            daysRemaining: 7
-        };
-    }
-
-    const created =
-        new Date(createdAt);
-
-    const now =
-        new Date();
-
-    const difference =
-        now.getTime() -
-        created.getTime();
-
-    const daysPassed =
-        Math.floor(
-            difference /
-            (1000 * 60 * 60 * 24)
-        );
-
-    const deliveryDate =
-        new Date(created);
-
-    deliveryDate.setDate(
-        deliveryDate.getDate() + 7
-    );
-
-    const daysRemaining =
-        Math.max(
-            0,
-            7 - daysPassed
-        );
-
-    return {
-        deliveredDate: deliveryDate,
-        daysPassed: daysPassed,
-        daysRemaining: daysRemaining
-    };
-}
-
-
-// ------------------------------------------------------------
-// LOAD ORDERS
-// ------------------------------------------------------------
-
-async function loadMyOrders()
-{
-    const container =
-        document.getElementById(
-            "ordersContainer"
-        );
-
-    const resultText =
-        document.getElementById(
-            "orderResultText"
-        );
-
-
-    if (!container)
-    {
-        return;
-    }
-
-
-    // IMPORTANT:
-    // Your existing script.js uses user_id
+    // ============================================================
+    // CHECK LOGIN
+    // ============================================================
 
     const userId =
         localStorage.getItem("user_id");
-
 
     const userRole =
         localStorage.getItem("user_role");
 
 
-    if (!userId)
-    {
+    if (!userId) {
+
         window.location.href =
             "login.html";
 
-        return;
     }
 
 
-    if (userRole !== "buyer")
-    {
+    if (userRole &&
+        userRole.toLowerCase() !== "buyer") {
+
+        alert(
+            "Only buyers can view My Orders."
+        );
+
         window.location.href =
-            "seller.html";
+            "index.html";
 
-        return;
     }
 
 
-    container.innerHTML = `
-        <div class="loading-products">
-            Loading your orders...
-        </div>
-    `;
+    // ============================================================
+    // LOGOUT
+    // ============================================================
+
+    document
+        .getElementById("logoutBtn")
+        .addEventListener("click", function () {
+
+            localStorage.removeItem("user_id");
+            localStorage.removeItem("user_name");
+            localStorage.removeItem("user_role");
+
+            window.location.href =
+                "login.html";
+
+        });
 
 
-    try
-    {
+    // ============================================================
+    // ELEMENTS
+    // ============================================================
 
-        const response =
-            await fetch(
-                `/api/orders/buyer/${Number(userId)}`
+    const loading =
+        document.getElementById("loading");
+
+    const ordersContainer =
+        document.getElementById("ordersContainer");
+
+    const emptyOrders =
+        document.getElementById("emptyOrders");
+
+    const errorBox =
+        document.getElementById("errorBox");
+
+
+    // ============================================================
+    // LOAD ORDERS
+    // ============================================================
+
+    async function loadOrders() {
+
+        try {
+
+            loading.style.display =
+                "block";
+
+            ordersContainer.innerHTML = "";
+
+            emptyOrders.style.display =
+                "none";
+
+            errorBox.style.display =
+                "none";
+
+
+            const response =
+                await fetch(
+                    `/api/orders/buyer/${userId}`
+                );
+
+
+            if (!response.ok) {
+
+                throw new Error(
+                    "Failed to load orders."
+                );
+
+            }
+
+
+            const data =
+                await response.json();
+
+
+            if (!data.success) {
+
+                throw new Error(
+                    data.message ||
+                    "Unable to load orders."
+                );
+
+            }
+
+
+            loading.style.display =
+                "none";
+
+
+            if (!data.orders ||
+                data.orders.length === 0) {
+
+                emptyOrders.style.display =
+                    "block";
+
+                return;
+
+            }
+
+
+            data.orders.forEach(
+                renderOrder
             );
 
+        }
+        catch (error) {
 
-        const result =
-            await response.json();
-
-
-        if (!response.ok)
-        {
-            throw new Error(
-                result.message ||
-                "Unable to load orders."
+            console.error(
+                "My Orders Error:",
+                error
             );
-        }
 
+            loading.style.display =
+                "none";
 
-        let orders = [];
+            errorBox.textContent =
+                error.message ||
+                "Something went wrong while loading your orders.";
 
+            errorBox.style.display =
+                "block";
 
-        if (Array.isArray(result))
-        {
-            orders = result;
-        }
-        else if (
-            Array.isArray(result.orders)
-        )
-        {
-            orders = result.orders;
-        }
-        else if (
-            Array.isArray(result.data)
-        )
-        {
-            orders = result.data;
-        }
-
-
-        if (resultText)
-        {
-            resultText.textContent =
-                orders.length === 0
-                    ? "No orders yet."
-                    : `${orders.length} order${
-                        orders.length === 1
-                            ? ""
-                            : "s"
-                    }`;
-        }
-
-
-        displayMyOrders(orders);
-
-    }
-    catch (error)
-    {
-
-        console.error(
-            "Load orders error:",
-            error
-        );
-
-
-        container.innerHTML = `
-            <div class="error-message">
-                Unable to load your orders.
-                Please make sure KaviyaMart server is running.
-            </div>
-        `;
-
-
-        if (resultText)
-        {
-            resultText.textContent =
-                "Unable to load orders.";
         }
 
     }
-}
 
 
-// ------------------------------------------------------------
-// DISPLAY ORDERS
-// ------------------------------------------------------------
+    // ============================================================
+    // RENDER ORDER
+    // ============================================================
 
-function displayMyOrders(orders)
-{
-    const container =
-        document.getElementById(
-            "ordersContainer"
-        );
-
-
-    if (!container)
-    {
-        return;
-    }
-
-
-    if (
-        !orders ||
-        orders.length === 0
-    )
-    {
-
-        container.innerHTML = `
-            <div class="empty-products">
-
-                <div
-                    style="
-                        font-size:52px;
-                        margin-bottom:15px;
-                    "
-                >
-                    
-                </div>
-
-                <h3>
-                    No orders yet
-                </h3>
-
-                <p>
-                    Your purchased products will
-                    appear here.
-                </p>
-
-                <a
-                    href="buyer.html"
-                    class="btn"
-                >
-                    Start Shopping
-                </a>
-
-            </div>
-        `;
-
-        return;
-    }
-
-
-    container.innerHTML = "";
-
-
-    orders.forEach(order =>
-    {
+    function renderOrder(order) {
 
         const orderCard =
             document.createElement("div");
-
 
         orderCard.className =
             "order-card";
 
 
-        const status =
-            String(
-                order.status || "Pending"
+        const createdDate =
+            formatDate(order.created_at);
+
+
+        const total =
+            Number(order.total_amount || 0)
+                .toFixed(2);
+
+
+        let productsHTML = "";
+
+
+        if (order.items &&
+            order.items.length > 0) {
+
+            order.items.forEach(
+                item => {
+
+                    productsHTML +=
+                        createProductHTML(item);
+
+                }
             );
 
+        }
+        else {
 
-        const deliveryInfo =
-            getDeliveryInfo(
-                order.created_at
+            productsHTML = `
+                <div style="
+                    padding:20px;
+                    color:#777;
+                    text-align:center;">
+                    No products found in this order.
+                </div>
+            `;
+
+        }
+
+
+        const deliveryName =
+            escapeHTML(
+                order.delivery_name || ""
             );
 
+        const deliveryMobile =
+            escapeHTML(
+                order.delivery_mobile || ""
+            );
 
-        const isDelivered =
-            status.toLowerCase() ===
-            "delivered";
+        const deliveryAddress =
+            escapeHTML(
+                order.delivery_address || ""
+            );
 
+        const deliveryCity =
+            escapeHTML(
+                order.delivery_city || ""
+            );
 
-        let productsHtml = "";
-
-
-        const items =
-            Array.isArray(order.items)
-                ? order.items
-                : [];
-
-
-        items.forEach(item =>
-        {
-
-            const imagePath =
-                typeof getImagePath === "function"
-                    ? getImagePath(
-                        item.image_path
-                    )
-                    : "";
-
-
-            productsHtml += `
-
-                <div class="order-product">
-
-                    <div class="order-product-image">
-
-                        ${
-                            imagePath
-                            ?
-                            `
-                            <img
-                                src="${escapeHtml(imagePath)}"
-                                alt="${escapeHtml(
-                                    item.product_name ||
-                                    "Product"
-                                )}"
-                                onerror="
-                                    this.style.display='none';
-                                "
-                            >
-                            `
-                            :
-                            `
-                            <div>
-                                📦
-                            </div>
-                            `
-                        }
-
-                    </div>
-
-
-                    <div class="order-product-info">
-
-                        <h4>
-                            ${escapeHtml(
-                                item.product_name ||
-                                "Product"
-                            )}
-                        </h4>
-
-
-                        <p class="order-description">
-                            ${escapeHtml(
-                                item.description ||
-                                "No description available."
-                            )}
-                        </p>
-
-
-                        <div class="order-product-meta">
-
-                            <span>
-                                Quantity:
-                                <strong>
-                                    ${Number(
-                                        item.quantity || 0
-                                    )}
-                                </strong>
-                            </span>
-
-
-                            <span>
-                                Price:
-                                <strong>
-                                    ${formatPrice(
-                                        item.price
-                                    )}
-                                </strong>
-                            </span>
-
-
-                            <span>
-                                Subtotal:
-                                <strong>
-                                    ${formatPrice(
-                                        item.subtotal ||
-                                        (
-                                            Number(item.price || 0) *
-                                            Number(item.quantity || 0)
-                                        )
-                                    )}
-                                </strong>
-                            </span>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-            `;
-        });
-
-
-        if (!productsHtml)
-        {
-            productsHtml = `
-                <div class="order-product">
-
-                    <div class="order-product-info">
-
-                        <p>
-                            Order item information unavailable.
-                        </p>
-
-                    </div>
-
-                </div>
-            `;
-        }
-
-
-        let deliveryMessage = "";
-
-
-        if (isDelivered)
-        {
-
-            deliveryMessage = `
-                <div class="order-delivery delivered">
-
-                    <strong>
-                        ✓ Product received
-                    </strong>
-
-                    <span>
-                        You confirmed that you received this order.
-                    </span>
-
-                </div>
-            `;
-
-        }
-        else if (
-            deliveryInfo.daysPassed >= 7
-        )
-        {
-
-            deliveryMessage = `
-                <div class="order-delivery ready">
-
-                    <strong>
-                        📦 Expected delivery time has passed
-                    </strong>
-
-                    <span>
-                        If you have received your product,
-                        please confirm below.
-                    </span>
-
-
-                    <button
-                        type="button"
-                        class="btn confirm-delivery-btn"
-                        onclick="
-                            confirmOrderDelivery(
-                                ${Number(order.order_id)}
-                            )
-                        "
-                    >
-                        Yes, I received my product
-                    </button>
-
-                </div>
-            `;
-
-        }
-        else
-        {
-
-            const days =
-                deliveryInfo.daysRemaining;
-
-
-            deliveryMessage = `
-                <div class="order-delivery pending">
-
-                    <strong>
-                        🚚 Order is on the way
-                    </strong>
-
-                    <span>
-                        Expected delivery within
-                        ${days}
-                        day${days === 1 ? "" : "s"}.
-                    </span>
-
-                </div>
-            `;
-        }
+        const deliveryPincode =
+            escapeHTML(
+                order.delivery_pincode || ""
+            );
 
 
         orderCard.innerHTML = `
 
-            <div class="order-card-header">
+            <div class="order-header">
 
-                <div>
+                <div class="order-top">
 
-                    <span class="eyebrow">
-                        ORDER
-                    </span>
+                    <div>
 
-                    <h3>
-                        #${Number(order.order_id)}
-                    </h3>
+                        <div class="order-id">
+                            Order #${order.order_id}
+                        </div>
 
-                </div>
+                        <div class="order-date">
+                            Placed on ${createdDate}
+                        </div>
 
+                        <div class="payment-method">
+                            Payment:
+                            <strong>
+                                ${escapeHTML(
+                                    order.payment_method || "COD"
+                                )}
+                            </strong>
+                        </div>
 
-                <div class="order-status
-                    ${
-                        isDelivered
-                            ? "status-delivered"
-                            : "status-pending"
-                    }
-                ">
-
-                    ${
-                        isDelivered
-                            ? "✓ Delivered"
-                            : "⏳ Pending"
-                    }
-
-                </div>
-
-            </div>
+                    </div>
 
 
-            <div class="order-summary">
-
-                <div>
-
-                    <span>
-                        Order Date
-                    </span>
-
-                    <strong>
-                        ${formatOrderDate(
-                            order.created_at
-                        )}
-                    </strong>
-
-                </div>
-
-
-                <div>
-
-                    <span>
-                        Payment
-                    </span>
-
-                    <strong>
-                        ${escapeHtml(
-                            order.payment_method ||
-                            "COD"
-                        )}
-                    </strong>
-
-                </div>
-
-
-                <div>
-
-                    <span>
-                        Total
-                    </span>
-
-                    <strong>
-                        ${formatPrice(
-                            order.total_amount
-                        )}
-                    </strong>
+                    <div class="order-total">
+                        Total: ₹${total}
+                    </div>
 
                 </div>
 
             </div>
 
 
-            <div class="order-products">
+            <div class="products-container">
 
-                ${productsHtml}
+                ${productsHTML}
 
             </div>
 
 
-            <div class="order-delivery-details">
+            <div class="delivery-section">
 
-                <h4>
+                <div class="delivery-title">
                     Delivery Details
-                </h4>
+                </div>
 
-                <p>
-                    <strong>Name:</strong>
-                    ${escapeHtml(
-                        order.delivery_name ||
-                        "-"
-                    )}
-                </p>
+                <div class="delivery-info">
 
-                <p>
-                    <strong>Mobile:</strong>
-                    ${escapeHtml(
-                        order.delivery_mobile ||
-                        "-"
-                    )}
-                </p>
+                    <strong>
+                        ${deliveryName}
+                    </strong>
 
-                <p>
-                    <strong>Address:</strong>
-                    ${escapeHtml(
-                        order.delivery_address ||
-                        "-"
-                    )}
-                </p>
+                    <br>
 
-                <p>
-                    <strong>City:</strong>
-                    ${escapeHtml(
-                        order.delivery_city ||
-                        "-"
-                    )}
-                </p>
+                    Mobile:
+                    ${deliveryMobile}
 
-                <p>
-                    <strong>Pincode:</strong>
-                    ${escapeHtml(
-                        order.delivery_pincode ||
-                        "-"
-                    )}
-                </p>
+                    <br>
+
+                    ${deliveryAddress},
+                    ${deliveryCity}
+                    -
+                    ${deliveryPincode}
+
+                </div>
 
             </div>
-
-
-            ${deliveryMessage}
-
         `;
 
 
-        container.appendChild(orderCard);
-
-    });
-}
-
-
-// ------------------------------------------------------------
-// CONFIRM DELIVERY
-// ------------------------------------------------------------
-
-async function confirmOrderDelivery(orderId)
-{
-    const userId =
-        localStorage.getItem("user_id");
-
-
-    if (!userId)
-    {
-        window.location.href =
-            "login.html";
-
-        return;
-    }
-
-
-    const confirmed =
-        window.confirm(
-            "Have you received this product?"
+        ordersContainer.appendChild(
+            orderCard
         );
 
-
-    if (!confirmed)
-    {
-        return;
     }
 
 
-    try
-    {
+    // ============================================================
+    // CREATE PRODUCT HTML
+    // ============================================================
 
-        const response =
-            await fetch(
-                `/api/orders/${Number(orderId)}/delivered`,
-                {
-                    method: "PUT",
+    function createProductHTML(item) {
 
-                    headers:
-                    {
-                        "Content-Type":
-                            "application/json"
-                    },
-
-                    body: JSON.stringify(
-                    {
-                        user_id:
-                            Number(userId)
-                    })
-                }
+        const productName =
+            escapeHTML(
+                item.product_name ||
+                "Product"
             );
 
 
-        const result =
-            await response.json();
-
-
-        if (!response.ok)
-        {
-            throw new Error(
-                result.message ||
-                "Unable to confirm delivery."
+        const description =
+            escapeHTML(
+                item.description ||
+                ""
             );
+
+
+        const quantity =
+            Number(item.quantity || 0);
+
+
+        const price =
+            Number(item.price || 0);
+
+
+        const subtotal =
+            item.subtotal !== undefined &&
+            item.subtotal !== null
+                ? Number(item.subtotal)
+                : price * quantity;
+
+
+        /*
+         * IMPORTANT
+         *
+         * The backend should eventually send:
+         *
+         * item.status
+         *
+         * Example:
+         *
+         * {
+         *     "order_item_id": 10,
+         *     "product_name": "Watch",
+         *     "status": "Delivered"
+         * }
+         *
+         * Until that backend change is made,
+         * we safely show Pending.
+         */
+
+        const status =
+            normalizeStatus(
+                item.status
+            );
+
+
+        const statusClass =
+            status === "Delivered"
+                ? "status-delivered"
+                : status === "Pending"
+                    ? "status-pending"
+                    : "status-unknown";
+
+
+        const statusIcon =
+            status === "Delivered"
+                ? "✓"
+                : status === "Pending"
+                    ? "●"
+                    : "•";
+
+
+        let imageHTML = "";
+
+
+        if (item.image_path) {
+
+            let imagePath =
+                item.image_path;
+
+
+            /*
+             * If backend stores something like:
+             *
+             * uploads/product.jpg
+             *
+             * use it directly.
+             */
+
+            if (!imagePath.startsWith("/")) {
+
+                imagePath =
+                    "/" + imagePath;
+
+            }
+
+
+            imageHTML = `
+
+                <img
+                    src="${escapeAttribute(imagePath)}"
+                    alt="${escapeAttribute(productName)}"
+                    class="product-image"
+                    onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"
+                >
+
+                <div
+                    class="no-image"
+                    style="display:none;">
+                    Image unavailable
+                </div>
+
+            `;
+
+        }
+        else {
+
+            imageHTML = `
+
+                <div class="no-image">
+                    No Image
+                </div>
+
+            `;
+
         }
 
 
-        showOrderMessage(
-            "Order marked as Delivered."
-        );
+        return `
+
+            <div class="product-card">
+
+                <div class="product-image-wrapper">
+
+                    ${imageHTML}
+
+                </div>
 
 
-        setTimeout(() =>
-        {
-            loadMyOrders();
-        }, 500);
+                <div class="product-info">
+
+                    <div class="product-name">
+                        ${productName}
+                    </div>
+
+
+                    ${
+                        description
+                            ? `
+                                <div class="product-description">
+                                    ${description}
+                                </div>
+                              `
+                            : ""
+                    }
+
+
+                    <div class="product-details">
+
+                        <span>
+                            Quantity:
+                            <strong>
+                                ${quantity}
+                            </strong>
+                        </span>
+
+
+                        <span class="product-price">
+                            Price:
+                            ₹${price.toFixed(2)}
+                        </span>
+
+
+                        <span class="product-subtotal">
+                            Subtotal:
+                            ₹${subtotal.toFixed(2)}
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="item-status-section">
+
+                    <div class="status-label">
+                        Delivery Status
+                    </div>
+
+                    <div
+                        class="item-status ${statusClass}">
+
+                        ${statusIcon}
+                        &nbsp;
+                        ${status}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        `;
 
     }
-    catch (error)
-    {
-
-        console.error(
-            "Confirm delivery error:",
-            error
-        );
 
 
-        showOrderMessage(
-            error.message ||
-            "Unable to confirm delivery.",
-            "error"
+    // ============================================================
+    // NORMALIZE STATUS
+    // ============================================================
+
+    function normalizeStatus(status) {
+
+        if (!status) {
+
+            return "Pending";
+
+        }
+
+
+        const value =
+            String(status)
+                .trim()
+                .toLowerCase();
+
+
+        if (value === "delivered") {
+
+            return "Delivered";
+
+        }
+
+
+        if (value === "pending") {
+
+            return "Pending";
+
+        }
+
+
+        return "Pending";
+
+    }
+
+
+    // ============================================================
+    // FORMAT DATE
+    // ============================================================
+
+    function formatDate(dateValue) {
+
+        if (!dateValue) {
+
+            return "Date unavailable";
+
+        }
+
+
+        const date =
+            new Date(dateValue);
+
+
+        if (Number.isNaN(
+            date.getTime()
+        )) {
+
+            return escapeHTML(
+                String(dateValue)
+            );
+
+        }
+
+
+        return date.toLocaleString(
+            "en-IN",
+            {
+                day: "2-digit",
+                month: "short",
+                year: "numeric",
+                hour: "2-digit",
+                minute: "2-digit"
+            }
         );
 
     }
-}
 
 
-// ------------------------------------------------------------
-// START
-// ------------------------------------------------------------
+    // ============================================================
+    // HTML ESCAPING
+    // ============================================================
 
-document.addEventListener(
-    "DOMContentLoaded",
-    function()
-    {
-        loadMyOrders();
+    function escapeHTML(value) {
+
+        return String(value)
+            .replaceAll("&", "&amp;")
+            .replaceAll("<", "&lt;")
+            .replaceAll(">", "&gt;")
+            .replaceAll('"', "&quot;")
+            .replaceAll("'", "&#039;");
+
     }
-);
+
+
+    function escapeAttribute(value) {
+
+        return escapeHTML(value);
+
+    }
+
+
+    // ============================================================
+    // START
+    // ============================================================
+
+    loadOrders();
 
 </script>
 

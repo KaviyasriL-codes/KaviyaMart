@@ -8,42 +8,66 @@ public:
 
     METHOD_LIST_BEGIN
 
-    // Place a new order
+    // ============================================================
+    // PLACE ORDER
+    // ============================================================
+
     ADD_METHOD_TO(
         OrderController::placeOrder,
         "/api/orders",
         drogon::Post
     );
 
-    // Get orders for a buyer
+
+    // ============================================================
+    // BUYER - MY ORDERS
+    // ============================================================
+
     ADD_METHOD_TO(
         OrderController::getBuyerOrders,
         "/api/orders/buyer/{1}",
         drogon::Get
     );
 
-    // Confirm that buyer received the order
-    ADD_METHOD_TO(
-        OrderController::confirmDelivery,
-        "/api/orders/{1}/delivered",
-        drogon::Put
-    );
 
-    // Get orders containing products belonging to a seller
+    // ============================================================
+    // SELLER - VIEW ORDERS
+    // ============================================================
+
     ADD_METHOD_TO(
         OrderController::getSellerOrders,
         "/api/orders/seller/{1}",
         drogon::Get
     );
 
+
+    // ============================================================
+    // SELLER - MARK INDIVIDUAL PRODUCT AS DELIVERED
+    // ============================================================
+
+    ADD_METHOD_TO(
+        OrderController::markItemDelivered,
+        "/api/order-items/{1}/delivered",
+        drogon::Put
+    );
+
+
     METHOD_LIST_END
 
+
+    // ============================================================
+    // PLACE ORDER
+    // ============================================================
 
     void placeOrder(
         const drogon::HttpRequestPtr& req,
         std::function<void(const drogon::HttpResponsePtr&)>&& callback
     );
 
+
+    // ============================================================
+    // BUYER - MY ORDERS
+    // ============================================================
 
     void getBuyerOrders(
         const drogon::HttpRequestPtr& req,
@@ -52,16 +76,25 @@ public:
     );
 
 
-    void confirmDelivery(
-        const drogon::HttpRequestPtr& req,
-        std::function<void(const drogon::HttpResponsePtr&)>&& callback,
-        int orderId
-    );
-
+    // ============================================================
+    // SELLER - VIEW ORDERS
+    // ============================================================
 
     void getSellerOrders(
         const drogon::HttpRequestPtr& req,
         std::function<void(const drogon::HttpResponsePtr&)>&& callback,
         int sellerId
     );
+
+
+    // ============================================================
+    // SELLER - MARK ONE PRODUCT AS DELIVERED
+    // ============================================================
+
+    void markItemDelivered(
+        const drogon::HttpRequestPtr& req,
+        std::function<void(const drogon::HttpResponsePtr&)>&& callback,
+        int orderItemId
+    );
+
 };
